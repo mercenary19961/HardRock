@@ -1,22 +1,22 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+// Landing Page (Public)
 Route::get('/', function () {
     return Inertia::render('Landing');
-});
+})->name('home');
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// TODO: Add contact form submission route
+// Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
+// Admin Dashboard (Simple authentication for you only)
+// TODO: Implement simple admin dashboard
+// Route::middleware('auth')->group(function () {
+//     Route::get('/admin', function () {
+//         return Inertia::render('Admin/Dashboard');
+//     })->name('admin.dashboard');
+// });
 
 require __DIR__.'/auth.php';

@@ -4,7 +4,7 @@
         "module": "ESNext",
         "moduleResolution": "bundler",
         "jsx": "react-jsx",
-        "strict": false,
+        "strict": true,
         "isolatedModules": true,
         "target": "ESNext",
         "esModuleInterop": true,
@@ -16,18 +16,5 @@
             "ziggy-js": ["./vendor/tightenco/ziggy"]
         }
     },
-    "include": ["resources/js/**/*.ts", "resources/js/**/*.tsx", "resources/js/**/*.d.ts"],
-    "exclude": [
-        "resources/js/components/app-header.tsx",
-        "resources/js/components/app-shell.tsx",
-        "resources/js/components/app-sidebar.tsx",
-        "resources/js/components/app-sidebar-header.tsx",
-        "resources/js/components/app-content.tsx",
-        "resources/js/components/nav-*.tsx",
-        "resources/js/components/user-*.tsx",
-        "resources/js/components/delete-user.tsx",
-        "resources/js/components/two-factor-*.tsx",
-        "resources/js/components/appearance-*.tsx",
-        "resources/js/components/breadcrumbs.tsx"
-    ]
+    "include": ["resources/js/**/*.ts", "resources/js/**/*.tsx", "resources/js/**/*.d.ts"]
 }
