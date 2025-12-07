@@ -4,21 +4,26 @@ import './bootstrap';
 import { createInertiaApp } from '@inertiajs/react';
 import { createRoot } from 'react-dom/client';
 
-// Import pages directly
-const pages = import.meta.glob('./pages/**/*.tsx', { eager: true });
+// Explicitly import Landing page
+import Landing from './pages/Landing';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+
+// Map of page names to components
+const pages: Record<string, any> = {
+    'Landing': Landing,
+};
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: (name) => {
-        const page = pages[`./pages/${name}.tsx`];
+        const page = pages[name];
         if (!page) {
             console.error('Available pages:', Object.keys(pages));
-            throw new Error(`Page not found: ./pages/${name}.tsx. Available: ${Object.keys(pages).join(', ')}`);
+            console.error('Requested page:', name);
+            throw new Error(`Page not found: ${name}. Available: ${Object.keys(pages).join(', ')}`);
         }
-        // @ts-ignore
-        return page.default;
+        return page;
     },
     setup({ el, App, props }) {
         const root = createRoot(el);
