@@ -5,7 +5,7 @@ import { createInertiaApp } from '@inertiajs/react';
 import { createRoot } from 'react-dom/client';
 
 // Explicitly import Landing page
-import Landing from './pages/Landing';
+import Landing from '@/pages/Landing';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
