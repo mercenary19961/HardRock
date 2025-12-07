@@ -14,9 +14,11 @@ createInertiaApp({
     resolve: (name) => {
         const page = pages[`./pages/${name}.tsx`];
         if (!page) {
-            throw new Error(`Page not found: ./pages/${name}.tsx`);
+            console.error('Available pages:', Object.keys(pages));
+            throw new Error(`Page not found: ./pages/${name}.tsx. Available: ${Object.keys(pages).join(', ')}`);
         }
-        return page;
+        // @ts-ignore
+        return page.default;
     },
     setup({ el, App, props }) {
         const root = createRoot(el);
