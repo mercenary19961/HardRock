@@ -1,0 +1,16 @@
+{
+  "nav": {
+    "whyHardrock": "لماذا هاردروك",
+    "services": "الخدمات",
+    "ourTeam": "فريقنا",
+    "contactUs": "تواصل معنا"
+  },
+  "theme": {
+    "light": "الوضع الفاتح",
+    "dark": "الوضع الداكن"
+  },
+  "language": {
+    "en": "English",
+    "ar": "العربية"
+  }
+}

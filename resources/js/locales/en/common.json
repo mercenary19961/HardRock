@@ -1,0 +1,16 @@
+{
+  "nav": {
+    "whyHardrock": "Why HardRock",
+    "services": "Services",
+    "ourTeam": "Our Team",
+    "contactUs": "Contact Us"
+  },
+  "theme": {
+    "light": "Light Mode",
+    "dark": "Dark Mode"
+  },
+  "language": {
+    "en": "English",
+    "ar": "Arabic"
+  }
+}

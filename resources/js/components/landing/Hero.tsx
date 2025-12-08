@@ -1,92 +1,99 @@
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { ArrowRight, Sparkles } from 'lucide-react';
-import { useRef } from 'react';
+import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 export default function Hero() {
-    const ref = useRef(null);
-    const { scrollYProgress } = useScroll({
-        target: ref,
-        offset: ["start start", "end start"]
-    });
-
-    const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
-    const opacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
+    const { t } = useTranslation('hero');
 
     return (
-        <section ref={ref} className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-            {/* Aurora Background */}
-            <div className="absolute inset-0 -z-10 overflow-hidden bg-background">
-                <div className="absolute -top-[40%] -left-[20%] w-[70%] h-[70%] rounded-full bg-purple-500/20 blur-[120px] animate-blob mix-blend-multiply dark:mix-blend-screen" />
-                <div className="absolute -top-[40%] -right-[20%] w-[70%] h-[70%] rounded-full bg-primary/20 blur-[120px] animate-blob animation-delay-2000 mix-blend-multiply dark:mix-blend-screen" />
-                <div className="absolute -bottom-[40%] left-[20%] w-[70%] h-[70%] rounded-full bg-pink-500/20 blur-[120px] animate-blob animation-delay-4000 mix-blend-multiply dark:mix-blend-screen" />
-                <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150" />
+        <section className="relative min-h-screen flex items-center overflow-hidden bg-white dark:bg-black">
+            {/* Purple Glow Background - Dark Mode */}
+            <div className="absolute inset-0 overflow-hidden dark:block hidden">
+                <div className="absolute bottom-0 left-0 w-full h-[60%] bg-gradient-to-t from-purple-900/40 via-purple-600/20 to-transparent blur-3xl" />
+                <div className="absolute top-1/3 ltr:left-0 rtl:right-0 w-1/2 h-1/2 bg-gradient-to-r from-purple-600/30 to-transparent blur-[100px]" />
             </div>
 
-            <motion.div 
-                style={{ y, opacity }}
-                className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10"
-            >
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.5 }}
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary mb-8 border border-primary/20 backdrop-blur-sm"
-                >
-                    <Sparkles className="w-4 h-4 animate-pulse" />
-                    <span className="text-sm font-medium">Next Gen Marketing & AI Solutions</span>
-                </motion.div>
+            {/* Light Mode Background */}
+            <div className="absolute inset-0 bg-gradient-to-br from-white via-purple-50/30 to-pink-50/20 dark:hidden" />
 
-                <motion.h1
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.1 }}
-                    className="text-5xl md:text-8xl font-bold tracking-tight text-foreground mb-8 leading-tight"
-                >
-                    Elevate Your Brand with <br />
-                    <span className="bg-gradient-to-r from-primary via-purple-500 to-pink-500 bg-clip-text text-transparent animate-gradient bg-300%">
-                        Intelligent Marketing
-                    </span>
-                </motion.h1>
+            {/* Background Wave */}
+            <div className="absolute bottom-0 ltr:right-0 rtl:left-0 w-[60%] h-auto opacity-30 dark:opacity-40">
+                <img
+                    src="/images/bg wave.png"
+                    alt=""
+                    className="w-full h-auto object-contain"
+                />
+            </div>
 
-                <motion.p
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.2 }}
-                    className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto mb-12 leading-relaxed"
-                >
-                    We combine creative storytelling with cutting-edge AI technology to deliver data-driven marketing strategies that scale.
-                </motion.p>
+            <div className="relative z-10 w-full px-8 sm:px-12 lg:px-20 xl:px-32 pt-32 pb-20">
+                <div className="grid lg:grid-cols-2 gap-0 items-center">
+                    {/* Left Column - Text Content */}
+                    <motion.div
+                        initial={{ opacity: 0, x: -50 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.8 }}
+                        className="text-left rtl:text-right"
+                    >
+                        <motion.h2
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.8, delay: 0.2 }}
+                            className="text-3xl md:text-4xl lg:text-5xl font-bold text-black dark:text-white mb-4 leading-tight"
+                        >
+                            {t('title.line1')} {t('title.line2')}
+                        </motion.h2>
 
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.3 }}
-                    className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-20 me-6"
-                >
-                    <button className="group relative px-8 py-4 bg-primary text-primary-foreground rounded-full font-medium text-lg overflow-hidden transition-all hover:scale-105 hover:shadow-[0_0_40px_-10px_rgba(var(--primary),0.5)]">
-                        <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-                        <span className="relative flex items-center gap-2">
-                            Start Your Journey
-                            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                        </span>
-                    </button>
-                    <button className="px-8 py-4 bg-background border border-border text-foreground rounded-full font-medium text-lg hover:bg-muted transition-all hover:scale-105">
-                        View Case Studies
-                    </button>
-                </motion.div>
-            </motion.div>
-            
-            {/* Scroll Indicator */}
-            <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1, duration: 1 }}
-                className="absolute bottom-10 left-1/2 -translate-x-1/2"
-            >
-                <div className="w-6 h-10 border-2 border-muted-foreground/30 rounded-full p-1">
-                    <div className="w-1.5 h-1.5 bg-muted-foreground rounded-full mx-auto animate-bounce" />
+                        <motion.h1
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.8, delay: 0.3 }}
+                            className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight"
+                        >
+                            <span className="bg-gradient-to-r from-pink-500 via-purple-500 to-purple-600 bg-clip-text text-transparent">
+                                {t('title.gradient')}
+                            </span>
+                        </motion.h1>
+
+                        <motion.p
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.8, delay: 0.4 }}
+                            className="text-base md:text-lg lg:text-xl text-gray-700 dark:text-gray-300 mb-8 max-w-lg mx-auto ltr:text-center rtl:text-center"
+                        >
+                            {t('subtitle')}
+                        </motion.p>
+
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.8, delay: 0.6 }}
+                        >
+                            <button className="group bg-white dark:bg-white text-black border-2 border-gray-300 dark:border-transparent px-10 py-4 rounded-full text-base font-medium hover:shadow-2xl hover:shadow-purple-500/20 transition-all duration-300 hover:scale-105 tracking-wide">
+                                {t('cta')}
+                            </button>
+                        </motion.div>
+                    </motion.div>
+
+                    {/* Right Column - Hero Image */}
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 1, delay: 0.3 }}
+                        className="relative flex justify-center items-center"
+                    >
+                        <div className="relative w-full max-w-lg">
+                            {/* Glow effect behind image */}
+                            <div className="absolute inset-0 bg-gradient-to-br from-pink-500/30 via-purple-500/30 to-purple-600/30 blur-[80px] rounded-full" />
+
+                            {/* Hero Icon */}
+                            <img
+                                src="/images/hero-icon.webp"
+                                alt="Digital Solutions"
+                                className="relative z-10 w-full h-auto drop-shadow-2xl animate-float"
+                            />
+                        </div>
+                    </motion.div>
                 </div>
-            </motion.div>
+            </div>
         </section>
     );
 }

@@ -1,59 +1,67 @@
 import { Link } from '@inertiajs/react';
-import { motion, useScroll, useSpring } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import ThemeToggle from '@/components/ThemeToggle';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
-    const { scrollYProgress } = useScroll();
-    const scaleX = useSpring(scrollYProgress, {
-        stiffness: 100,
-        damping: 30,
-        restDelta: 0.001
-    });
+    const { t } = useTranslation('common');
 
     const navLinks = [
-        { name: 'Services', href: '#services' },
-        { name: 'About', href: '#about' },
-        { name: 'Contact', href: '#contact' },
+        { name: t('nav.whyHardrock'), href: '#why-hardrock' },
+        { name: t('nav.services'), href: '#services' },
+        { name: t('nav.ourTeam'), href: '#team' },
     ];
 
     return (
-        <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex items-center justify-between h-16">
-                    <div className="flex-shrink-0">
-                        <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
-                            Hard Rock
-                        </Link>
-                    </div>
-                    
+        <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-black/90 backdrop-blur-md border-b border-gray-200 dark:border-white/10">
+            <div className="w-full px-8 sm:px-12 lg:px-20 xl:px-32">
+                <div className="flex items-center justify-between h-20">
+                    {/* Logo */}
+                    <Link href="/" className="flex-shrink-0">
+                        <img
+                            src="/images/HOR-BLACK LOGO.svg"
+                            alt="HardRock"
+                            className="h-8 w-auto dark:hidden"
+                        />
+                        <img
+                            src="/images/OR-WHITE LOGO.svg"
+                            alt="HardRock"
+                            className="h-8 w-auto hidden dark:block"
+                        />
+                    </Link>
+
                     {/* Desktop Menu */}
-                    <div className="hidden md:block">
-                        <div className="ml-10 flex items-center space-x-8">
-                            {navLinks.map((link) => (
-                                <a
-                                    key={link.name}
-                                    href={link.href}
-                                    className="text-foreground/80 hover:text-primary transition-colors duration-200 px-3 py-2 rounded-md text-sm font-medium"
-                                >
-                                    {link.name}
-                                </a>
-                            ))}
-                            <button className="bg-primary text-primary-foreground px-4 py-2 rounded-full text-sm font-medium hover:bg-primary/90 transition-colors">
-                                Get Started
-                            </button>
-                            <ThemeToggle />
-                        </div>
+                    <div className="hidden md:flex items-center ltr:space-x-6 rtl:space-x-reverse rtl:gap-6">
+                        {navLinks.map((link) => (
+                            <a
+                                key={link.name}
+                                href={link.href}
+                                className="text-black/90 dark:text-white/90 hover:text-black dark:hover:text-white transition-colors duration-200 text-base font-medium"
+                            >
+                                {link.name}
+                            </a>
+                        ))}
+
+                        {/* Theme & Language Toggles */}
+                        <ThemeToggle />
+                        <LanguageSwitcher />
+
+                        <button className="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-6 py-2.5 rounded-full text-base font-medium hover:shadow-lg hover:shadow-pink-500/50 transition-all duration-300">
+                            {t('nav.contactUs')}
+                        </button>
                     </div>
 
                     {/* Mobile menu button */}
-                    <div className="md:hidden flex items-center gap-4">
+                    <div className="md:hidden flex items-center gap-3">
                         <ThemeToggle />
+                        <LanguageSwitcher />
                         <button
                             onClick={() => setIsOpen(!isOpen)}
-                            className="inline-flex items-center justify-center p-2 rounded-md text-foreground hover:text-primary focus:outline-none"
+                            className="inline-flex items-center justify-center p-2 rounded-md text-black dark:text-white hover:text-pink-500 focus:outline-none transition-colors"
                         >
                             {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
                         </button>
@@ -61,35 +69,29 @@ export default function Navbar() {
                 </div>
             </div>
 
-            {/* Scroll Progress Bar */}
-            <motion.div
-                className="absolute bottom-0 left-0 right-0 h-[2px] bg-primary origin-left"
-                style={{ scaleX }}
-            />
-
             {/* Mobile Menu */}
-            <motion.div 
+            <motion.div
                 initial={false}
                 animate={isOpen ? "open" : "closed"}
                 variants={{
                     open: { opacity: 1, height: "auto" },
                     closed: { opacity: 0, height: 0 }
                 }}
-                className="md:hidden overflow-hidden bg-background border-b border-border"
+                className="md:hidden overflow-hidden bg-black/95 border-b border-white/10"
             >
-                <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <div className="px-4 pt-2 pb-4 space-y-2">
                     {navLinks.map((link) => (
                         <a
                             key={link.name}
                             href={link.href}
-                            className="text-foreground/80 hover:text-primary block px-3 py-2 rounded-md text-base font-medium"
+                            className="text-white/90 hover:text-white block px-3 py-3 rounded-md text-base font-medium transition-colors"
                             onClick={() => setIsOpen(false)}
                         >
                             {link.name}
                         </a>
                     ))}
-                    <button className="w-full text-left bg-primary text-primary-foreground px-3 py-2 rounded-md text-base font-medium hover:bg-primary/90 transition-colors mt-4">
-                        Get Started
+                    <button className="w-full bg-gradient-to-r from-pink-500 to-purple-600 text-white px-4 py-3 rounded-full text-base font-medium hover:shadow-lg hover:shadow-pink-500/50 transition-all mt-2">
+                        Contact Us
                     </button>
                 </div>
             </motion.div>

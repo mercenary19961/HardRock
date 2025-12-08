@@ -1,8 +1,10 @@
 import '../css/app.css';
 import './bootstrap';
+import './i18n'; // Initialize i18n
 
 import { createInertiaApp } from '@inertiajs/react';
 import { createRoot } from 'react-dom/client';
+import { ThemeProvider } from '@/contexts/ThemeContext';
 
 // Explicitly import Landing page
 import Landing from '@/pages/Landing';
@@ -28,7 +30,11 @@ createInertiaApp({
     setup({ el, App, props }) {
         const root = createRoot(el);
 
-        root.render(<App {...props} />);
+        root.render(
+            <ThemeProvider>
+                <App {...props} />
+            </ThemeProvider>
+        );
     },
     progress: {
         color: '#4B5563',
