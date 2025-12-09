@@ -17,7 +17,7 @@ export default function LanguageSwitcher() {
     >
       <Globe className="w-4 h-4" />
       <span className="text-sm font-medium">
-        {i18n.language === 'en' ? 'AR' : 'EN'}
+        {i18n.language === 'en' ? 'عربي' : 'EN'}
       </span>
     </button>
   );

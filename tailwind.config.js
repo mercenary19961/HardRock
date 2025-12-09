@@ -15,6 +15,8 @@ export default {
         extend: {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                tajawal: ['Tajawal', 'sans-serif'],
+                cairo: ['Cairo', 'sans-serif'],
             },
             colors: {
                 border: 'hsl(var(--border))',

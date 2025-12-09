@@ -17,8 +17,8 @@ export default function Navbar() {
     ];
 
     return (
-        <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-black/90 backdrop-blur-md border-b border-gray-200 dark:border-white/10">
-            <div className="w-full px-8 sm:px-12 lg:px-20 xl:px-32">
+        <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-black/90 backdrop-blur-md border-b border-purple-500 dark:border-purple-200">
+            <div className="w-full px-8 sm:px-12 lg:px-16 xl:px-20">
                 <div className="flex items-center justify-between h-20">
                     {/* Logo */}
                     <Link href="/" className="flex-shrink-0">
@@ -40,7 +40,7 @@ export default function Navbar() {
                             <a
                                 key={link.name}
                                 href={link.href}
-                                className="text-black/90 dark:text-white/90 hover:text-black dark:hover:text-white transition-colors duration-200 text-base font-medium"
+                                className="text-black/90 dark:text-white/90 hover:text-black dark:hover:text-white transition-colors duration-200 text-base font-medium rtl:font-tajawal rtl:font-normal"
                             >
                                 {link.name}
                             </a>
@@ -84,7 +84,7 @@ export default function Navbar() {
                         <a
                             key={link.name}
                             href={link.href}
-                            className="text-white/90 hover:text-white block px-3 py-3 rounded-md text-base font-medium transition-colors"
+                            className="text-white/90 hover:text-white block px-3 py-3 rounded-md text-base font-medium transition-colors rtl:font-tajawal rtl:font-normal"
                             onClick={() => setIsOpen(false)}
                         >
                             {link.name}

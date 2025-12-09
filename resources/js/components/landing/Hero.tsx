@@ -2,7 +2,8 @@ import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
 export default function Hero() {
-    const { t } = useTranslation('hero');
+    const { t, i18n } = useTranslation('hero');
+    const isArabic = i18n.language === 'ar';
 
     return (
         <section className="relative min-h-screen flex items-center overflow-hidden bg-white dark:bg-black">
@@ -24,40 +25,46 @@ export default function Hero() {
                 />
             </div>
 
-            <div className="relative z-10 w-full px-8 sm:px-12 lg:px-20 xl:px-32 pt-32 pb-20">
-                <div className="grid lg:grid-cols-2 gap-0 items-center">
+            <div className="relative z-10 w-full px-8 sm:px-12 lg:px-16 xl:px-20 pt-24 pb-20">
+                <div className="grid lg:grid-cols-2 gap-10 items-center">
                     {/* Left Column - Text Content */}
                     <motion.div
                         initial={{ opacity: 0, x: -50 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.8 }}
-                        className="text-left rtl:text-right"
+                        className="text-center"
                     >
-                        <motion.h2
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.2 }}
-                            className="text-3xl md:text-4xl lg:text-5xl font-bold text-black dark:text-white mb-4 leading-tight"
-                        >
-                            {t('title.line1')} {t('title.line2')}
-                        </motion.h2>
-
                         <motion.h1
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.3 }}
-                            className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight"
+                            transition={{ duration: 0.8, delay: 0.2 }}
+                            className="text-4xl md:text-5xl lg:text-7xl font-bold text-black dark:text-white text-center mb-6 rtl:font-tajawal rtl:font-bold"
+                            style={{ lineHeight: '1.5' }}
                         >
-                            <span className="bg-gradient-to-r from-pink-500 via-purple-500 to-purple-600 bg-clip-text text-transparent">
-                                {t('title.gradient')}
-                            </span>
+                            {isArabic ? (
+                                <>
+                                    {t('title.line1')}<br />
+                                    <span className="bg-gradient-to-r from-pink-500 via-purple-500 to-purple-600 bg-clip-text text-transparent">
+                                        {t('title.line2')}
+                                    </span><br />
+                                    {t('title.gradient')}
+                                </>
+                            ) : (
+                                <>
+                                    {t('title.line1')}<br />
+                                    {t('title.line2')}<br />
+                                    <span className="bg-gradient-to-r from-pink-500 via-purple-500 to-purple-600 bg-clip-text text-transparent">
+                                        {t('title.gradient')}
+                                    </span>
+                                </>
+                            )}
                         </motion.h1>
 
                         <motion.p
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8, delay: 0.4 }}
-                            className="text-base md:text-lg lg:text-xl text-gray-700 dark:text-gray-300 mb-8 max-w-lg mx-auto ltr:text-center rtl:text-center"
+                            className="text-base md:text-xl lg:text-2xl text-gray-700 dark:text-gray-300 mb-12 max-w-md mx-auto text-center leading-relaxed rtl:font-tajawal rtl:font-extralight"
                         >
                             {t('subtitle')}
                         </motion.p>
@@ -67,7 +74,7 @@ export default function Hero() {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8, delay: 0.6 }}
                         >
-                            <button className="group bg-white dark:bg-white text-black border-2 border-gray-300 dark:border-transparent px-10 py-4 rounded-full text-base font-medium hover:shadow-2xl hover:shadow-purple-500/20 transition-all duration-300 hover:scale-105 tracking-wide">
+                            <button className="group bg-white dark:bg-white text-black border-2 border-gray-300 dark:border-transparent px-24 py-4 rounded-full text-xl md:text-2xl font-medium hover:shadow-2xl hover:shadow-purple-500/20 transition-all duration-300 hover:scale-105 tracking-wide rtl:font-cairo">
                                 {t('cta')}
                             </button>
                         </motion.div>
