@@ -17,7 +17,7 @@ export default function Navbar() {
     ];
 
     return (
-        <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-black/90 backdrop-blur-md border-b-2 border-purple-800 dark:border-purple-800/50">
+        <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-black/90 backdrop-blur-md border-b-2" style={{ borderImage: 'linear-gradient(to right, #704399, #C93727) 1' }}>
             <div className="w-full px-8 sm:px-12 lg:px-16 xl:px-20">
                 <div className="flex items-center justify-between h-20">
                     {/* Logo */}
@@ -35,12 +35,12 @@ export default function Navbar() {
                     </Link>
 
                     {/* Desktop Menu */}
-                    <div className="hidden md:flex items-center ltr:space-x-6 rtl:space-x-reverse rtl:gap-6">
+                    <div className="hidden md:flex items-center ltr:space-x-4 ltr:lg:space-x-6 rtl:space-x-reverse rtl:gap-4 rtl:lg:gap-6">
                         {navLinks.map((link) => (
                             <a
                                 key={link.name}
                                 href={link.href}
-                                className="text-black/90 dark:text-white/90 hover:text-purple-500 dark:hover:text-purple-500 transition-colors duration-200 text-base font-medium rtl:font-tajawal rtl:font-normal"
+                                className="text-black/90 dark:text-white/90 hover:text-purple-500 dark:hover:text-purple-500 transition-colors duration-200 text-sm lg:text-base font-medium rtl:font-tajawal rtl:font-normal"
                             >
                                 {link.name}
                             </a>
@@ -50,7 +50,7 @@ export default function Navbar() {
                         <ThemeToggle />
                         <LanguageSwitcher />
 
-                        <button className="bg-gradient-to-r from-pink-800 to-purple-800 text-white px-6 py-2.5 rounded-full text-base font-medium hover:shadow-lg hover:shadow-pink-500/50 transition-all duration-300">
+                        <button className="bg-gradient-to-r from-brand-purple to-brand-red text-white px-4 lg:px-6 py-2 lg:py-2.5 rounded-full text-sm lg:text-base font-medium hover:shadow-lg hover:shadow-brand-red/50 transition-all duration-300">
                             {t('nav.contactUs')}
                         </button>
                     </div>
@@ -90,8 +90,8 @@ export default function Navbar() {
                             {link.name}
                         </a>
                     ))}
-                    <button className="w-full bg-gradient-to-r from-pink-500 to-purple-600 text-white px-4 py-3 rounded-full text-base font-medium hover:shadow-lg hover:shadow-pink-500/50 transition-all mt-2">
-                        Contact Us
+                    <button className="w-full bg-gradient-to-r from-brand-purple to-brand-red text-white px-4 py-3 rounded-full text-base font-medium hover:shadow-lg hover:shadow-brand-red/50 transition-all mt-2">
+                        {t('nav.contactUs')}
                     </button>
                 </div>
             </motion.div>
