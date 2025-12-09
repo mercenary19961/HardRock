@@ -1,0 +1,28 @@
+/* SF Pro Font Faces */
+
+/* SF Pro Bold - for line1 and line2 */
+@font-face {
+    font-family: 'SF Pro';
+    src: url('./SF-Pro-Display-Bold.otf') format('opentype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* SF Pro Thin - for gradient text */
+@font-face {
+    font-family: 'SF Pro';
+    src: url('./SF-Pro-Display-Thin.otf') format('opentype');
+    font-weight: 100;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* SF Pro Light - for CTA button */
+@font-face {
+    font-family: 'SF Pro';
+    src: url('./SF-Pro-Display-Light.otf') format('opentype');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
