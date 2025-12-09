@@ -40,7 +40,7 @@ export default function Navbar() {
                             <a
                                 key={link.name}
                                 href={link.href}
-                                className="text-black/90 dark:text-white/90 hover:text-purple-500 dark:hover:text-purple-500 transition-colors duration-200 text-sm lg:text-base font-medium rtl:font-tajawal rtl:font-normal"
+                                className="text-black/90 dark:text-white/90 hover:!text-brand-purple transition-all duration-200 text-sm lg:text-base font-medium rtl:font-tajawal rtl:font-normal"
                             >
                                 {link.name}
                             </a>

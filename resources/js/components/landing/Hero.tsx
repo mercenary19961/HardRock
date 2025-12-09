@@ -93,7 +93,7 @@ export default function Hero() {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8, delay: 0.6 }}
                         >
-                            <button className="group relative bg-white hover:bg-gradient-to-r hover:from-brand-purple hover:to-brand-red dark:bg-white border-2 border-gray-300 dark:border-transparent px-10 py-4 md:px-24 rounded-full text-xl md:text-2xl font-medium hover:shadow-2xl hover:shadow-brand-red/20 transition-all duration-300 hover:scale-105 tracking-wide rtl:font-cairo overflow-hidden">
+                            <button className="group relative bg-white hover:bg-gradient-to-r hover:from-brand-purple hover:to-brand-red dark:bg-white border-2 border-white dark:border-white px-10 py-4 md:px-24 rounded-full text-xl md:text-2xl font-medium hover:shadow-2xl hover:shadow-brand-red/20 transition-all duration-300 hover:scale-105 tracking-wide rtl:font-cairo overflow-hidden">
                                 <span className="relative z-10 bg-gradient-to-r from-brand-purple to-brand-red bg-clip-text text-transparent group-hover:text-white transition-all duration-300">
                                     {t('cta')}
                                 </span>
