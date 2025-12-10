@@ -78,40 +78,39 @@ export default function Services() {
             <div className="absolute top-1/2 ltr:left-1/3 rtl:right-1/3 w-32 h-32 bg-red-500/15 dark:bg-red-500/25 rounded-full blur-3xl" />
 
             <div className="relative z-10 w-full px-8 sm:px-12 lg:px-16 xl:px-20">
-                <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start" dir="ltr">
+                <div className="grid lg:grid-cols-2  items-start" dir="ltr">
                     {/* Services List - Left for English, Right for Arabic */}
                     <motion.div
                         initial={{ opacity: 0, x: isArabic ? 50 : -50 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.8 }}
                         viewport={{ once: true }}
-                        className={`space-y-6 ${isArabic ? 'lg:order-2' : 'lg:order-1'}`}
+                        className={`space-y-6 flex flex-col ${isArabic ? 'lg:order-2 items-start lg:pr-36' : 'lg:order-1 items-start lg:ml-20'}`}
                         dir={isArabic ? 'rtl' : 'ltr'}
                     >
                         {services.map((service) => {
                             const isSelected = selectedService.id === service.id;
 
                             return (
-                                <div key={service.id} className="flex">
-                                    <button
+                                <button
+                                        key={service.id}
                                         onClick={() => setSelectedService(service)}
-                                        className={`text-left rtl:text-right px-8 py-6 rounded-full transition-all duration-300 ${
+                                        className={`px-8 py-6 rounded-full transition-all duration-300 ${
                                             isSelected
                                                 ? 'bg-gradient-to-r from-brand-purple to-brand-red shadow-lg shadow-brand-purple/30'
                                                 : 'bg-transparent hover:bg-gray-100 dark:hover:bg-white/5'
                                         } ${
                                             isArabic
                                                 ? isSelected
-                                                    ? 'font-tajawal font-light text-white'
-                                                    : 'font-tajawal font-extralight text-black dark:text-white'
+                                                    ? 'font-tajawal font-light text-white text-right'
+                                                    : 'font-tajawal font-extralight text-black dark:text-white text-right'
                                                 : isSelected
-                                                    ? 'font-poppins font-light text-white'
-                                                    : 'font-poppins font-extralight text-black dark:text-white'
+                                                    ? 'font-poppins font-light text-white text-left'
+                                                    : 'font-poppins font-extralight text-black dark:text-white text-left'
                                         } text-lg md:text-xl lg:text-2xl xl:text-3xl`}
                                     >
                                         {service.name}
                                     </button>
-                                </div>
                             );
                         })}
                     </motion.div>
