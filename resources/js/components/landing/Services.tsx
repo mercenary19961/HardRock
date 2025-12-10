@@ -1,135 +1,163 @@
-import { motion, useMotionTemplate, useMotionValue } from 'framer-motion';
-import { BarChart3, Bot, Brain, Globe, Megaphone, Zap } from 'lucide-react';
-import { MouseEvent } from 'react';
-import { cn } from '@/lib/utils';
-
-const services = [
-    {
-        title: 'AI Strategy',
-        description: 'Leverage machine learning to predict trends and optimize campaigns.',
-        icon: Brain,
-        className: "md:col-span-2",
-        gradient: "from-purple-500/20 to-blue-500/20"
-    },
-    {
-        title: 'Digital Marketing',
-        description: 'Full-service digital marketing campaigns that drive real ROI.',
-        icon: Megaphone,
-        className: "md:col-span-1",
-        gradient: "from-blue-500/20 to-cyan-500/20"
-    },
-    {
-        title: 'Automation',
-        description: 'Streamline your workflows with intelligent process automation.',
-        icon: Bot,
-        className: "md:col-span-1",
-        gradient: "from-green-500/20 to-emerald-500/20"
-    },
-    {
-        title: 'Global Reach',
-        description: 'Expand your brand presence across international markets.',
-        icon: Globe,
-        className: "md:col-span-2",
-        gradient: "from-orange-500/20 to-red-500/20"
-    },
-    {
-        title: 'Data Analytics',
-        description: 'Deep insights into customer behavior and market performance.',
-        icon: BarChart3,
-        className: "md:col-span-1",
-        gradient: "from-pink-500/20 to-rose-500/20"
-    },
-    {
-        title: 'Rapid Scaling',
-        description: 'Growth hacking strategies designed for startups and scale-ups.',
-        icon: Zap,
-        className: "md:col-span-2",
-        gradient: "from-yellow-500/20 to-amber-500/20"
-    },
-];
-
-function ServiceCard({ service, index }: { service: typeof services[0], index: number }) {
-    const mouseX = useMotionValue(0);
-    const mouseY = useMotionValue(0);
-
-    function handleMouseMove({ currentTarget, clientX, clientY }: MouseEvent) {
-        const { left, top } = currentTarget.getBoundingClientRect();
-        mouseX.set(clientX - left);
-        mouseY.set(clientY - top);
-    }
-
-    return (
-        <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: index * 0.1 }}
-            className={cn(
-                "group relative rounded-3xl border border-white/10 bg-card overflow-hidden",
-                service.className
-            )}
-            onMouseMove={handleMouseMove}
-        >
-            <motion.div
-                className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 transition duration-300 group-hover:opacity-100"
-                style={{
-                    background: useMotionTemplate`
-                        radial-gradient(
-                            650px circle at ${mouseX}px ${mouseY}px,
-                            rgba(255,255,255,0.1),
-                            transparent 80%
-                        )
-                    `,
-                }}
-            />
-            <div className="relative h-full p-8 flex flex-col justify-between z-10">
-                <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center mb-8 bg-gradient-to-br", service.gradient)}>
-                    <service.icon className="w-7 h-7 text-foreground" />
-                </div>
-                
-                <div>
-                    <h3 className="text-2xl font-bold mb-3">{service.title}</h3>
-                    <p className="text-muted-foreground leading-relaxed">{service.description}</p>
-                </div>
-
-                <div className="absolute bottom-0 right-0 p-8 opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
-                    <ArrowRight className="w-6 h-6 text-primary" />
-                </div>
-            </div>
-        </motion.div>
-    );
-}
-
-import { ArrowRight } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Link } from '@inertiajs/react';
 
 export default function Services() {
-    return (
-        <section id="services" className="py-32 bg-muted/30">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="text-center mb-20">
-                    <motion.h2
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        className="text-4xl md:text-5xl font-bold mb-6"
-                    >
-                        Our Expertise
-                    </motion.h2>
-                    <motion.p
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.1 }}
-                        className="text-xl text-muted-foreground max-w-2xl mx-auto"
-                    >
-                        Comprehensive solutions bridging the gap between traditional marketing and artificial intelligence.
-                    </motion.p>
-                </div>
+    const { t, i18n } = useTranslation('services');
+    const isArabic = i18n.language === 'ar';
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {services.map((service, index) => (
-                        <ServiceCard key={service.title} service={service} index={index} />
-                    ))}
+    const services = t('items', { returnObjects: true }) as Array<{
+        id: string;
+        name: string;
+        description: string;
+        image?: string;
+        imageLight?: string;
+        imageDark?: string;
+        link: string;
+    }>;
+
+    const [selectedService, setSelectedService] = useState(services[0]);
+
+    // Determine which image to use
+    const getServiceImage = (service: typeof selectedService) => {
+        if (service.imageLight && service.imageDark) {
+            return {
+                light: service.imageLight,
+                dark: service.imageDark,
+            };
+        }
+        return {
+            light: service.image,
+            dark: service.image,
+        };
+    };
+
+    const currentImage = getServiceImage(selectedService);
+
+    return (
+        <section id="services" className="relative py-20 md:py-32 overflow-hidden bg-white dark:bg-black">
+            {/* Background Blurs */}
+            <div className="absolute top-20 ltr:left-20 rtl:right-20 w-40 h-40 bg-purple-500/20 dark:bg-purple-500/30 rounded-full blur-3xl" />
+            <div className="absolute bottom-40 ltr:right-20 rtl:left-20 w-48 h-48 bg-pink-500/20 dark:bg-pink-500/30 rounded-full blur-3xl" />
+            <div className="absolute top-1/2 ltr:left-1/3 rtl:right-1/3 w-32 h-32 bg-red-500/15 dark:bg-red-500/25 rounded-full blur-3xl" />
+
+            <div className="relative z-10 w-full px-8 sm:px-12 lg:px-16 xl:px-20">
+                <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+                    {/* Services List - Left for English, Right for Arabic */}
+                    <motion.div
+                        initial={{ opacity: 0, x: isArabic ? 50 : -50 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.8 }}
+                        viewport={{ once: true }}
+                        className={`space-y-4 ${isArabic ? 'lg:order-2' : 'lg:order-1'}`}
+                    >
+                        {services.map((service) => {
+                            const isSelected = selectedService.id === service.id;
+
+                            return (
+                                <button
+                                    key={service.id}
+                                    onClick={() => setSelectedService(service)}
+                                    className={`w-full text-left rtl:text-right px-6 py-4 rounded-2xl transition-all duration-300 ${
+                                        isSelected
+                                            ? 'bg-gradient-to-r from-brand-purple to-brand-red shadow-lg shadow-brand-purple/30'
+                                            : 'bg-transparent border-2 border-gray-300 dark:border-white/20 hover:border-brand-purple dark:hover:border-brand-purple'
+                                    } ${
+                                        isArabic
+                                            ? isSelected
+                                                ? 'font-tajawal font-light text-white'
+                                                : 'font-tajawal font-extralight text-black dark:text-white'
+                                            : isSelected
+                                                ? 'font-poppins font-light text-white'
+                                                : 'font-poppins font-extralight text-black dark:text-white'
+                                    } text-lg md:text-xl lg:text-2xl`}
+                                >
+                                    {service.name}
+                                </button>
+                            );
+                        })}
+                    </motion.div>
+
+                    {/* Service Content - Right for English, Left for Arabic */}
+                    <motion.div
+                        initial={{ opacity: 0, x: isArabic ? -50 : 50 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.8 }}
+                        viewport={{ once: true }}
+                        className={`${isArabic ? 'lg:order-1 text-right' : 'lg:order-2 text-left'}`}
+                    >
+                        {/* Title */}
+                        <h1 className={`text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black mb-8 md:mb-12 ${
+                            isArabic ? 'font-tajawal' : 'font-sf-pro'
+                        }`}>
+                            <span className="text-black dark:text-white">
+                                {t('title').split('.')[0].split('؟')[0]}
+                            </span>
+                            <span className="bg-gradient-to-r from-brand-purple to-brand-red bg-clip-text text-transparent">
+                                {t('title').includes('.') ? '.' : '؟'}
+                            </span>
+                        </h1>
+
+                        {/* Service Image with Animation */}
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={selectedService.id}
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.9 }}
+                                transition={{ duration: 0.5 }}
+                                className="relative w-full max-w-md mx-auto lg:mx-0 rtl:lg:ml-auto mb-8"
+                            >
+                                {/* Glow effect */}
+                                <div className="absolute inset-0 bg-gradient-to-br from-brand-purple/20 to-brand-red/20 rounded-full blur-2xl" />
+
+                                {/* Light mode image */}
+                                <img
+                                    src={currentImage.light}
+                                    alt={selectedService.name}
+                                    className="relative z-10 w-full h-auto drop-shadow-2xl dark:hidden"
+                                />
+
+                                {/* Dark mode image */}
+                                <img
+                                    src={currentImage.dark}
+                                    alt={selectedService.name}
+                                    className="relative z-10 w-full h-auto drop-shadow-2xl hidden dark:block"
+                                />
+                            </motion.div>
+                        </AnimatePresence>
+
+                        {/* Service Description with Animation */}
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={selectedService.id + '-text'}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -20 }}
+                                transition={{ duration: 0.5 }}
+                            >
+                                <p className={`text-gray-700 dark:text-gray-300 mb-6 leading-relaxed ${
+                                    isArabic
+                                        ? 'text-lg md:text-xl lg:text-2xl font-tajawal font-normal'
+                                        : 'text-base md:text-lg lg:text-xl font-poppins font-normal'
+                                }`}>
+                                    {selectedService.description}
+                                </p>
+
+                                <Link
+                                    href={selectedService.link}
+                                    className={`inline-block text-brand-red hover:text-brand-purple transition-colors duration-300 ${
+                                        isArabic
+                                            ? 'text-lg md:text-xl font-tajawal font-medium'
+                                            : 'text-base md:text-lg font-poppins font-medium'
+                                    }`}
+                                >
+                                    {t('learnMore')} →
+                                </Link>
+                            </motion.div>
+                        </AnimatePresence>
+                    </motion.div>
                 </div>
             </div>
         </section>
