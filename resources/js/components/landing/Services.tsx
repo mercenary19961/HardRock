@@ -202,13 +202,13 @@ export default function Services() {
                                     </p>
 
                                     <span
-                                        className={`inline-block text-brand-red group-hover:text-brand-purple transition-colors duration-300 ${
+                                        className={`inline-block text-brand-purple group-hover:text-brand-red transition-colors duration-300 ${
                                             isArabic
                                                 ? 'text-lg md:text-xl font-tajawal font-medium'
                                                 : 'text-base md:text-lg font-poppins font-medium'
                                         }`}
                                     >
-                                        {t('learnMore')} →
+                                        {t('learnMore')} {isArabic ? '←' : '→'}
                                     </span>
                                 </motion.div>
                             </AnimatePresence>
