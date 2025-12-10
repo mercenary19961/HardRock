@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from '@inertiajs/react';
 
@@ -18,6 +18,41 @@ export default function Services() {
     }>;
 
     const [selectedService, setSelectedService] = useState(services[0]);
+
+    // Reset selected service when language changes
+    useEffect(() => {
+        setSelectedService(services[0]);
+    }, [i18n.language]);
+
+    // Get responsive margin based on screen width
+    const getImageMargin = () => {
+        if (typeof window !== 'undefined') {
+            const width = window.innerWidth;
+            if (width >= 1280) {
+                // xl screens and above
+                return { left: '100px', right: '100px' };
+            } else if (width >= 1024) {
+                // lg screens
+                return { left: '50px', right: '50px' };
+            } else if (width >= 768) {
+                // md screens
+                return { left: '20px', right: '20px' };
+            }
+        }
+        // Default for smaller screens
+        return { left: '0px', right: '0px' };
+    };
+
+    const [imageMargin, setImageMargin] = useState(getImageMargin());
+
+    // Update margin on window resize
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const handleResize = () => setImageMargin(getImageMargin());
+            window.addEventListener('resize', handleResize);
+            return () => window.removeEventListener('resize', handleResize);
+        }
+    }, []);
 
     // Determine which image to use
     const getServiceImage = (service: typeof selectedService) => {
@@ -89,15 +124,22 @@ export default function Services() {
                         className={`${isArabic ? 'lg:order-1 text-right' : 'lg:order-2 text-left'}`}
                     >
                         {/* Title */}
-                        <h1 className={`text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black mb-10 md:mb-12 ${
+                        <h1 className={`text-4xl md:text-5xl lg:text-5xl xl:text-7xl font-black mb-10 md:mb-12 ${
                             isArabic ? 'font-tajawal' : 'font-sf-pro'
                         }`}>
-                            <span className="text-black dark:text-white">
-                                {t('title').split('.')[0].split('؟')[0]}
-                            </span>
-                            <span className="bg-gradient-to-r from-brand-purple to-brand-red bg-clip-text text-transparent">
-                                {t('title').includes('.') ? '.' : '؟'}
-                            </span>
+                            {isArabic ? (
+                                <>
+                                    <span className="text-black dark:text-white">ماذا </span>
+                                    <span className="bg-gradient-to-r from-brand-purple to-brand-red bg-clip-text text-transparent">نقدم</span>
+                                    <span className="text-black dark:text-white">؟</span>
+                                </>
+                            ) : (
+                                <>
+                                    <span className="text-black dark:text-white">We Help You </span>
+                                    <span className="bg-gradient-to-r from-brand-purple to-brand-red bg-clip-text text-transparent">With</span>
+                                    <span className="text-black dark:text-white">.</span>
+                                </>
+                            )}
                         </h1>
 
                         {/* Service Image with Animation */}
@@ -108,8 +150,12 @@ export default function Services() {
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.9 }}
                                 transition={{ duration: 0.5 }}
-                                className="relative w-full max-w-sm mx-auto lg:mx-0 rtl:lg:ml-auto mb-8"
-                                style={{ height: '280px' }}
+                                className="relative w-full max-w-sm mb-8 flex items-center justify-center"
+                                style={{
+                                    height: '280px',
+                                    marginLeft: imageMargin.left,
+                                    marginRight: imageMargin.right
+                                }}
                             >
                                 {/* Glow effect */}
                                 <div className="absolute inset-0 bg-gradient-to-br from-brand-purple/20 to-brand-red/20 rounded-full blur-2xl" />
@@ -139,12 +185,16 @@ export default function Services() {
                                 exit={{ opacity: 0, y: -20 }}
                                 transition={{ duration: 0.5 }}
                                 style={{ minHeight: '180px' }}
+                                className="max-w-2xl"
                             >
-                                <p className={`text-gray-700 dark:text-gray-300 mb-6 leading-relaxed ${
-                                    isArabic
-                                        ? 'text-lg md:text-xl lg:text-2xl xl:text-3xl font-tajawal font-normal'
-                                        : 'text-base md:text-lg lg:text-xl xl:text-2xl font-poppins font-normal'
-                                }`}>
+                                <p
+                                    className={`text-gray-700 dark:text-gray-300 mb-6 ${
+                                        isArabic
+                                            ? 'text-lg md:text-xl lg:text-2xl xl:text-3xl font-tajawal font-normal'
+                                            : 'text-base md:text-lg lg:text-xl xl:text-2xl font-poppins font-normal'
+                                    }`}
+                                    style={{ lineHeight: '1.8' }}
+                                >
                                     {selectedService.description}
                                 </p>
 
