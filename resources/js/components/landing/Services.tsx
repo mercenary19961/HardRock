@@ -1,7 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from '@inertiajs/react';
 
 export default function Services() {
     const { t, i18n } = useTranslation('services');
@@ -96,14 +95,14 @@ export default function Services() {
             <div className="absolute top-1/2 ltr:left-1/3 rtl:right-1/3 w-32 h-32 bg-red-500/15 dark:bg-red-500/25 rounded-full blur-3xl" />
 
             <div className="relative z-10 w-full px-8 sm:px-12 lg:px-16 xl:px-20">
-                <div className="grid lg:grid-cols-2  items-start" dir="ltr">
-                    {/* Services List - Left for English, Right for Arabic */}
+                <div className="flex flex-col lg:flex-row items-start gap-4" dir="ltr">
+                    {/* Services List */}
                     <motion.div
-                        initial={{ opacity: 0, x: isArabic ? 50 : -50 }}
+                        initial={{ opacity: 0, x: isArabic ? 50 : 50 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.8 }}
                         viewport={{ once: true }}
-                        className={`grid grid-cols-2 gap-4 mb-12 lg:mb-0 lg:flex lg:flex-col lg:space-y-6 ${isArabic ? 'lg:order-2 items-start lg:pr-36' : 'lg:order-1 items-start lg:ml-20'}`}
+                        className={`grid grid-cols-2 gap-4 mb-12 lg:mb-0 lg:flex lg:flex-col lg:space-y-6 lg:flex-1 items-start ${isArabic ? 'lg:pr-0' : 'lg:pl-40'}`}
                         dir={isArabic ? 'rtl' : 'ltr'}
                     >
                         {services.map((service) => {
@@ -133,17 +132,17 @@ export default function Services() {
                         })}
                     </motion.div>
 
-                    {/* Service Content - Right for English, Left for Arabic */}
-                    <div ref={serviceContentRef}>
+                    {/* Service Content */}
+                    <div ref={serviceContentRef} className="lg:flex-1">
                         <motion.div
-                            initial={{ opacity: 0, x: isArabic ? -50 : 50 }}
+                            initial={{ opacity: 0, x: isArabic ? -50 : -50 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.8 }}
                             viewport={{ once: true }}
-                            className={`${isArabic ? 'lg:order-1 text-right' : 'lg:order-2 text-left'}`}
+                            className={`${isArabic ? 'text-right pr-36' : 'text-left'}`}
                             dir={isArabic ? 'rtl' : 'ltr'}
                         >
-                            <Link href={selectedService.link} className="block cursor-pointer group">
+                            <div className="block group pointer-events-none">
                             {/* Title */}
                             <h1 className={`text-4xl md:text-5xl lg:text-5xl xl:text-7xl font-black mb-10 md:mb-12 ${
                                 isArabic ? 'font-tajawal' : 'font-sf-pro'
@@ -206,7 +205,7 @@ export default function Services() {
                                     exit={{ opacity: 0, y: -20 }}
                                     transition={{ duration: 0.5 }}
                                     style={{ minHeight: '180px' }}
-                                    className="max-w-2xl"
+                                    className="max-w-lg"
                                 >
                                     <p
                                         className={`text-gray-700 dark:text-gray-300 mb-6 ${
@@ -219,7 +218,8 @@ export default function Services() {
                                         {selectedService.description}
                                     </p>
 
-                                    <span
+                                    {/* Learn More button - Hidden until service pages are developed */}
+                                    {/* <span
                                         className={`inline-block text-brand-purple group-hover:text-brand-red transition-colors duration-300 ${
                                             isArabic
                                                 ? 'text-lg md:text-xl font-tajawal font-medium'
@@ -227,10 +227,10 @@ export default function Services() {
                                         }`}
                                     >
                                         {t('learnMore')} {isArabic ? '←' : '→'}
-                                    </span>
+                                    </span> */}
                                 </motion.div>
                             </AnimatePresence>
-                        </Link>
+                        </div>
                         </motion.div>
                     </div>
                 </div>
