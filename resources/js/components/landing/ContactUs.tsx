@@ -248,7 +248,7 @@ export default function ContactUs() {
                                         isArabic
                                             ? 'text-right font-tajawal font-normal'
                                             : 'text-left font-sf-pro-expanded font-thin'
-                                    } text-white text-lg`}
+                                    } text-black dark:text-white text-lg`}
                                     style={{
                                         border: 'none',
                                         borderTop: 'none',
@@ -278,8 +278,8 @@ export default function ContactUs() {
                                             : 'font-sf-pro-expanded font-thin text-left'
                                     } ${
                                         focusedField === 'personalName' || formData.personalName
-                                            ? 'text-white'
-                                            : 'text-gray-400'
+                                            ? 'text-black dark:text-white'
+                                            : 'text-gray-500 dark:text-gray-400'
                                     } text-lg`}
                                 >
                                     {isArabic ? 'الاســــــــــــم :' : 'PERSONAL NAME :'}
@@ -313,7 +313,7 @@ export default function ContactUs() {
                                         isArabic
                                             ? 'text-right font-tajawal font-normal'
                                             : 'text-left font-sf-pro-expanded font-thin'
-                                    } text-white text-lg`}
+                                    } text-black dark:text-white text-lg`}
                                     style={{
                                         border: 'none',
                                         borderTop: 'none',
@@ -343,8 +343,8 @@ export default function ContactUs() {
                                             : 'font-sf-pro-expanded font-thin text-left'
                                     } ${
                                         focusedField === 'companyName' || formData.companyName
-                                            ? 'text-white'
-                                            : 'text-gray-400'
+                                            ? 'text-black dark:text-white'
+                                            : 'text-gray-500 dark:text-gray-400'
                                     } text-lg`}
                                 >
                                     {isArabic ? 'اســـــــــم الشــــركـــة :' : 'COMPANY NAME :'}
@@ -378,7 +378,7 @@ export default function ContactUs() {
                                         isArabic
                                             ? 'text-right font-tajawal font-normal'
                                             : 'text-left font-sf-pro-expanded font-thin'
-                                    } text-white text-lg`}
+                                    } text-black dark:text-white text-lg`}
                                     style={{
                                         border: 'none',
                                         borderTop: 'none',
@@ -408,8 +408,8 @@ export default function ContactUs() {
                                             : 'font-sf-pro-expanded font-thin text-left'
                                     } ${
                                         focusedField === 'phoneNumber' || formData.phoneNumber
-                                            ? 'text-white'
-                                            : 'text-gray-400'
+                                            ? 'text-black dark:text-white'
+                                            : 'text-gray-500 dark:text-gray-400'
                                     } text-lg`}
                                 >
                                     {isArabic ? 'رقـــــم الهـــاتــف :' : 'PHONE NUMBER :'}
@@ -443,7 +443,7 @@ export default function ContactUs() {
                                         isArabic
                                             ? 'text-right font-tajawal font-normal'
                                             : 'text-left font-sf-pro-expanded font-thin'
-                                    } text-white text-lg`}
+                                    } text-black dark:text-white text-lg`}
                                     style={{
                                         border: 'none',
                                         borderTop: 'none',
@@ -473,8 +473,8 @@ export default function ContactUs() {
                                             : 'font-sf-pro-expanded font-thin text-left'
                                     } ${
                                         focusedField === 'email' || formData.email
-                                            ? 'text-white'
-                                            : 'text-gray-400'
+                                            ? 'text-black dark:text-white'
+                                            : 'text-gray-500 dark:text-gray-400'
                                     } text-lg`}
                                 >
                                     {isArabic ? 'البريد الإلكترونــــــي :' : 'E-MAIL :'}
@@ -584,14 +584,13 @@ export default function ContactUs() {
                                     {isArabic ? 'ملاحظـــــــــات:' : 'More Details:'}
                                 </h2>
                                 <div
-                                    className="relative rounded-[3rem] p-[1px] transition-all duration-300"
-                                    style={{
-                                        background: (focusedField === 'moreDetails' || formData.moreDetails)
-                                            ? '#704399'
-                                            : '#ffffff'
-                                    }}
+                                    className={`relative rounded-[3rem] p-[1px] transition-all duration-300 ${
+                                        (focusedField === 'moreDetails' || formData.moreDetails)
+                                            ? 'bg-brand-purple'
+                                            : 'bg-black dark:bg-white'
+                                    }`}
                                 >
-                                    <div className="bg-black rounded-[3rem] p-6">
+                                    <div className="bg-white dark:bg-black rounded-[3rem] p-6">
                                         <textarea
                                             value={formData.moreDetails}
                                             onChange={(e) =>
@@ -604,7 +603,7 @@ export default function ContactUs() {
                                                 isArabic
                                                     ? 'font-tajawal font-light text-right'
                                                     : 'font-poppins font-light text-left'
-                                            } text-white text-base placeholder-gray-400 dark:placeholder-gray-500`}
+                                            } text-black dark:text-white text-base placeholder-gray-400 dark:placeholder-gray-500`}
                                             style={{ border: 'none', boxShadow: 'none' }}
                                         />
                                     </div>
