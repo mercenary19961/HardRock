@@ -17,7 +17,7 @@ export default function Footer() {
                                 <img src="/images/icon-location.png" alt="Location" className="w-10 h-10" />
                             </div>
                             <p className={`text-black dark:text-white text-sm md:text-base ${
-                                isArabic ? 'font-tajawal font-light' : 'font-poppins font-light'
+                                isArabic ? 'font-tajawal font-bold' : 'font-poppins font-light'
                             }`}>
                                 {t('address')}
                             </p>
@@ -31,7 +31,7 @@ export default function Footer() {
                             <a
                                 href={`tel:${t('phone')}`}
                                 className={`text-black dark:text-white text-sm md:text-base hover:text-brand-purple transition-colors ${
-                                    isArabic ? 'font-tajawal font-light' : 'font-poppins font-light'
+                                    isArabic ? 'font-tajawal font-bold' : 'font-poppins font-light'
                                 }`}
                             >
                                 {t('phone')}
@@ -46,7 +46,7 @@ export default function Footer() {
                             <a
                                 href={`mailto:${t('email')}`}
                                 className={`text-black dark:text-white text-sm md:text-base hover:text-brand-purple transition-colors ${
-                                    isArabic ? 'font-tajawal font-light' : 'font-poppins font-light'
+                                    isArabic ? 'font-tajawal font-bold' : 'font-poppins font-light'
                                 }`}
                             >
                                 {t('email')}
@@ -119,36 +119,39 @@ export default function Footer() {
                         <nav className="space-y-4">
                             <a
                                 href="#why-hardrock"
-                                className={`block text-black dark:text-white hover:text-brand-purple transition-colors text-sm md:text-base ${
-                                    isArabic ? 'font-tajawal font-light' : 'font-poppins font-light'
+                                className={`group block text-black dark:text-white transition-all duration-300 text-sm md:text-base relative pb-1 ${
+                                    isArabic ? 'font-tajawal font-bold' : 'font-poppins font-light'
                                 }`}
-                                style={isArabic ? {} : { textDecoration: 'underline', textUnderlineOffset: '4px' }}
                             >
                                 {t('menu.whyHardRock')}
+                                <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-gradient-to-r from-brand-purple to-brand-red group-hover:w-full transition-all duration-500"></span>
                             </a>
                             <a
                                 href="#services"
-                                className={`block text-black dark:text-white hover:text-brand-purple transition-colors text-sm md:text-base ${
-                                    isArabic ? 'font-tajawal font-light' : 'font-poppins font-light'
+                                className={`group block text-black dark:text-white transition-all duration-300 text-sm md:text-base relative pb-1 ${
+                                    isArabic ? 'font-tajawal font-bold' : 'font-poppins font-light'
                                 }`}
                             >
                                 {t('menu.services')}
+                                <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-gradient-to-r from-brand-purple to-brand-red group-hover:w-full transition-all duration-500"></span>
                             </a>
-                            <a
+                            {/* <a
                                 href="#our-team"
-                                className={`block text-black dark:text-white hover:text-brand-purple transition-colors text-sm md:text-base ${
-                                    isArabic ? 'font-tajawal font-light' : 'font-poppins font-light'
+                                className={`group block text-black dark:text-white transition-all duration-300 text-sm md:text-base relative pb-1 ${
+                                    isArabic ? 'font-tajawal font-bold' : 'font-poppins font-light'
                                 }`}
                             >
                                 {t('menu.ourTeam')}
-                            </a>
+                                <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-gradient-to-r from-brand-purple to-brand-red group-hover:w-full transition-all duration-500"></span>
+                            </a> */}
                             <a
                                 href="#contact-us"
-                                className={`block text-black dark:text-white hover:text-brand-purple transition-colors text-sm md:text-base ${
-                                    isArabic ? 'font-tajawal font-light' : 'font-poppins font-light'
+                                className={`group block text-black dark:text-white transition-all duration-300 text-sm md:text-base relative pb-1 ${
+                                    isArabic ? 'font-tajawal font-bold' : 'font-poppins font-light'
                                 }`}
                             >
                                 {t('menu.contactUs')}
+                                <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-gradient-to-r from-brand-purple to-brand-red group-hover:w-full transition-all duration-500"></span>
                             </a>
                         </nav>
                     </div>
@@ -157,7 +160,7 @@ export default function Footer() {
                 {/* Copyright */}
                 <div className="mt-16 pt-8 border-t border-gray-300 dark:border-gray-800 text-center">
                     <p className={`text-gray-500 dark:text-gray-400 text-xs md:text-sm ${
-                        isArabic ? 'font-tajawal font-light' : 'font-poppins font-light'
+                        isArabic ? 'font-tajawal font-bold' : 'font-poppins font-light'
                     }`}>
                         {t('copyright')}
                     </p>
