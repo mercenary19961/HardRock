@@ -180,7 +180,7 @@ export default function ContactUs() {
                     style={{
                         backgroundImage: 'url(/images/contact-us.png)',
                         backgroundPosition: 'center center',
-                        opacity: 0.6,
+                        opacity: 1,
                     }}
                 />
             </div>
@@ -533,79 +533,83 @@ export default function ContactUs() {
                         viewport={{ once: true }}
                         className={`${isArabic ? 'lg:order-2' : 'lg:order-2'} relative`}
                     >
-                        {/* Services Section */}
-                        <div className="mb-12 relative z-10">
-                            <h2
-                                className={`text-2xl md:text-3xl mb-6 ${
-                                    isArabic
-                                        ? 'font-tajawal font-normal text-right'
-                                        : 'font-sf-pro-expanded font-light text-left'
-                                } text-black dark:text-white`}
-                            >
-                                {isArabic ? 'الخدمات المهتم بها' : 'Services you looking for'}
-                            </h2>
-                            <div className="flex flex-wrap gap-3">
-                                {services.map((service) => {
-                                    const isSelected = formData.services.includes(service);
-                                    return (
-                                        <span
-                                            key={service}
-                                            onClick={() => handleServiceToggle(service)}
-                                            className={`cursor-pointer transition-all duration-300 ${
-                                                isArabic
-                                                    ? 'font-tajawal font-extralight'
-                                                    : 'font-poppins font-extralight'
-                                            } ${
-                                                isSelected
-                                                    ? 'text-white'
-                                                    : 'text-gray-400 hover:text-gray-300'
-                                            }`}
-                                        >
-                                            {service}
-                                            {isSelected && <span className={isArabic ? 'mr-2' : 'ml-2'}>●</span>}
-                                        </span>
-                                    );
-                                })}
+                        {/* Services and More Details Container */}
+                        <div className={`relative z-10 space-y-12 ${
+                            isArabic ? 'ml-32 lg:ml-40 xl:ml-48' : 'mr-32 lg:mr-40 xl:mr-48'
+                        }`}>
+                            {/* Services Section */}
+                            <div>
+                                <h2
+                                    className={`text-2xl md:text-3xl mb-6 ${
+                                        isArabic
+                                            ? 'font-tajawal font-normal text-right'
+                                            : 'font-sf-pro-expanded font-light text-left'
+                                    } text-black dark:text-white`}
+                                >
+                                    {isArabic ? 'الخدمات المهتم بها' : 'Services you are looking for'}
+                                </h2>
+                                <div className="flex flex-wrap gap-3">
+                                    {services.map((service) => {
+                                        const isSelected = formData.services.includes(service);
+                                        return (
+                                            <span
+                                                key={service}
+                                                onClick={() => handleServiceToggle(service)}
+                                                className={`cursor-pointer transition-all duration-300 ${
+                                                    isArabic
+                                                        ? 'font-tajawal font-extralight'
+                                                        : 'font-poppins font-extralight'
+                                                } ${
+                                                    isSelected
+                                                        ? 'text-white'
+                                                        : 'text-gray-400 hover:text-gray-300'
+                                                }`}
+                                            >
+                                                {service}
+                                                {isSelected && <span className={isArabic ? 'mr-2' : 'ml-2'}>●</span>}
+                                            </span>
+                                        );
+                                    })}
+                                </div>
                             </div>
-                        </div>
 
-                        {/* More Details Section */}
-                        <div className="relative z-10">
-                            <h2
-                                className={`text-2xl md:text-3xl mb-6 ${
-                                    isArabic
-                                        ? 'font-tajawal font-normal text-right'
-                                        : 'font-sf-pro-expanded font-light text-left'
-                                } text-black dark:text-white`}
-                            >
-                                {isArabic ? 'ملاحظـــــــــات' : 'More Details'}
-                            </h2>
-                            <div
-                                className={`border-2 rounded-3xl p-6 ${
-                                    focusedField === 'moreDetails'
-                                        ? 'border-brand-purple dark:border-brand-red'
-                                        : 'border-gray-300 dark:border-gray-700'
-                                } transition-all duration-300`}
-                            >
-                                <textarea
-                                    value={formData.moreDetails}
-                                    onChange={(e) =>
-                                        setFormData({ ...formData, moreDetails: e.target.value })
-                                    }
-                                    onFocus={() => setFocusedField('moreDetails')}
-                                    onBlur={() => setFocusedField(null)}
-                                    rows={6}
-                                    placeholder={
+                            {/* More Details Section */}
+                            <div>
+                                <h2
+                                    className={`text-2xl md:text-3xl mb-6 ${
                                         isArabic
-                                            ? 'اريد ملعقة كبيرة من العسل\nwelcome to jordan any time'
-                                            : 'اريد ملعقة كبيرة من العسل\nwelcome to jordan any time'
-                                    }
-                                    className={`w-full bg-transparent outline-none resize-none ${
-                                        isArabic
-                                            ? 'font-tajawal font-light text-right'
-                                            : 'font-poppins font-light text-left'
-                                    } text-black dark:text-white text-base placeholder-gray-400 dark:placeholder-gray-500`}
-                                />
+                                            ? 'font-tajawal font-normal text-right'
+                                            : 'font-sf-pro-expanded font-light text-left'
+                                    } text-black dark:text-white`}
+                                >
+                                    {isArabic ? 'ملاحظـــــــــات' : 'More Details'}
+                                </h2>
+                                <div
+                                    className="relative rounded-[1rem] p-[1px] transition-all duration-300"
+                                    style={{
+                                        background: (focusedField === 'moreDetails' || formData.moreDetails)
+                                            ? '#704399'
+                                            : '#ffffff'
+                                    }}
+                                >
+                                    <div className="bg-black rounded-[1rem] p-6">
+                                        <textarea
+                                            value={formData.moreDetails}
+                                            onChange={(e) =>
+                                                setFormData({ ...formData, moreDetails: e.target.value })
+                                            }
+                                            onFocus={() => setFocusedField('moreDetails')}
+                                            onBlur={() => setFocusedField(null)}
+                                            rows={6}
+                                            className={`w-full bg-transparent outline-none resize-none border-0 ${
+                                                isArabic
+                                                    ? 'font-tajawal font-light text-right'
+                                                    : 'font-poppins font-light text-left'
+                                            } text-white text-base placeholder-gray-400 dark:placeholder-gray-500`}
+                                            style={{ border: 'none', boxShadow: 'none' }}
+                                        />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </motion.div>
