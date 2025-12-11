@@ -197,7 +197,7 @@ export default function ContactUs() {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8 }}
                     viewport={{ once: true }}
-                    className={`text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black mb-16 md:mb-20 ${
+                    className={`text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black mb-12 md:mb-16 ${
                         isArabic ? 'font-tajawal text-right' : 'font-sf-pro text-left'
                     }`}
                 >
@@ -227,7 +227,7 @@ export default function ContactUs() {
                         viewport={{ once: true }}
                         className={isArabic ? 'lg:order-1' : 'lg:order-1'}
                     >
-                        <form onSubmit={handleSubmit} className="space-y-8">
+                        <form onSubmit={handleSubmit} className="space-y-9">
                             {/* Personal Name */}
                             <div className="relative">
                                 <input
@@ -244,7 +244,7 @@ export default function ContactUs() {
                                         validateField('personalName', formData.personalName);
                                         if (!formData.personalName) setFocusedField(null);
                                     }}
-                                    className={`w-full bg-transparent py-3 px-0 outline-none transition-all duration-300 ${
+                                    className={`w-full bg-transparent py-4 px-0 outline-none transition-all duration-300 ${
                                         isArabic
                                             ? 'text-right font-tajawal font-normal'
                                             : 'text-left font-sf-pro-expanded font-thin'
@@ -309,7 +309,7 @@ export default function ContactUs() {
                                         validateField('companyName', formData.companyName);
                                         if (!formData.companyName) setFocusedField(null);
                                     }}
-                                    className={`w-full bg-transparent py-3 px-0 outline-none transition-all duration-300 ${
+                                    className={`w-full bg-transparent py-4 px-0 outline-none transition-all duration-300 ${
                                         isArabic
                                             ? 'text-right font-tajawal font-normal'
                                             : 'text-left font-sf-pro-expanded font-thin'
@@ -374,7 +374,7 @@ export default function ContactUs() {
                                         validateField('phoneNumber', formData.phoneNumber);
                                         if (!formData.phoneNumber) setFocusedField(null);
                                     }}
-                                    className={`w-full bg-transparent py-3 px-0 outline-none transition-all duration-300 ${
+                                    className={`w-full bg-transparent py-4 px-0 outline-none transition-all duration-300 ${
                                         isArabic
                                             ? 'text-right font-tajawal font-normal'
                                             : 'text-left font-sf-pro-expanded font-thin'
@@ -439,7 +439,7 @@ export default function ContactUs() {
                                         validateField('email', formData.email);
                                         if (!formData.email) setFocusedField(null);
                                     }}
-                                    className={`w-full bg-transparent py-3 px-0 outline-none transition-all duration-300 ${
+                                    className={`w-full bg-transparent py-4 px-0 outline-none transition-all duration-300 ${
                                         isArabic
                                             ? 'text-right font-tajawal font-normal'
                                             : 'text-left font-sf-pro-expanded font-thin'
@@ -534,8 +534,8 @@ export default function ContactUs() {
                         className={`${isArabic ? 'lg:order-2' : 'lg:order-2'} relative`}
                     >
                         {/* Services and More Details Container */}
-                        <div className={`relative z-10 space-y-12 ${
-                            isArabic ? 'ml-32 lg:ml-40 xl:ml-48' : 'mr-32 lg:mr-40 xl:mr-48'
+                        <div className={`relative z-10 space-y-5 md:space-y-5 lg:space-y-7 xl:space-y-9${
+                            isArabic ? 'ml-32 lg:ml-40 xl:ml-48' : 'mr-32 lg:mr-40 xl:mr-52'
                         }`}>
                             {/* Services Section */}
                             <div>
@@ -546,27 +546,26 @@ export default function ContactUs() {
                                             : 'font-sf-pro-expanded font-light text-left'
                                     } text-black dark:text-white`}
                                 >
-                                    {isArabic ? 'الخدمات المهتم بها' : 'Services you are looking for'}
+                                    {isArabic ? 'الخدمات المهتم بها' : 'Services you are looking for?'}
                                 </h2>
-                                <div className="flex flex-wrap gap-3">
+                                <div className="flex flex-wrap gap-0.5 sm:gap-1 lg:gap-2 xl:gap-3">
                                     {services.map((service) => {
                                         const isSelected = formData.services.includes(service);
                                         return (
                                             <span
                                                 key={service}
                                                 onClick={() => handleServiceToggle(service)}
-                                                className={`cursor-pointer transition-all duration-300 ${
+                                                className={`cursor-pointer transition-all duration-300 px-4 py-2 rounded-full ${
                                                     isArabic
                                                         ? 'font-tajawal font-extralight'
                                                         : 'font-poppins font-extralight'
                                                 } ${
                                                     isSelected
-                                                        ? 'text-white'
+                                                        ? 'text-white bg-gradient-to-r from-brand-purple/70 to-brand-red/70'
                                                         : 'text-gray-400 hover:text-gray-300'
                                                 }`}
                                             >
                                                 {service}
-                                                {isSelected && <span className={isArabic ? 'mr-2' : 'ml-2'}>●</span>}
                                             </span>
                                         );
                                     })}
@@ -582,17 +581,17 @@ export default function ContactUs() {
                                             : 'font-sf-pro-expanded font-light text-left'
                                     } text-black dark:text-white`}
                                 >
-                                    {isArabic ? 'ملاحظـــــــــات' : 'More Details'}
+                                    {isArabic ? 'ملاحظـــــــــات' : 'More Details:'}
                                 </h2>
                                 <div
-                                    className="relative rounded-[1rem] p-[1px] transition-all duration-300"
+                                    className="relative rounded-[3rem] p-[1px] transition-all duration-300"
                                     style={{
                                         background: (focusedField === 'moreDetails' || formData.moreDetails)
                                             ? '#704399'
                                             : '#ffffff'
                                     }}
                                 >
-                                    <div className="bg-black rounded-[1rem] p-6">
+                                    <div className="bg-black rounded-[3rem] p-6">
                                         <textarea
                                             value={formData.moreDetails}
                                             onChange={(e) =>
