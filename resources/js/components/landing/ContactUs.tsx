@@ -474,9 +474,9 @@ export default function ContactUs() {
                                 <button
                                     type="submit"
                                     disabled={!isFormValid()}
-                                    className={`w-2/4 py-6 px-8 rounded-full text-2xl transition-all duration-300 ${
+                                    className={`relative w-2/4 py-6 px-8 rounded-full text-2xl transition-all duration-300 ${
                                         isFormValid()
-                                            ? 'bg-gradient-to-r from-brand-purple to-brand-red text-white hover:shadow-lg hover:shadow-brand-purple/30 cursor-pointer'
+                                            ? 'bg-gradient-to-r from-brand-purple to-brand-red text-white cursor-pointer hover:scale-105 hover:shadow-2xl hover:shadow-brand-purple/50 active:scale-95 animate-pulse-glow'
                                             : 'bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-500 cursor-not-allowed'
                                     } ${
                                         isArabic
@@ -487,6 +487,22 @@ export default function ContactUs() {
                                     {isArabic ? 'قــــــــدّم' : 'SUBMIT'}
                                 </button>
                             </div>
+
+                            <style dangerouslySetInnerHTML={{
+                                __html: `
+                                    @keyframes pulse-glow {
+                                        0%, 100% {
+                                            box-shadow: 0 0 20px rgba(112, 67, 153, 0.4), 0 0 40px rgba(201, 55, 39, 0.2);
+                                        }
+                                        50% {
+                                            box-shadow: 0 0 30px rgba(112, 67, 153, 0.6), 0 0 60px rgba(201, 55, 39, 0.3);
+                                        }
+                                    }
+                                    .animate-pulse-glow {
+                                        animation: pulse-glow 2s ease-in-out infinite;
+                                    }
+                                `
+                            }} />
                         </form>
                     </motion.div>
 
