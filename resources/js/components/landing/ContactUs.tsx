@@ -25,6 +25,90 @@ export default function ContactUs() {
     });
 
     const [focusedField, setFocusedField] = useState<string | null>(null);
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
+    // Validation functions
+    const validatePersonalName = (name: string): string => {
+        const trimmed = name.trim();
+        if (!trimmed) return isArabic ? 'الاسم مطلوب' : 'Name is required';
+
+        const names = trimmed.split(/\s+/);
+        if (names.length < 2) {
+            return isArabic ? 'يجب إدخال الاسم الأول والأخير' : 'First and last name required';
+        }
+
+        for (const n of names) {
+            if (n.length < 2) {
+                return isArabic ? 'كل اسم يجب أن يحتوي على حرفين على الأقل' : 'Each name must be at least 2 letters';
+            }
+        }
+
+        return '';
+    };
+
+    const validateCompanyName = (name: string): string => {
+        const trimmed = name.trim();
+        if (trimmed && trimmed.length < 2) {
+            return isArabic ? 'اسم الشركة يجب أن يحتوي على حرفين على الأقل' : 'Company name must be at least 2 letters';
+        }
+        return '';
+    };
+
+    const validatePhoneNumber = (phone: string): string => {
+        const trimmed = phone.trim();
+        if (!trimmed) return isArabic ? 'رقم الهاتف مطلوب' : 'Phone number is required';
+
+        // International phone format: allows +, spaces, hyphens, parentheses, and digits
+        // Minimum 7 digits, maximum 15 digits (E.164 standard)
+        const phoneRegex = /^[\+]?[(]?[0-9]{1,4}[)]?[-\s\.]?[(]?[0-9]{1,4}[)]?[-\s\.]?[0-9]{1,5}[-\s\.]?[0-9]{1,5}$/;
+        const digitsOnly = trimmed.replace(/\D/g, '');
+
+        if (digitsOnly.length < 7 || digitsOnly.length > 15) {
+            return isArabic ? 'رقم الهاتف غير صالح' : 'Invalid phone number';
+        }
+
+        if (!phoneRegex.test(trimmed)) {
+            return isArabic ? 'رقم الهاتف غير صالح' : 'Invalid phone number';
+        }
+
+        return '';
+    };
+
+    const validateEmail = (email: string): string => {
+        const trimmed = email.trim();
+        if (!trimmed) return isArabic ? 'البريد الإلكتروني مطلوب' : 'Email is required';
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(trimmed)) {
+            return isArabic ? 'البريد الإلكتروني غير صالح' : 'Invalid email address';
+        }
+
+        return '';
+    };
+
+    const validateField = (fieldName: string, value: string) => {
+        let error = '';
+
+        switch (fieldName) {
+            case 'personalName':
+                error = validatePersonalName(value);
+                break;
+            case 'companyName':
+                error = validateCompanyName(value);
+                break;
+            case 'phoneNumber':
+                error = validatePhoneNumber(value);
+                break;
+            case 'email':
+                error = validateEmail(value);
+                break;
+        }
+
+        setErrors(prev => ({
+            ...prev,
+            [fieldName]: error
+        }));
+    };
 
     const availableServices = [
         'Paid Ads',
@@ -130,13 +214,17 @@ export default function ContactUs() {
                                 <input
                                     type="text"
                                     value={formData.personalName}
-                                    onChange={(e) =>
-                                        setFormData({ ...formData, personalName: e.target.value })
-                                    }
+                                    onChange={(e) => {
+                                        setFormData({ ...formData, personalName: e.target.value });
+                                        if (errors.personalName) {
+                                            validateField('personalName', e.target.value);
+                                        }
+                                    }}
                                     onFocus={() => setFocusedField('personalName')}
-                                    onBlur={() =>
-                                        !formData.personalName && setFocusedField(null)
-                                    }
+                                    onBlur={() => {
+                                        validateField('personalName', formData.personalName);
+                                        if (!formData.personalName) setFocusedField(null);
+                                    }}
                                     className={`w-full bg-transparent py-3 px-0 outline-none transition-all duration-300 ${
                                         isArabic
                                             ? 'text-right font-tajawal font-normal'
@@ -147,9 +235,11 @@ export default function ContactUs() {
                                         borderTop: 'none',
                                         borderLeft: 'none',
                                         borderRight: 'none',
-                                        borderBottom: focusedField === 'personalName'
+                                        borderBottom: errors.personalName
                                             ? '2px solid #c93727'
-                                            : '2px solid #704399',
+                                            : (focusedField === 'personalName' || formData.personalName)
+                                                ? '2px solid #704399'
+                                                : '2px solid #ffffff',
                                         outline: 'none',
                                         boxShadow: 'none',
                                     }}
@@ -175,6 +265,13 @@ export default function ContactUs() {
                                 >
                                     {isArabic ? 'الاســــــــــــم :' : 'PERSONAL NAME :'}
                                 </label>
+                                {errors.personalName && (
+                                    <p className={`mt-1 text-sm text-brand-red ${
+                                        isArabic ? 'text-right font-tajawal' : 'text-left font-poppins'
+                                    }`}>
+                                        {errors.personalName}
+                                    </p>
+                                )}
                             </div>
 
                             {/* Company Name */}
@@ -182,13 +279,17 @@ export default function ContactUs() {
                                 <input
                                     type="text"
                                     value={formData.companyName}
-                                    onChange={(e) =>
-                                        setFormData({ ...formData, companyName: e.target.value })
-                                    }
+                                    onChange={(e) => {
+                                        setFormData({ ...formData, companyName: e.target.value });
+                                        if (errors.companyName) {
+                                            validateField('companyName', e.target.value);
+                                        }
+                                    }}
                                     onFocus={() => setFocusedField('companyName')}
-                                    onBlur={() =>
-                                        !formData.companyName && setFocusedField(null)
-                                    }
+                                    onBlur={() => {
+                                        validateField('companyName', formData.companyName);
+                                        if (!formData.companyName) setFocusedField(null);
+                                    }}
                                     className={`w-full bg-transparent py-3 px-0 outline-none transition-all duration-300 ${
                                         isArabic
                                             ? 'text-right font-tajawal font-normal'
@@ -199,9 +300,11 @@ export default function ContactUs() {
                                         borderTop: 'none',
                                         borderLeft: 'none',
                                         borderRight: 'none',
-                                        borderBottom: focusedField === 'companyName'
+                                        borderBottom: errors.companyName
                                             ? '2px solid #c93727'
-                                            : '2px solid #704399',
+                                            : (focusedField === 'companyName' || formData.companyName)
+                                                ? '2px solid #704399'
+                                                : '2px solid #ffffff',
                                         outline: 'none',
                                         boxShadow: 'none',
                                     }}
@@ -227,6 +330,13 @@ export default function ContactUs() {
                                 >
                                     {isArabic ? 'اســـــــــم الشــــركـــة :' : 'COMPANY NAME :'}
                                 </label>
+                                {errors.companyName && (
+                                    <p className={`mt-1 text-sm text-brand-red ${
+                                        isArabic ? 'text-right font-tajawal' : 'text-left font-poppins'
+                                    }`}>
+                                        {errors.companyName}
+                                    </p>
+                                )}
                             </div>
 
                             {/* Phone Number */}
@@ -234,13 +344,17 @@ export default function ContactUs() {
                                 <input
                                     type="tel"
                                     value={formData.phoneNumber}
-                                    onChange={(e) =>
-                                        setFormData({ ...formData, phoneNumber: e.target.value })
-                                    }
+                                    onChange={(e) => {
+                                        setFormData({ ...formData, phoneNumber: e.target.value });
+                                        if (errors.phoneNumber) {
+                                            validateField('phoneNumber', e.target.value);
+                                        }
+                                    }}
                                     onFocus={() => setFocusedField('phoneNumber')}
-                                    onBlur={() =>
-                                        !formData.phoneNumber && setFocusedField(null)
-                                    }
+                                    onBlur={() => {
+                                        validateField('phoneNumber', formData.phoneNumber);
+                                        if (!formData.phoneNumber) setFocusedField(null);
+                                    }}
                                     className={`w-full bg-transparent py-3 px-0 outline-none transition-all duration-300 ${
                                         isArabic
                                             ? 'text-right font-tajawal font-normal'
@@ -251,9 +365,11 @@ export default function ContactUs() {
                                         borderTop: 'none',
                                         borderLeft: 'none',
                                         borderRight: 'none',
-                                        borderBottom: focusedField === 'phoneNumber'
+                                        borderBottom: errors.phoneNumber
                                             ? '2px solid #c93727'
-                                            : '2px solid #704399',
+                                            : (focusedField === 'phoneNumber' || formData.phoneNumber)
+                                                ? '2px solid #704399'
+                                                : '2px solid #ffffff',
                                         outline: 'none',
                                         boxShadow: 'none',
                                     }}
@@ -279,6 +395,13 @@ export default function ContactUs() {
                                 >
                                     {isArabic ? 'رقـــــم الهـــاتــف :' : 'PHONE NUMBER :'}
                                 </label>
+                                {errors.phoneNumber && (
+                                    <p className={`mt-1 text-sm text-brand-red ${
+                                        isArabic ? 'text-right font-tajawal' : 'text-left font-poppins'
+                                    }`}>
+                                        {errors.phoneNumber}
+                                    </p>
+                                )}
                             </div>
 
                             {/* Email */}
@@ -286,11 +409,17 @@ export default function ContactUs() {
                                 <input
                                     type="email"
                                     value={formData.email}
-                                    onChange={(e) =>
-                                        setFormData({ ...formData, email: e.target.value })
-                                    }
+                                    onChange={(e) => {
+                                        setFormData({ ...formData, email: e.target.value });
+                                        if (errors.email) {
+                                            validateField('email', e.target.value);
+                                        }
+                                    }}
                                     onFocus={() => setFocusedField('email')}
-                                    onBlur={() => !formData.email && setFocusedField(null)}
+                                    onBlur={() => {
+                                        validateField('email', formData.email);
+                                        if (!formData.email) setFocusedField(null);
+                                    }}
                                     className={`w-full bg-transparent py-3 px-0 outline-none transition-all duration-300 ${
                                         isArabic
                                             ? 'text-right font-tajawal font-normal'
@@ -301,9 +430,11 @@ export default function ContactUs() {
                                         borderTop: 'none',
                                         borderLeft: 'none',
                                         borderRight: 'none',
-                                        borderBottom: focusedField === 'email'
+                                        borderBottom: errors.email
                                             ? '2px solid #c93727'
-                                            : '2px solid #704399',
+                                            : (focusedField === 'email' || formData.email)
+                                                ? '2px solid #704399'
+                                                : '2px solid #ffffff',
                                         outline: 'none',
                                         boxShadow: 'none',
                                     }}
@@ -323,12 +454,19 @@ export default function ContactUs() {
                                             : 'font-sf-pro-expanded font-thin text-left'
                                     } ${
                                         focusedField === 'email' || formData.email
-                                            ? 'text-brand-purple dark:text-brand-red'
-                                            : 'text-gray-500 dark:text-gray-400'
+                                            ? 'text-white'
+                                            : 'text-gray-400'
                                     } text-lg`}
                                 >
                                     {isArabic ? 'البريد الإلكترونــــــي :' : 'E-MAIL :'}
                                 </label>
+                                {errors.email && (
+                                    <p className={`mt-1 text-sm text-brand-red ${
+                                        isArabic ? 'text-right font-tajawal' : 'text-left font-poppins'
+                                    }`}>
+                                        {errors.email}
+                                    </p>
+                                )}
                             </div>
 
                             {/* Submit Button */}
