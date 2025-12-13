@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@/contexts/ThemeContext';
@@ -29,6 +29,7 @@ export default function ContactUs() {
 
     const [focusedField, setFocusedField] = useState<string | null>(null);
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
+    const [showNotification, setShowNotification] = useState(false);
 
     // Merge Inertia errors with local errors
     const allErrors = { ...errors, ...inertiaErrors };
@@ -172,11 +173,15 @@ export default function ContactUs() {
         e.preventDefault();
         if (isFormValid()) {
             post(route('contact.store'), {
+                preserveScroll: true,
+                preserveState: true,
                 onSuccess: () => {
                     reset();
                     setErrors({});
                     clearErrors();
                     setFocusedField(null);
+                    setShowNotification(true);
+                    setTimeout(() => setShowNotification(false), 5000);
                 },
                 onError: (errors) => {
                     console.error('Form submission errors:', errors);
@@ -665,6 +670,84 @@ export default function ContactUs() {
                     </button>
                 </div>
             </div>
+
+            {/* Success Notification Toast */}
+            <AnimatePresence>
+                {showNotification && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 50, scale: 0.9 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 20, scale: 0.9 }}
+                        transition={{ duration: 0.4, ease: 'easeOut' }}
+                        className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 max-w-md w-full mx-4"
+                    >
+                        <div className="bg-gradient-to-r from-brand-purple to-brand-red p-1 rounded-2xl shadow-2xl">
+                            <div className="bg-white dark:bg-black rounded-2xl p-6 flex items-center gap-4">
+                                {/* Success Icon */}
+                                <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-r from-brand-purple to-brand-red rounded-full flex items-center justify-center">
+                                    <svg
+                                        className="w-6 h-6 text-white"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={3}
+                                            d="M5 13l4 4L19 7"
+                                        />
+                                    </svg>
+                                </div>
+
+                                {/* Message */}
+                                <div className="flex-1">
+                                    <h3 className={`font-bold text-lg mb-1 text-black dark:text-white ${
+                                        isArabic ? 'font-tajawal text-right' : 'font-poppins text-left'
+                                    }`}>
+                                        {isArabic ? 'تم الإرسال بنجاح!' : 'Successfully Submitted!'}
+                                    </h3>
+                                    <p className={`text-sm text-gray-600 dark:text-gray-400 ${
+                                        isArabic ? 'font-tajawal text-right' : 'font-poppins text-left'
+                                    }`}>
+                                        {isArabic
+                                            ? 'سنتواصل معك قريباً'
+                                            : "We'll get back to you soon"}
+                                    </p>
+                                </div>
+
+                                {/* Close Button */}
+                                <button
+                                    onClick={() => setShowNotification(false)}
+                                    className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                                >
+                                    <svg
+                                        className="w-5 h-5 text-gray-500 dark:text-gray-400"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M6 18L18 6M6 6l12 12"
+                                        />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Progress Bar */}
+                        <motion.div
+                            initial={{ scaleX: 1 }}
+                            animate={{ scaleX: 0 }}
+                            transition={{ duration: 5, ease: 'linear' }}
+                            className="h-1 bg-gradient-to-r from-brand-purple to-brand-red rounded-full mt-2 origin-left"
+                        />
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </section>
     );
 }
