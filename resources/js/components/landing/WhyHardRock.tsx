@@ -26,7 +26,7 @@ export default function WhyHardRock() {
                     >
                         <div className="relative w-full max-w-md mx-auto">
                             {/* Gradient Circle Background */}
-                            <div className="absolute inset-0 bg-gradient-to-br from-brand-purple to-brand-red rounded-full blur-2xl opacity-30" />
+                            <div className="hidden lg:block absolute inset-0 bg-gradient-to-br from-brand-purple to-brand-red rounded-full blur-2xl opacity-30" />
 
                             {/* AI Head Image */}
                             <img
