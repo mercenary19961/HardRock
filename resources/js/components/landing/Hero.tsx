@@ -39,7 +39,7 @@ export default function Hero() {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.8, delay: 0.2 }}
-                                className="text-2xl xs:text-2xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-7xl font-bold text-black dark:text-white text-center mb-6 font-tajawal"
+                                className="text-2xl xs:text-2xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-black dark:text-white text-center mb-6 font-tajawal"
                                 style={{ lineHeight: '1.5' }}
                             >
                                 {t('title.line1')}<br />
@@ -54,7 +54,7 @@ export default function Hero() {
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ duration: 0.8, delay: 0.2 }}
-                                    className="text-2xl xs:text-2xl sm:text-4xl md:text-4xl lg:text-4xl xl:text-5xl font-bold text-black dark:text-white text-center mb-2 font-sf-pro"
+                                    className="text-2xl xs:text-3xl sm:text-4xl md:text-4xl lg:text-4xl xl:text-4xl font-bold text-black dark:text-white text-center mb-2 font-sf-pro"
                                     style={{ lineHeight: '1.5' }}
                                 >
                                     {t('title.line1')}<br />
@@ -65,7 +65,7 @@ export default function Hero() {
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ duration: 0.8, delay: 0.3 }}
-                                    className="text-4xl md:text-5xl lg:text-5xl xl:text-7xl font-bold text-center mb-4 font-sf-pro"
+                                    className="text-4xl xs:text-5xl sm:text-6xl md:text-6xl lg:text-6xl xl:text-7xl font-bold text-center mb-4 font-sf-pro"
                                     style={{ lineHeight: '1.5' }}
                                 >
                                     <span className="bg-gradient-to-r from-brand-purple to-brand-red bg-clip-text text-transparent">
