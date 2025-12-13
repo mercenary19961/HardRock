@@ -18,7 +18,7 @@ export default function ContactUs() {
     const { theme } = useTheme();
     const isArabic = i18n.language === 'ar';
 
-    const { data, setData, post, processing, errors: inertiaErrors, reset } = useForm<FormData>({
+    const { data, setData, post, processing, errors: inertiaErrors, reset, clearErrors } = useForm<FormData>({
         personalName: '',
         companyName: '',
         phoneNumber: '',
@@ -29,6 +29,9 @@ export default function ContactUs() {
 
     const [focusedField, setFocusedField] = useState<string | null>(null);
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
+    // Merge Inertia errors with local errors
+    const allErrors = { ...errors, ...inertiaErrors };
 
     // Validation functions
     const validatePersonalName = (name: string): string => {
@@ -146,11 +149,23 @@ export default function ContactUs() {
     };
 
     const isFormValid = () => {
-        return (
-            data.personalName.trim() !== '' &&
-            data.phoneNumber.trim() !== '' &&
-            data.email.trim() !== ''
-        );
+        // Check if required fields are filled
+        if (!data.personalName.trim() || !data.phoneNumber.trim() || !data.email.trim()) {
+            return false;
+        }
+
+        // Check if there are any validation errors (both local and server-side)
+        if (allErrors.personalName || allErrors.companyName || allErrors.phoneNumber || allErrors.email) {
+            return false;
+        }
+
+        // Validate fields that haven't been validated yet
+        const nameError = validatePersonalName(data.personalName);
+        const phoneError = validatePhoneNumber(data.phoneNumber);
+        const emailError = validateEmail(data.email);
+        const companyError = data.companyName ? validateCompanyName(data.companyName) : '';
+
+        return !nameError && !phoneError && !emailError && !companyError;
     };
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -160,6 +175,7 @@ export default function ContactUs() {
                 onSuccess: () => {
                     reset();
                     setErrors({});
+                    clearErrors();
                     setFocusedField(null);
                 },
                 onError: (errors) => {
@@ -243,7 +259,7 @@ export default function ContactUs() {
                                     value={data.personalName}
                                     onChange={(e) => {
                                         setData('personalName', e.target.value);
-                                        if (errors.personalName) {
+                                        if (allErrors.personalName) {
                                             validateField('personalName', e.target.value);
                                         }
                                     }}
@@ -262,7 +278,7 @@ export default function ContactUs() {
                                         borderTop: 'none',
                                         borderLeft: 'none',
                                         borderRight: 'none',
-                                        borderBottom: errors.personalName
+                                        borderBottom: allErrors.personalName
                                             ? '2px solid #c93727'
                                             : (focusedField === 'personalName' || data.personalName)
                                                 ? '2px solid #704399'
@@ -292,11 +308,11 @@ export default function ContactUs() {
                                 >
                                     {isArabic ? 'الاســــــــــــم :' : 'PERSONAL NAME :'}
                                 </label>
-                                {errors.personalName && (
+                                {allErrors.personalName && (
                                     <p className={`mt-1 text-sm text-brand-red ${
                                         isArabic ? 'text-right font-tajawal' : 'text-left font-poppins'
                                     }`}>
-                                        {errors.personalName}
+                                        {allErrors.personalName}
                                     </p>
                                 )}
                             </div>
@@ -308,7 +324,7 @@ export default function ContactUs() {
                                     value={data.companyName}
                                     onChange={(e) => {
                                         setData('companyName', e.target.value);
-                                        if (errors.companyName) {
+                                        if (allErrors.companyName) {
                                             validateField('companyName', e.target.value);
                                         }
                                     }}
@@ -327,7 +343,7 @@ export default function ContactUs() {
                                         borderTop: 'none',
                                         borderLeft: 'none',
                                         borderRight: 'none',
-                                        borderBottom: errors.companyName
+                                        borderBottom: allErrors.companyName
                                             ? '2px solid #c93727'
                                             : (focusedField === 'companyName' || data.companyName)
                                                 ? '2px solid #704399'
@@ -357,11 +373,11 @@ export default function ContactUs() {
                                 >
                                     {isArabic ? 'اســـــــــم الشــــركـــة :' : 'COMPANY NAME :'}
                                 </label>
-                                {errors.companyName && (
+                                {allErrors.companyName && (
                                     <p className={`mt-1 text-sm text-brand-red ${
                                         isArabic ? 'text-right font-tajawal' : 'text-left font-poppins'
                                     }`}>
-                                        {errors.companyName}
+                                        {allErrors.companyName}
                                     </p>
                                 )}
                             </div>
@@ -373,7 +389,7 @@ export default function ContactUs() {
                                     value={data.phoneNumber}
                                     onChange={(e) => {
                                         setData('phoneNumber', e.target.value);
-                                        if (errors.phoneNumber) {
+                                        if (allErrors.phoneNumber) {
                                             validateField('phoneNumber', e.target.value);
                                         }
                                     }}
@@ -392,7 +408,7 @@ export default function ContactUs() {
                                         borderTop: 'none',
                                         borderLeft: 'none',
                                         borderRight: 'none',
-                                        borderBottom: errors.phoneNumber
+                                        borderBottom: allErrors.phoneNumber
                                             ? '2px solid #c93727'
                                             : (focusedField === 'phoneNumber' || data.phoneNumber)
                                                 ? '2px solid #704399'
@@ -422,11 +438,11 @@ export default function ContactUs() {
                                 >
                                     {isArabic ? 'رقـــــم الهـــاتــف :' : 'PHONE NUMBER :'}
                                 </label>
-                                {errors.phoneNumber && (
+                                {allErrors.phoneNumber && (
                                     <p className={`mt-1 text-sm text-brand-red ${
                                         isArabic ? 'text-right font-tajawal' : 'text-left font-poppins'
                                     }`}>
-                                        {errors.phoneNumber}
+                                        {allErrors.phoneNumber}
                                     </p>
                                 )}
                             </div>
@@ -438,7 +454,7 @@ export default function ContactUs() {
                                     value={data.email}
                                     onChange={(e) => {
                                         setData('email', e.target.value);
-                                        if (errors.email) {
+                                        if (allErrors.email) {
                                             validateField('email', e.target.value);
                                         }
                                     }}
@@ -457,7 +473,7 @@ export default function ContactUs() {
                                         borderTop: 'none',
                                         borderLeft: 'none',
                                         borderRight: 'none',
-                                        borderBottom: errors.email
+                                        borderBottom: allErrors.email
                                             ? '2px solid #c93727'
                                             : (focusedField === 'email' || data.email)
                                                 ? '2px solid #704399'
@@ -487,11 +503,11 @@ export default function ContactUs() {
                                 >
                                     {isArabic ? 'البريد الإلكترونــــــي :' : 'E-MAIL :'}
                                 </label>
-                                {errors.email && (
+                                {allErrors.email && (
                                     <p className={`mt-1 text-sm text-brand-red ${
                                         isArabic ? 'text-right font-tajawal' : 'text-left font-poppins'
                                     }`}>
-                                        {errors.email}
+                                        {allErrors.email}
                                     </p>
                                 )}
                             </div>
