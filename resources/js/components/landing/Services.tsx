@@ -95,56 +95,93 @@ export default function Services() {
             <div className="absolute top-1/2 ltr:left-1/3 rtl:right-1/3 w-32 h-32 bg-red-500/15 dark:bg-red-500/25 rounded-full blur-3xl" />
 
             <div className="relative z-10 w-full px-8 sm:px-12 lg:px-16 xl:px-20">
-                <div className="flex flex-col lg:flex-row items-start gap-4" dir="ltr">
+                <div className="flex flex-col lg:grid lg:grid-cols-2 items-start gap-4 lg:gap-8" dir="ltr">
+                    {/* Title - Shows first on mobile, hidden on desktop (shown in Service Content section) */}
+                    <motion.div
+                        initial={{ opacity: 0, y: -20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8 }}
+                        viewport={{ once: true }}
+                        className={`lg:hidden w-full mb-8 ${isArabic ? 'text-right' : 'text-left'}`}
+                        dir={isArabic ? 'rtl' : 'ltr'}
+                    >
+                        <h1 className={`text-4xl md:text-5xl font-black ${
+                            isArabic ? 'font-tajawal' : 'font-sf-pro'
+                        }`}>
+                            {isArabic ? (
+                                <>
+                                    <span className="text-black dark:text-white">مـــــــــاذا </span>
+                                    <span className="bg-gradient-to-r from-brand-purple to-brand-red bg-clip-text text-transparent">نقـــــــــــــــدم</span>
+                                    <span className="text-black dark:text-white">؟</span>
+                                </>
+                            ) : (
+                                <>
+                                    <span className="text-black dark:text-white">We Help You </span>
+                                    <span className="bg-gradient-to-r from-brand-purple to-brand-red bg-clip-text text-transparent">With</span>
+                                </>
+                            )}
+                        </h1>
+                    </motion.div>
+
                     {/* Services List */}
                     <motion.div
                         initial={{ opacity: 0, x: isArabic ? 50 : 50 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.8 }}
                         viewport={{ once: true }}
-                        className={`grid grid-cols-2 gap-4 mb-12 lg:mb-0 lg:flex lg:flex-col lg:space-y-6 lg:flex-1 items-start ${isArabic ? 'lg:pr-0' : 'md:pl-12 lg:pl-16 xl:pl-24 2xl:pl-40'}`}
+                        className={`w-full flex justify-center lg:justify-start mb-12 lg:mb-0 ${isArabic ? 'lg:order-1' : 'lg:order-1'}`}
                         dir={isArabic ? 'rtl' : 'ltr'}
                     >
-                        {services.map((service) => {
-                            const isSelected = selectedService.id === service.id;
+                        <div className="grid grid-cols-2 gap-4 lg:flex lg:flex-col lg:space-y-6 lg:flex-1 max-w-2xl lg:max-w-none">
+                            {services.map((service) => {
+                                const isSelected = selectedService.id === service.id;
 
-                            return (
-                                <button
-                                        key={service.id}
-                                        onClick={() => handleServiceClick(service)}
-                                        className={`px-8 py-6 rounded-full transition-all duration-300 ${
-                                            isSelected
-                                                ? 'bg-gradient-to-r from-brand-purple to-brand-red shadow-lg shadow-brand-purple/30'
-                                                : 'bg-transparent hover:bg-gray-100 dark:hover:bg-white/5'
-                                        } ${
-                                            isArabic
-                                                ? isSelected
-                                                    ? 'font-tajawal font-light text-white text-right'
-                                                    : 'font-tajawal font-extralight text-black dark:text-white text-right'
-                                                : isSelected
-                                                    ? 'font-poppins font-light text-white text-left'
-                                                    : 'font-poppins font-extralight text-black dark:text-white text-left'
-                                        } text-lg md:text-xl lg:text-2xl xl:text-3xl`}
-                                    >
-                                        {service.name}
-                                    </button>
-                            );
-                        })}
+                                return (
+                                    <button
+                                            key={service.id}
+                                            onClick={() => handleServiceClick(service)}
+                                            className={`py-4 transition-all duration-300 flex ${
+                                                isArabic
+                                                    ? 'justify-end'
+                                                    : 'justify-start'
+                                            } ${
+                                                !isSelected && 'hover:bg-gray-100 dark:hover:bg-white/5 px-6 rounded-full'
+                                            }`}
+                                        >
+                                            <span className={`px-8 py-0 rounded-full transition-all duration-300 ${
+                                                isSelected
+                                                    ? 'bg-gradient-to-r from-brand-purple to-brand-red shadow-lg shadow-brand-purple/30'
+                                                    : 'bg-transparent'
+                                            } ${
+                                                isArabic
+                                                    ? isSelected
+                                                        ? 'font-tajawal font-light text-white'
+                                                        : 'font-tajawal font-extralight text-black dark:text-white'
+                                                    : isSelected
+                                                        ? 'font-poppins font-light text-white'
+                                                        : 'font-poppins font-extralight text-black dark:text-white'
+                                            } text-lg md:text-xl lg:text-2xl xl:text-3xl`}>
+                                                {service.name}
+                                            </span>
+                                        </button>
+                                );
+                            })}
+                        </div>
                     </motion.div>
 
                     {/* Service Content */}
-                    <div ref={serviceContentRef} className="lg:flex-1 md:pl-48">
+                    <div ref={serviceContentRef} className={`w-full flex justify-center lg:justify-start ${isArabic ? 'lg:order-2' : 'lg:order-2'}`}>
                         <motion.div
                             initial={{ opacity: 0, x: isArabic ? -50 : -50 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.8 }}
                             viewport={{ once: true }}
-                            className={`${isArabic ? 'text-right pr-36' : 'text-left'}`}
+                            className={`w-full max-w-2xl lg:max-w-none ${isArabic ? 'text-center lg:text-right' : 'text-center lg:text-left'}`}
                             dir={isArabic ? 'rtl' : 'ltr'}
                         >
                             <div className="block group pointer-events-none">
-                            {/* Title */}
-                            <h1 className={`text-4xl md:text-5xl lg:text-5xl xl:text-7xl font-black mb-10 md:mb-12 ${
+                            {/* Title - Hidden on mobile, shown on desktop */}
+                            <h1 className={`hidden lg:block text-4xl md:text-5xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-black mb-10 md:mb-12 ${
                                 isArabic ? 'font-tajawal' : 'font-sf-pro'
                             }`}>
                                 {isArabic ? (
@@ -170,11 +207,11 @@ export default function Services() {
                                     animate={{ opacity: 1, scale: 1 }}
                                     exit={{ opacity: 0, scale: 0.9 }}
                                     transition={{ duration: 0.5 }}
-                                    className="relative w-full max-w-sm mb-8 flex items-center justify-center"
+                                    className="relative w-full max-w-sm mb-8 flex items-center justify-center mx-auto lg:mx-0"
                                     style={{
                                         height: '280px',
-                                        marginLeft: imageMargin.left,
-                                        marginRight: imageMargin.right
+                                        marginLeft: window.innerWidth >= 1024 ? imageMargin.left : 'auto',
+                                        marginRight: window.innerWidth >= 1024 ? imageMargin.right : 'auto'
                                     }}
                                 >
                                     {/* Glow effect */}
@@ -205,7 +242,7 @@ export default function Services() {
                                     exit={{ opacity: 0, y: -20 }}
                                     transition={{ duration: 0.5 }}
                                     style={{ minHeight: '180px' }}
-                                    className="max-w-lg"
+                                    className="max-w-lg mx-auto lg:mx-0"
                                 >
                                     <p
                                         className={`text-gray-700 dark:text-gray-300 mb-6 ${
