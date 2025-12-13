@@ -214,7 +214,7 @@ export default function ContactUs() {
             <div className="absolute bottom-40 ltr:right-20 rtl:left-20 w-48 h-48 bg-pink-500/20 dark:bg-pink-500/30 rounded-full blur-3xl" />
             <div className="absolute top-1/2 ltr:right-1/3 rtl:left-1/3 w-32 h-32 bg-red-500/15 dark:bg-red-500/25 rounded-full blur-3xl" />
 
-            <div className="relative z-10 w-full px-8 sm:px-12 lg:px-16 xl:px-20">
+            <div className="relative z-10 w-full px-4 sm:px-8 md:px-12 lg:px-16 xl:px-20">
                 {/* Title */}
                 <motion.h1
                     initial={{ opacity: 0, y: 20 }}
@@ -559,7 +559,7 @@ export default function ContactUs() {
                     >
                         {/* Services and More Details Container */}
                         <div className={`relative z-10 space-y-5 md:space-y-5 lg:space-y-7 xl:space-y-9 ${
-                            isArabic ? 'ml-32 lg:ml-40 xl:ml-48' : 'mr-32 lg:mr-40 xl:mr-52'
+                            isArabic ? 'ml-0 md:ml-32 lg:ml-40 xl:ml-48' : 'mr-0 md:mr-32 lg:mr-40 xl:mr-52'
                         }`}>
                             {/* Services Section */}
                             <div>
