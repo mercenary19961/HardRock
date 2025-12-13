@@ -5,6 +5,17 @@ export default function Hero() {
     const { t, i18n } = useTranslation('hero');
     const isArabic = i18n.language === 'ar';
 
+    // Scroll to contact section
+    const scrollToContact = () => {
+        const contactSection = document.getElementById('contact-us');
+        if (contactSection) {
+            contactSection.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    };
+
     return (
         <section className="relative min-h-screen flex items-center overflow-hidden bg-white dark:bg-black">
             {/* Purple Glow Background - Dark Mode */}
@@ -93,7 +104,7 @@ export default function Hero() {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8, delay: 0.6 }}
                         >
-                            <button className={`group relative bg-white dark:bg-white border-2 border-brand-purple dark:border-brand-purple px-10 py-4 sm:px-16 md:px-24 rounded-full text-xl md:text-2xl font-light hover:shadow-2xl hover:shadow-brand-red/20 transition-all duration-300 hover:scale-105 tracking-wide hover:border-transparent dark:hover:border-transparent overflow-hidden ${
+                            <button onClick={scrollToContact} className={`group relative bg-white dark:bg-white border-2 border-brand-purple dark:border-brand-purple px-10 py-4 sm:px-16 md:px-24 rounded-full text-xl md:text-2xl font-light hover:shadow-2xl hover:shadow-brand-red/20 transition-all duration-300 hover:scale-105 tracking-wide hover:border-transparent dark:hover:border-transparent overflow-hidden ${
                                 isArabic ? 'font-cairo' : 'font-sf-pro'
                             }`}>
                                 <div className="absolute inset-0 bg-gradient-to-r from-brand-purple to-brand-red opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-full" />
