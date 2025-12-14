@@ -22,30 +22,28 @@
       "id": "seo",
       "name": "تحسين محركات البحث",
       "description": "نقدّم خدمات SEO قائمة على البيانات لتعزيز الظهور الرقمي، زيادة الزيارات العضوية عالية الجودة وتحقيق أداء بحث مستدام طويل الأمد.",
-      "image": "/images/services/seo.png",
+      "image": "/images/services/seo (1).png",
       "link": "/services/seo"
     },
     {
       "id": "branding",
       "name": "ادارة العلامة التجارية",
       "description": "نصمّم هويّة علامة تجارية قوية ولا تُنسى، من خلال الاستراتيجية والتصميم المؤثر، بما يشمل استراتيجية العلامة التجارية وتصميم الشعارات والهوية البصرية والرسائل، لضمان حضور موحّد عبر جميع المنصات.",
-      "image": "/images/services/branding.png",
+      "image": "/images/services/branding (1).png",
       "link": "/services/branding"
     },
     {
       "id": "software-ai",
       "name": "حلول البرمجيات والذكاء الاصطناعي",
       "description": "توفر هارد روك حلولاً متقدمة في البرمجيات ووكلاء الذكاء الاصطناعي لتعزيز الأداء وتبسيط العمليات ودعم نمو فعّال وقابل للتوسع في المجال التقني.",
-      "image": "/images/services/software-ai.png",
-      "imageLight": "/images/services/software-ai-light.png",
-      "imageDark": "/images/services/software-ai-dark.png",
+      "image": "/images/services/ai.png",
       "link": "/services/software-ai"
     },
     {
       "id": "pr-social-listening",
       "name": "العلاقات العامة والاستماع الرقمي",
       "description": "تقدّم هارد روك حلول العلاقات العامة الرقمية المتكاملة وتقنيات الرصد المتقدم لآراء الجمهور، لتعزيز السمعة، وزيادة الظهور، واكتشاف الفرص في الوقت الفعلي.",
-      "image": "/images/services/pr-social-listening.png",
+      "image": "/images/services/pr ar.png",
       "link": "/services/pr-social-listening"
     }
   ]

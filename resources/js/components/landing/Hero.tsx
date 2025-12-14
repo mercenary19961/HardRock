@@ -92,8 +92,8 @@ export default function Hero() {
                             transition={{ duration: 0.8, delay: 0.4 }}
                             className={`text-gray-700 dark:text-gray-300 mx-auto text-center leading-relaxed ${
                                 isArabic
-                                    ? 'text-base md:text-lg lg:text-xl xl:text-2xl mb-12 max-w-md font-tajawal font-extralight'
-                                    : 'text-sm md:text-lg lg:text-1xl xl:text-2xl mb-10 max-w-xl font-sf-pro font-thin'
+                                    ? 'text-base md:text-lg lg:text-xl xl:text-2xl mb-12 max-w-md font-tajawal font-light'
+                                    : 'text-sm md:text-lg lg:text-1xl xl:text-2xl mb-10 max-w-xl font-sf-pro font-light'
                             }`}
                         >
                             {t('subtitle')}
