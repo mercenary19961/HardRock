@@ -11,24 +11,34 @@ class ContactController extends Controller
 {
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'personalName' => 'required|string|min:2',
-            'companyName' => 'nullable|string|min:2',
-            'phoneNumber' => 'required|string|min:7|max:15',
-            'email' => 'required|email',
-            'services' => 'nullable|array',
-            'moreDetails' => 'nullable|string',
-        ]);
+        try {
+            $validated = $request->validate([
+                'personalName' => 'required|string|min:2',
+                'companyName' => 'nullable|string|min:2',
+                'phoneNumber' => 'required|string|min:7|max:15',
+                'email' => 'required|email',
+                'services' => 'nullable|array',
+                'moreDetails' => 'nullable|string',
+            ]);
 
-        // Create contact record
-        $contact = Contact::create([
-            'personal_name' => $validated['personalName'],
-            'company_name' => $validated['companyName'] ?? null,
-            'phone_number' => $validated['phoneNumber'],
-            'email' => $validated['email'],
-            'services' => $validated['services'] ?? [],
-            'more_details' => $validated['moreDetails'] ?? null,
-        ]);
+            // Create contact record
+            $contact = Contact::create([
+                'personal_name' => $validated['personalName'],
+                'company_name' => $validated['companyName'] ?? null,
+                'phone_number' => $validated['phoneNumber'],
+                'email' => $validated['email'],
+                'services' => $validated['services'] ?? [],
+                'more_details' => $validated['moreDetails'] ?? null,
+            ]);
+
+            Log::info('Contact created successfully', ['id' => $contact->id, 'email' => $contact->email]);
+        } catch (\Exception $e) {
+            Log::error('Failed to create contact', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            throw $e;
+        }
 
         // Send email notification (disabled until email server is configured)
         // TODO: Re-enable after Resend/SMTP setup
