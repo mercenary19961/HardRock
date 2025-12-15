@@ -109,7 +109,7 @@ export default function Services() {
             <div className="absolute bottom-40 ltr:right-20 rtl:left-20 w-48 h-48 bg-pink-500/20 dark:bg-pink-500/30 rounded-full blur-3xl" />
             <div className="absolute top-1/2 ltr:left-1/3 rtl:right-1/3 w-32 h-32 bg-red-500/15 dark:bg-red-500/25 rounded-full blur-3xl" />
 
-            <div className="relative z-10 w-full px-8 sm:px-12 lg:px-16 xl:px-20">
+            <div className="relative z-10 w-full px-6 sm:px-12 lg:px-16 xl:px-20">
                 <div className="flex flex-col lg:grid lg:grid-cols-2 items-start gap-4 lg:gap-8" dir="ltr">
                     {/* Title - Shows first on mobile, hidden on desktop (shown in Service Content section) */}
                     <motion.div
@@ -162,7 +162,7 @@ export default function Services() {
                                                     : ''
                                             }`}
                                         >
-                                            <span className={`px-3 md:px-6 py-0 rounded-full whitespace-nowrap ${
+                                            <span className={`px-1 md:px-6 py-0 rounded-full whitespace-nowrap ${
                                                 isSelected
                                                     ? 'bg-gradient-to-r from-brand-purple to-brand-red shadow-lg shadow-brand-purple/30'
                                                     : 'bg-transparent'

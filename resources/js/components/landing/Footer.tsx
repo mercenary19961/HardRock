@@ -270,7 +270,7 @@ export default function Footer() {
 
                     {/* Right Column - Navigation Menu */}
                     <div className={`flex flex-col ${isArabic ? 'lg:order-3 items-start pl-4 md:pl-6 lg:pl-8' : 'lg:order-3 items-start lg:items-end pl-4 md:pl-6 lg:pl-8'}`} dir={isArabic ? 'rtl' : 'ltr'}>
-                        <nav className="space-y-3 md:space-y-4 lg:space-y-6">
+                        <nav className="space-y-3 md:space-y-5 lg:space-y-8">
                             <a
                                 href="#why-hardrock"
                                 className={`group block text-black dark:text-white transition-all duration-300 text-xs md:text-sm lg:text-base relative pb-1 ${
