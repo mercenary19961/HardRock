@@ -20,7 +20,7 @@
         <meta property="og:url" content="https://hardrock-co.com/">
         <meta property="og:title" content="HardRock | Data-Driven Digital Marketing & AI Solutions">
         <meta property="og:description" content="Elevate your brand with performance marketing, AI-powered solutions, and strategic digital transformation. Based in Amman, serving globally.">
-        <meta property="og:image" content="https://hardrock-co.com/images/og-image.webp?v=2">
+        <meta property="og:image" content="https://hardrock-co.com/images/og-image-2.webp">
         <meta property="og:site_name" content="HardRock">
         <meta property="og:locale" content="en_US">
         <meta property="og:locale:alternate" content="ar_AR">
@@ -30,7 +30,7 @@
         <meta property="twitter:url" content="https://hardrock-co.com/">
         <meta property="twitter:title" content="HardRock | Data-Driven Digital Marketing & AI Solutions">
         <meta property="twitter:description" content="Elevate your brand with performance marketing, AI-powered solutions, and strategic digital transformation. Based in Amman, serving globally.">
-        <meta property="twitter:image" content="https://hardrock-co.com/images/og-image.webp?v=2">
+        <meta property="twitter:image" content="https://hardrock-co.com/images/og-image-2.webp">
 
         <!-- Additional SEO -->
         <link rel="canonical" href="https://hardrock-co.com/">

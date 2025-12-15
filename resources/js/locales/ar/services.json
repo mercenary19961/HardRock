@@ -6,42 +6,42 @@
       "id": "paid-ads",
       "name": "الحملات الاعلانية",
       "description": "ننفّذ إعلانات Meta و Google مدعومة بالبيانات لتحقيق أقصى درجات الظهور، رفع معدلات التحويل، وتحقيق نتائج قابلة للقياس بدقة على جميع المنصات الرئيسية.",
-      "image": "/images/services/paid-ads.webp",
+      "image": "/images/services/paid-ads-2.webp",
       "link": "/services/paid-ads"
     },
     {
       "id": "social-media",
       "name": "إدارة مواقع التواصل الاجتماعي",
       "description": "إدارة شاملة لوسائل التواصل الاجتماعي تقدم محتوى مؤثرًا ونموًا مستمرًا من خلال تنفيذ استراتيجي قائم على البيانات.",
-      "image": "/images/services/social-media.webp",
+      "image": "/images/services/social-media-2.webp",
       "link": "/services/social-media"
     },
     {
       "id": "seo",
       "name": "تحسين محركات البحث",
       "description": "نقدّم خدمات SEO قائمة على البيانات لتعزيز الظهور الرقمي، زيادة الزيارات العضوية عالية الجودة وتحقيق أداء بحث مستدام طويل الأمد.",
-      "image": "/images/services/seo.webp",
+      "image": "/images/services/seo-2.webp",
       "link": "/services/seo"
     }, 
     {
       "id": "branding",
       "name": "ادارة العلامة التجارية",
       "description": "نصمّم هويّة علامة تجارية قوية ولا تُنسى، من خلال الاستراتيجية والتصميم المؤثر، بما يشمل استراتيجية العلامة التجارية وتصميم الشعارات والهوية البصرية والرسائل، لضمان حضور موحّد عبر جميع المنصات.",
-      "image": "/images/services/branding.webp",
+      "image": "/images/services/branding-2.webp",
       "link": "/services/branding"
     },
     {
       "id": "software-ai",
       "name": "حلول البرمجيات والذكاء الاصطناعي",
       "description": "توفر هارد روك حلولاً متقدمة في البرمجيات ووكلاء الذكاء الاصطناعي لتعزيز الأداء وتبسيط العمليات ودعم نمو فعّال وقابل للتوسع في المجال التقني.",
-      "image": "/images/services/ai.webp",
+      "image": "/images/services/ai-2.webp",
       "link": "/services/software-ai"
     },
     {
       "id": "pr-social-listening",
       "name": "العلاقات العامة والاستماع الرقمي",
       "description": "تقدّم هارد روك حلول العلاقات العامة الرقمية المتكاملة وتقنيات الرصد المتقدم لآراء الجمهور، لتعزيز السمعة، وزيادة الظهور، واكتشاف الفرص في الوقت الفعلي.",
-      "image": "/images/services/pr.webp",
+      "image": "/images/services/pr-2.webp",
       "link": "/services/pr-social-listening"
     }
   ]
