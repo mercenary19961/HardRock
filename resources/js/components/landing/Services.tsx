@@ -162,7 +162,7 @@ export default function Services() {
                                                     : ''
                                             }`}
                                         >
-                                            <span className={`px-1 md:px-6 py-0 rounded-full whitespace-nowrap ${
+                                            <span className={`px-1 md:px-6 py-0 rounded-full ${
                                                 isSelected
                                                     ? 'bg-gradient-to-r from-brand-purple to-brand-red shadow-lg shadow-brand-purple/30'
                                                     : 'bg-transparent'
@@ -172,9 +172,9 @@ export default function Services() {
                                                         ? 'font-tajawal font-light text-white'
                                                         : 'font-tajawal font-extralight text-black dark:text-white'
                                                     : isSelected
-                                                        ? 'font-poppins font-light text-white'
-                                                        : 'font-poppins font-extralight text-black dark:text-white'
-                                            } text-base md:text-lg lg:text-xl xl:text-2xl`}>
+                                                        ? 'font-poppins font-light text-white whitespace-nowrap'
+                                                        : 'font-poppins font-extralight text-black dark:text-white whitespace-nowrap'
+                                            } text-base md:text-lg lg:text-xl xl:text-2xl leading-tight`}>
                                                 {service.name}
                                             </span>
                                         </button>

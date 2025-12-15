@@ -36,7 +36,7 @@ export default function Hero() {
                 />
             </div>
 
-            <div className="relative z-10 w-full px-8 sm:px-12 lg:px-16 xl:px-20 pt-20 pb-0 md:pt-24 md:pb-20">
+            <div className="relative z-10 w-full px-8 sm:px-12 lg:px-16 xl:px-20 pt-36 pb-0 md:pt-24 md:pb-20">
                 <div className="grid lg:grid-cols-2 gap-10 items-center">
                     {/* Left Column - Text Content */}
                     <motion.div
@@ -65,7 +65,7 @@ export default function Hero() {
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ duration: 0.8, delay: 0.2 }}
-                                    className="text-2xl xs:text-3xl sm:text-4xl md:text-4xl lg:text-4xl xl:text-4xl font-bold text-black dark:text-white text-center mb-2 font-sf-pro"
+                                    className="text-2xl xs:text-3xl sm:text-4xl md:text-4xl lg:text-4xl xl:text-5xl font-bold text-black dark:text-white text-center mb-2 font-sf-pro"
                                     style={{ lineHeight: '1.5' }}
                                 >
                                     {t('title.line1')}<br />
@@ -92,7 +92,7 @@ export default function Hero() {
                             transition={{ duration: 0.8, delay: 0.4 }}
                             className={`text-gray-700 dark:text-gray-300 mx-auto text-center leading-relaxed ${
                                 isArabic
-                                    ? 'text-base md:text-lg lg:text-xl xl:text-2xl mb-12 max-w-md font-tajawal font-light'
+                                    ? 'text-base md:text-lg lg:text-xl xl:text-2xl mb-12 max-w-xs font-tajawal font-light'
                                     : 'text-sm md:text-lg lg:text-1xl xl:text-2xl mb-10 max-w-xl font-sf-pro font-light'
                             }`}
                         >
@@ -104,11 +104,10 @@ export default function Hero() {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8, delay: 0.6 }}
                         >
-                            <button onClick={scrollToContact} className={`group relative bg-white dark:bg-white border-2 border-brand-purple dark:border-brand-purple px-10 py-4 sm:px-16 md:px-24 rounded-full text-xl md:text-2xl font-light hover:shadow-2xl hover:shadow-brand-red/20 transition-all duration-300 hover:scale-105 tracking-wide hover:border-transparent dark:hover:border-transparent overflow-hidden ${
+                            <button onClick={scrollToContact} className={`group relative bg-gradient-to-r from-brand-purple to-brand-red px-10 py-4 sm:px-16 md:px-24 rounded-full text-xl md:text-2xl font-medium hover:shadow-2xl hover:shadow-brand-red/20 transition-all duration-300 hover:scale-105 tracking-wide overflow-hidden ${
                                 isArabic ? 'font-cairo' : 'font-sf-pro'
                             }`}>
-                                <div className="absolute inset-0 bg-gradient-to-r from-brand-purple to-brand-red opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-full" />
-                                <span className="relative z-10 bg-gradient-to-r from-brand-purple to-brand-red bg-clip-text text-transparent group-hover:text-white transition-all duration-300">
+                                <span className="relative z-10 text-white transition-all duration-300">
                                     {t('cta')}
                                 </span>
                             </button>
@@ -139,15 +138,16 @@ export default function Hero() {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8, delay: 0.5 }}
-                            className={`lg:hidden text-center -mt-12 text-4xl xs:text-5xl sm:text-6xl font-bold ${
+                            className={`lg:hidden text-center mt-4 text-4xl xs:text-5xl sm:text-6xl font-bold ${
                                 isArabic ? 'font-tajawal' : 'font-sf-pro'
                             }`}
                             style={{ lineHeight: '1.5' }}
                         >
                             {isArabic ? (
                                 <>
-                                    <span className="text-black dark:text-white">اصل </span>
-                                    <span className="bg-gradient-to-r from-brand-purple to-brand-red bg-clip-text text-transparent">للقمة</span>
+                                    <span className="text-black dark:text-white">نصل بـــــــك إلى</span>
+                                    <br />
+                                    <span className="bg-gradient-to-r from-brand-purple to-brand-red bg-clip-text text-transparent">القمـــــــــــــــــــــــــــــــة</span>
                                 </>
                             ) : (
                                 <>

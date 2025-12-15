@@ -23,6 +23,8 @@
       "name": "تحسين محركات البحث",
       "description": "نقدّم خدمات SEO قائمة على البيانات لتعزيز الظهور الرقمي، زيادة الزيارات العضوية عالية الجودة وتحقيق أداء بحث مستدام طويل الأمد.",
       "image": "/images/services/seo (1).webp",
+      "imageLight": "/images/services/SEO.webp",
+      "imageDark": "/images/services/SEO.webp",
       "link": "/services/seo"
     },
     {

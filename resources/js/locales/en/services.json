@@ -23,6 +23,8 @@
       "name": "SEO",
       "description": "Our SEO services use data-driven strategies and optimization to boost visibility, increase organic traffic, and deliver sustainable long-term search performance.",
       "image": "/images/services/seo (1).webp",
+      "imageLight": "/images/services/seo-light.webp",
+      "imageDark": "/images/services/seo (1).webp",
       "link": "/services/seo"
     },
     {
