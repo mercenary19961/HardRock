@@ -28,11 +28,11 @@ export default function Hero() {
             {/* <div className="absolute inset-0 bg-gradient-to-br from-white via-purple-50/30 to-pink-50/20 dark:hidden" /> */}
 
             {/* Background Wave */}
-            <div className="hidden lg:block absolute ltr:bottom-12 ltr:left-0 rtl:bottom-0 rtl:right-0 ltr:origin-bottom-left rtl:origin-bottom-right lg:w-[40%] opacity-15 dark:opacity-40">
+            <div className="hidden lg:block absolute ltr:bottom-12 ltr:left-0 rtl:bottom-12 rtl:right-0 ltr:origin-bottom-left rtl:origin-bottom-right lg:w-[40%] opacity-30 dark:opacity-60">
                 <img
                     src="/images/bg wave.webp"
                     alt=""
-                    className="w-full h-auto object-contain ltr:-rotate-45 rtl:rotate-45 ltr:translate-x-[-50%] ltr:translate-y-[20%] rtl:translate-x-[20%] rtl:translate-y-[20%]"
+                    className="w-full h-auto object-contain ltr:-rotate-45 rtl:-rotate-[155deg] ltr:translate-x-[-50%] ltr:translate-y-[20%] rtl:translate-x-[50%] rtl:translate-y-[20%]"
                 />
             </div>
 

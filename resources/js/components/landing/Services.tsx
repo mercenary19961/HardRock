@@ -162,7 +162,7 @@ export default function Services() {
                                                     : ''
                                             }`}
                                         >
-                                            <span className={`px-1 md:px-6 py-0 rounded-full ${
+                                            <span className={`px-2 md:px-6 py-2 md:py-0 rounded-full ${
                                                 isSelected
                                                     ? 'bg-gradient-to-r from-brand-purple to-brand-red shadow-lg shadow-brand-purple/30'
                                                     : 'bg-transparent'
