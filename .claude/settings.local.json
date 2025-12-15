@@ -1,7 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(du -sh:*)",
+      "Bash(cat:*)",
+      "Bash(ls:*)",
+      "Bash(xargs cat:*)"
     ],
     "deny": [],
     "ask": []

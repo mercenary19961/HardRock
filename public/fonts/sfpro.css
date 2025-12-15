@@ -1,9 +1,9 @@
-/* SF Pro Font Faces */
+/* SF Pro Font Faces - WOFF2 Format */
 
 /* SF Pro Bold - for line1 and line2 */
 @font-face {
     font-family: 'SF Pro';
-    src: url('./SF-Pro-Display-Bold.otf') format('opentype');
+    src: url('./SFProDisplay-Bold.woff2') format('woff2');
     font-weight: 700;
     font-style: normal;
     font-display: swap;
@@ -12,7 +12,7 @@
 /* SF Pro Thin - for gradient text */
 @font-face {
     font-family: 'SF Pro';
-    src: url('./SF-Pro-Display-Thin.otf') format('opentype');
+    src: url('./SFProDisplay-Thin.woff2') format('woff2');
     font-weight: 100;
     font-style: normal;
     font-display: swap;
@@ -21,7 +21,7 @@
 /* SF Pro Light - for CTA button */
 @font-face {
     font-family: 'SF Pro';
-    src: url('./SF-Pro-Display-Light.otf') format('opentype');
+    src: url('./SFProDisplay-Light.woff2') format('woff2');
     font-weight: 300;
     font-style: normal;
     font-display: swap;

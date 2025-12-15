@@ -30,8 +30,9 @@ export default function WhyHardRock() {
 
                             {/* AI Head Image */}
                             <img
-                                src="/images/why-hardrock.png"
+                                src="/images/why-hardrock.webp"
                                 alt="Why HardRock"
+                                loading="lazy"
                                 className="relative z-10 w-full h-auto drop-shadow-2xl"
                             />
                         </div>

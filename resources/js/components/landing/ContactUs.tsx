@@ -207,7 +207,7 @@ export default function ContactUs() {
                 <div
                     className="w-full h-full bg-no-repeat bg-contain"
                     style={{
-                        backgroundImage: 'url(/images/contact-us.png)',
+                        backgroundImage: 'url(/images/contact-us.webp)',
                         backgroundPosition: 'center center',
                         opacity: 1,
                     }}

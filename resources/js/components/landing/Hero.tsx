@@ -30,7 +30,7 @@ export default function Hero() {
             {/* Background Wave */}
             <div className="hidden lg:block absolute ltr:bottom-12 ltr:left-0 rtl:bottom-0 rtl:right-0 ltr:origin-bottom-left rtl:origin-bottom-right lg:w-[40%] opacity-15 dark:opacity-40">
                 <img
-                    src="/images/bg wave.png"
+                    src="/images/bg wave.webp"
                     alt=""
                     className="w-full h-auto object-contain ltr:-rotate-45 rtl:rotate-45 ltr:translate-x-[-50%] ltr:translate-y-[20%] rtl:translate-x-[20%] rtl:translate-y-[20%]"
                 />
@@ -128,7 +128,7 @@ export default function Hero() {
 
                             {/* Hero Icon */}
                             <img
-                                src="/images/hero-icon.webp"
+                                src="/images/hero-icon.webp" fetchPriority="high"
                                 alt="Digital Solutions"
                                 className="relative z-10 w-full h-auto drop-shadow-2xl animate-float"
                             />
