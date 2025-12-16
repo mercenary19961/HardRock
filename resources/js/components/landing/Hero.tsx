@@ -104,8 +104,8 @@ export default function Hero() {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8, delay: 0.6 }}
                         >
-                            <button onClick={scrollToContact} className={`group relative bg-gradient-to-r from-brand-purple to-brand-red rounded-full text-md xs:text-lg sm:text-xl md:text-2xl font-medium hover:shadow-2xl hover:shadow-brand-red/20 transition-all duration-300 hover:scale-105 tracking-wide overflow-hidden ${
-                                isArabic ? 'font-cairo px-4 py-4 sm:px-16 md:px-24' : 'font-sf-pro py-2 md:py-4 px-4 xs:px-16 sm:px-16 md:px-24'
+                            <button onClick={scrollToContact} className={`group relative bg-gradient-to-r from-brand-purple to-brand-red rounded-full text-md xs:text-lg sm:text-lg md:text-xl lg:text-2xl font-medium hover:shadow-2xl hover:shadow-brand-red/20 transition-all duration-300 hover:scale-105 tracking-wide overflow-hidden ${
+                                isArabic ? 'font-cairo py-2 md:py-4 px-4 sm:px-8 md:px-12 lg:px-12 xl:px-24' : 'font-sf-pro py-2 md:py-4 px-4 xs:px-16 sm:px-16 md:px-24'
                             }`}>
                                 <span className="relative z-10 text-white transition-all duration-300">
                                     {t('cta')}
@@ -134,19 +134,18 @@ export default function Hero() {
                         </div>
 
                         {/* "Reach The Peak" text - Mobile only */}
-                        <motion.h1
+                        <motion.h2
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8, delay: 0.5 }}
-                            className={`lg:hidden text-center mt-4 text-4xl xs:text-5xl sm:text-6xl font-bold ${
+                            className={`sm:hidden text-center mt-4 text-4xl xs:text-5xl sm:text-6xl font-bold ${
                                 isArabic ? 'font-tajawal' : 'font-sf-pro'
                             }`}
                             style={isArabic ? {
                                 lineHeight: '2',
                                 paddingTop: '0.5em',
                                 paddingBottom: '0.3em',
-                                overflow: 'visible',
-                                display: 'block'
+                                overflow: 'visible'
                             } : { lineHeight: '1.5' }}
                         >
                             {isArabic ? (
@@ -161,7 +160,7 @@ export default function Hero() {
                                     <span className="bg-gradient-to-r from-brand-purple to-brand-red bg-clip-text text-transparent">Peak</span>
                                 </>
                             )}
-                        </motion.h1>
+                        </motion.h2>
                     </motion.div>
                 </div>
             </div>
