@@ -1,6 +1,7 @@
 /* SF Pro Font Faces - WOFF2 Format */
+/* Properly subset to 19-20KB each for optimal performance */
 
-/* SF Pro Bold - for line1 and line2 */
+/* SF Pro Bold - for headings */
 @font-face {
     font-family: 'SF Pro';
     src: url('./SFProDisplay-Bold.woff2') format('woff2');
@@ -18,7 +19,7 @@
     font-display: swap;
 }
 
-/* SF Pro Light - for CTA button */
+/* SF Pro Light - for lighter text */
 @font-face {
     font-family: 'SF Pro';
     src: url('./SFProDisplay-Light.woff2') format('woff2');

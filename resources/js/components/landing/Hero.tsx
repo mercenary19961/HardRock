@@ -50,7 +50,7 @@ export default function Hero() {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.8, delay: 0.2 }}
-                                className="text-2xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-bold text-black dark:text-white text-center mb-6 font-tajawal"
+                                className="text-lg xs:text-2xl sm:text-3xl md:text-4xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-bold text-black dark:text-white text-center mb-6 font-tajawal"
                                 style={{ lineHeight: '1.6', paddingTop: '8px' }}
                             >
                                 {t('title.line1')}<br />
@@ -65,7 +65,7 @@ export default function Hero() {
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ duration: 0.8, delay: 0.2 }}
-                                    className="text-2xl xs:text-3xl sm:text-4xl md:text-4xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold text-black dark:text-white text-center mb-2 font-sf-pro"
+                                    className="text-lg xs:text-3xl sm:text-4xl md:text-4xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold text-black dark:text-white text-center mb-2 font-sf-pro"
                                     style={{ lineHeight: '1.5' }}
                                 >
                                     {t('title.line1')}<br />
@@ -76,7 +76,7 @@ export default function Hero() {
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ duration: 0.8, delay: 0.3 }}
-                                    className="text-4xl xs:text-5xl sm:text-6xl md:text-6xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold text-center mb-4 font-sf-pro"
+                                    className="text-3xl xs:text-5xl sm:text-6xl md:text-6xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold text-center mb-4 font-sf-pro"
                                     style={{ lineHeight: '1.5' }}
                                 >
                                     <span className="bg-gradient-to-r from-brand-purple to-brand-red bg-clip-text text-transparent">
@@ -93,7 +93,7 @@ export default function Hero() {
                             className={`text-gray-700 dark:text-gray-300 mx-auto text-center leading-relaxed ${
                                 isArabic
                                     ? 'text-base md:text-lg lg:text-xl xl:text-2xl mb-12 max-w-[250px] md:max-w-xs font-tajawal font-light'
-                                    : 'text-sm md:text-lg lg:text-1xl xl:text-2xl mb-10 max-w-xl font-sf-pro font-light'
+                                    : 'text-xs md:text-lg lg:text-1xl xl:text-2xl mb-10 max-w-[250px] sm:max-w-2xl md:max-w-xl font-sf-pro font-light'
                             }`}
                         >
                             {t('subtitle')}
@@ -104,8 +104,8 @@ export default function Hero() {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8, delay: 0.6 }}
                         >
-                            <button onClick={scrollToContact} className={`group relative bg-gradient-to-r from-brand-purple to-brand-red rounded-full text-lg sm:text-xl md:text-2xl font-medium hover:shadow-2xl hover:shadow-brand-red/20 transition-all duration-300 hover:scale-105 tracking-wide overflow-hidden ${
-                                isArabic ? 'font-cairo px-4 py-4 sm:px-16 md:px-24' : 'font-sf-pro px-10 py-4 sm:px-16 md:px-24'
+                            <button onClick={scrollToContact} className={`group relative bg-gradient-to-r from-brand-purple to-brand-red rounded-full text-md xs:text-lg sm:text-xl md:text-2xl font-medium hover:shadow-2xl hover:shadow-brand-red/20 transition-all duration-300 hover:scale-105 tracking-wide overflow-hidden ${
+                                isArabic ? 'font-cairo px-4 py-4 sm:px-16 md:px-24' : 'font-sf-pro py-2 md:py-4 px-4 xs:px-16 sm:px-16 md:px-24'
                             }`}>
                                 <span className="relative z-10 text-white transition-all duration-300">
                                     {t('cta')}
@@ -127,7 +127,7 @@ export default function Hero() {
 
                             {/* Hero Icon */}
                             <img
-                                src="/images/hero-icon.webp" fetchPriority="high"
+                                src="/images/hero-icon.webp"
                                 alt="Digital Solutions"
                                 className="relative z-10 w-full h-auto drop-shadow-2xl animate-float"
                             />
@@ -141,7 +141,13 @@ export default function Hero() {
                             className={`lg:hidden text-center mt-4 text-4xl xs:text-5xl sm:text-6xl font-bold ${
                                 isArabic ? 'font-tajawal' : 'font-sf-pro'
                             }`}
-                            style={{ lineHeight: isArabic ? '1.6' : '1.5', paddingTop: isArabic ? '8px' : '0' }}
+                            style={isArabic ? {
+                                lineHeight: '2',
+                                paddingTop: '0.5em',
+                                paddingBottom: '0.3em',
+                                overflow: 'visible',
+                                display: 'block'
+                            } : { lineHeight: '1.5' }}
                         >
                             {isArabic ? (
                                 <>

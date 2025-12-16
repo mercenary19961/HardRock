@@ -122,7 +122,13 @@ export default function Services() {
                     >
                         <h1 className={`text-4xl sm:text-5xl md:text-5xl lg:text-6xl xl:text-7xl font-black ${
                             isArabic ? 'font-tajawal' : 'font-sf-pro'
-                        }`} style={{ lineHeight: isArabic ? '1.6' : '1.2', paddingTop: isArabic ? '8px' : '0' }}>
+                        }`} style={isArabic ? {
+                            lineHeight: '2',
+                            paddingTop: '0.5em',
+                            paddingBottom: '0.3em',
+                            overflow: 'visible',
+                            display: 'block'
+                        } : { lineHeight: '1.2' }}>
                             {isArabic ? (
                                 <>
                                     <span className="text-black dark:text-white">مـــــــــاذا </span>
@@ -197,7 +203,13 @@ export default function Services() {
                             {/* Title - Hidden on mobile, shown on desktop */}
                             <h1 className={`hidden lg:block text-4xl md:text-4xl lg:text-5xl xl:text-5xl 2xl:text-6xl font-black mb-10 md:mb-12 ${
                                 isArabic ? 'font-tajawal' : 'font-sf-pro'
-                            }`} style={{ lineHeight: isArabic ? '1.6' : '1.2', paddingTop: isArabic ? '8px' : '0' }}>
+                            }`} style={isArabic ? {
+                                lineHeight: '2',
+                                paddingTop: '0.5em',
+                                paddingBottom: '0.3em',
+                                overflow: 'visible',
+                                display: 'block'
+                            } : { lineHeight: '1.2' }}>
                                 {isArabic ? (
                                     <>
                                         <span className="text-black dark:text-white">مـــــــــاذا </span>

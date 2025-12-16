@@ -18,7 +18,7 @@ export default {
                 tajawal: ['Tajawal', 'sans-serif'],
                 cairo: ['Cairo', 'sans-serif'],
                 poppins: ['Poppins', 'sans-serif'],
-                'sf-pro': ['SF Pro', 'sans-serif'],
+                'sf-pro': ['SF Pro', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Segoe UI', 'sans-serif'],
             },
             colors: {
                 border: 'hsl(var(--border))',

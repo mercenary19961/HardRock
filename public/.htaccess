@@ -1,3 +1,11 @@
+# MIME Types for Fonts
+<IfModule mod_mime.c>
+    AddType font/woff2 .woff2
+    AddType font/woff .woff
+    AddType font/ttf .ttf
+    AddType font/otf .otf
+</IfModule>
+
 # Browser Caching - Leverage Browser Cache
 <IfModule mod_expires.c>
     ExpiresActive On
