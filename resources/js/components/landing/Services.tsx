@@ -124,8 +124,6 @@ export default function Services() {
                             isArabic ? 'font-tajawal' : 'font-sf-pro'
                         }`} style={isArabic ? {
                             lineHeight: '2',
-                            paddingTop: '0.5em',
-                            paddingBottom: '0.3em',
                             overflow: 'visible',
                             display: 'block'
                         } : { lineHeight: '1.2' }}>
@@ -200,30 +198,7 @@ export default function Services() {
                             dir={isArabic ? 'rtl' : 'ltr'}
                         >
                             <div className="block group pointer-events-none">
-                            {/* Title - Hidden on mobile, shown on desktop */}
-                            <h1 className={`hidden lg:block text-4xl md:text-4xl lg:text-5xl xl:text-5xl 2xl:text-6xl font-black mb-10 md:mb-12 ${
-                                isArabic ? 'font-tajawal' : 'font-sf-pro'
-                            }`} style={isArabic ? {
-                                lineHeight: '2',
-                                paddingTop: '0.5em',
-                                paddingBottom: '0.3em',
-                                overflow: 'visible',
-                                display: 'block'
-                            } : { lineHeight: '1.2' }}>
-                                {isArabic ? (
-                                    <>
-                                        <span className="text-black dark:text-white">مـــــــــاذا </span>
-                                        <span className="bg-gradient-to-r from-brand-purple to-brand-red bg-clip-text text-transparent">نقـــــــــــــــدم</span>
-                                        <span className="text-black dark:text-white">؟</span>
-                                    </>
-                                ) : (
-                                    <>
-                                        <span className="text-black dark:text-white">We Help You </span>
-                                        <span className="bg-gradient-to-r from-brand-purple to-brand-red bg-clip-text text-transparent">With</span>
-                                        {/* <span className="text-black dark:text-white">.</span> */}
-                                    </>
-                                )}
-                            </h1>
+
 
                             {/* Service Image */}
                             <div

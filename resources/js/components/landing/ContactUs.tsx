@@ -241,8 +241,6 @@ export default function ContactUs() {
                     }`}
                     style={isArabic ? {
                         lineHeight: '2',
-                        paddingTop: '0.5em',
-                        paddingBottom: '0.3em',
                         overflow: 'visible',
                         display: 'block'
                     } : { lineHeight: '1.2' }}

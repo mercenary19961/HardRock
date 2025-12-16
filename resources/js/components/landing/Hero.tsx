@@ -50,7 +50,7 @@ export default function Hero() {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.8, delay: 0.2 }}
-                                className="text-lg xs:text-2xl sm:text-3xl md:text-4xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-bold text-black dark:text-white text-center mb-6 font-tajawal"
+                                className="text-3xl md:text-4xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-bold text-black dark:text-white text-center mb-6 font-tajawal"
                                 style={{ lineHeight: '1.6', paddingTop: '8px' }}
                             >
                                 {t('title.line1')}<br />
@@ -143,8 +143,6 @@ export default function Hero() {
                             }`}
                             style={isArabic ? {
                                 lineHeight: '2',
-                                paddingTop: '0.5em',
-                                paddingBottom: '0.3em',
                                 overflow: 'visible'
                             } : { lineHeight: '1.5' }}
                         >
