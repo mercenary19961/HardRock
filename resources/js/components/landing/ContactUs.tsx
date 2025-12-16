@@ -176,6 +176,16 @@ export default function ContactUs() {
                 preserveScroll: true,
                 preserveState: true,
                 onSuccess: () => {
+                    // Track Facebook Pixel Lead event
+                    if (typeof window !== 'undefined' && (window as any).fbq) {
+                        (window as any).fbq('track', 'Lead', {
+                            content_name: 'Contact Form Submission',
+                            content_category: 'Lead Generation',
+                            value: data.services.length,
+                            currency: 'USD'
+                        });
+                    }
+
                     reset();
                     setErrors({});
                     clearErrors();
