@@ -138,7 +138,7 @@ export default function Hero() {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8, delay: 0.5 }}
-                            className={`sm:hidden text-center mt-4 text-4xl xs:text-5xl sm:text-6xl font-bold ${
+                            className={`lg:hidden text-center mt-4 text-4xl xs:text-5xl sm:text-6xl font-bold ${
                                 isArabic ? 'font-tajawal' : 'font-sf-pro'
                             }`}
                             style={isArabic ? {
