@@ -203,8 +203,7 @@ export default function Services() {
                                 isArabic ? 'font-tajawal' : 'font-sf-pro'
                             }`} style={isArabic ? {
                                 lineHeight: '2',
-                                overflow: 'visible',
-                                display: 'block'
+                                overflow: 'visible'
                             } : { lineHeight: '1.2' }}>
                                 {isArabic ? (
                                     <>
