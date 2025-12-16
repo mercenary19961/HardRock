@@ -156,7 +156,7 @@ export default function Services() {
                                             key={service.id}
                                             onClick={() => handleServiceClick(service)}
                                             style={{ order: getMobileOrder(service.id) }}
-                                            className={`py-3 flex justify-start ${
+                                            className={`py-2 flex items-center justify-start ${
                                                 getMobileOrder(service.id) && getMobileOrder(service.id)! % 2 === 0
                                                     ? 'pl-4 lg:pl-0'
                                                     : ''
