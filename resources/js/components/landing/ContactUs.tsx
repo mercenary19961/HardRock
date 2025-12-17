@@ -177,7 +177,18 @@ export default function ContactUs() {
 
             post(route('contact.store'), {
                 preserveScroll: true,
+                preserveState: true,
+                only: [],
                 async: true,
+                onBefore: () => {
+                    console.log('[INERTIA] onBefore - About to make request');
+                },
+                onStart: () => {
+                    console.log('[INERTIA] onStart - Request started');
+                },
+                onProgress: () => {
+                    console.log('[INERTIA] onProgress - Upload progress');
+                },
                 onSuccess: () => {
                     const endTime = performance.now();
                     const duration = Math.round(endTime - startTime);
@@ -200,6 +211,11 @@ export default function ContactUs() {
                     setFocusedField(null);
                     setShowNotification(true);
                     setTimeout(() => setShowNotification(false), 5000);
+                },
+                onFinish: () => {
+                    const endTime = performance.now();
+                    const duration = Math.round(endTime - startTime);
+                    console.log(`[INERTIA] onFinish - Request finished after ${duration}ms`);
                 },
                 onError: (errors) => {
                     const endTime = performance.now();

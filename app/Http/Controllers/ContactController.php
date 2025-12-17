@@ -61,6 +61,7 @@ class ContactController extends Controller
             throw $e;
         }
 
-        return back()->with('success', 'Thank you for contacting us! We will get back to you soon.');
+        // Return an empty Inertia response to avoid page reload
+        return back();
     }
 }
