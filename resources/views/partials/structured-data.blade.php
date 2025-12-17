@@ -8,15 +8,16 @@
     "description": "Data-driven digital marketing agency specializing in Paid Ads, SEO, Social Media, Branding, PR, and AI solutions in Amman, Jordan",
     "address": {
         "@@type": "PostalAddress",
-        "streetAddress": "Amman",
-        "addressLocality": "Amman",
+        "streetAddress": "Amir Ben Malek St., Khalda",
+        "addressLocality": "Khalda",
         "addressRegion": "Amman",
+        "postalCode": "11953",
         "addressCountry": "JO"
     },
     "geo": {
         "@@type": "GeoCoordinates",
-        "latitude": 31.9454,
-        "longitude": 35.9284
+        "latitude": 31.99275,
+        "longitude": 35.84867
     },
     "url": "https://hardrock-co.com",
     "telephone": "+962-79-170-0034",
@@ -32,7 +33,7 @@
             "Sunday"
         ],
         "opens": "09:00",
-        "closes": "18:00"
+        "closes": "17:00"
     },
     "sameAs": [
         "https://www.facebook.com/hardrockjo",
@@ -66,20 +67,21 @@
     "image": "https://hardrock-co.com/images/og-image-2.webp",
     "address": {
         "@@type": "PostalAddress",
-        "streetAddress": "Amman",
-        "addressLocality": "Amman",
+        "streetAddress": "Amir Ben Malek St., Khalda",
+        "addressLocality": "Khalda",
         "addressRegion": "Amman",
-        "postalCode": "11000",
+        "postalCode": "11953",
         "addressCountry": "JO"
     },
     "geo": {
         "@@type": "GeoCoordinates",
-        "latitude": 31.9454,
-        "longitude": 35.9284
+        "latitude": 31.99275,
+        "longitude": 35.84867
     },
     "url": "https://hardrock-co.com",
     "telephone": "+962-79-170-0034",
     "email": "sales@hardrock-co.com",
+    "priceRange": "$$",
     "openingHoursSpecification": {
         "@@type": "OpeningHoursSpecification",
         "dayOfWeek": [
@@ -90,7 +92,7 @@
             "Sunday"
         ],
         "opens": "09:00",
-        "closes": "18:00"
+        "closes": "17:00"
     }
 }
 </script>
