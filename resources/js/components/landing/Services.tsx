@@ -151,7 +151,7 @@ export default function Services() {
                         className={`w-full flex justify-center lg:justify-start mb-12 lg:mb-0 ${isArabic ? 'lg:order-2' : 'lg:order-1'}`}
                         dir={isArabic ? 'rtl' : 'ltr'}
                     >
-                        <div className="grid grid-cols-2 gap-4 md:gap-4 pl-0 xl:pl-20 lg:flex lg:flex-col lg:space-y-6 lg:flex-1 max-w-2xl lg:max-w-none">
+                        <div className="grid grid-cols-2 gap-4 md:gap-4 pl-0 2xl:pl-20 lg:flex lg:flex-col lg:space-y-6 lg:flex-1 max-w-2xl lg:max-w-none">
                             {services.map((service) => {
                                 const isSelected = selectedService.id === service.id;
 

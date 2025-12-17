@@ -1,2 +1,16 @@
+# Robots.txt for HardRock Marketing & Technology
+# https://hardrock-co.com
+
 User-agent: *
-Disallow:
+Allow: /
+
+# Disallow admin and sensitive areas
+Disallow: /admin/
+Disallow: /api/
+Disallow: /*.json$
+
+# Sitemap location
+Sitemap: https://hardrock-co.com/sitemap.xml
+
+# Crawl delay for polite bots
+Crawl-delay: 1

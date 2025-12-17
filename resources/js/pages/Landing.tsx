@@ -15,52 +15,7 @@ export default function Landing() {
     return (
         <>
             <Head>
-                <title>Hard Rock - Intelligent Marketing Solutions</title>
-                <meta name="description" content="Hard Rock combines creative storytelling with cutting-edge AI technology to deliver data-driven marketing strategies that scale." />
-                <meta name="keywords" content="AI marketing, digital agency, marketing automation, growth hacking, data analytics, Hard Rock" />
-                
-                {/* Open Graph / Facebook */}
-                <meta property="og:type" content="website" />
-                <meta property="og:url" content="https://hardrock.ai/" />
-                <meta property="og:title" content="Hard Rock - Intelligent Marketing Solutions" />
-                <meta property="og:description" content="We combine creative storytelling with cutting-edge AI technology to deliver data-driven marketing strategies that scale." />
-                <meta property="og:image" content="https://hardrock.ai/og-image.jpg" />
-
-                {/* Twitter */}
-                <meta property="twitter:card" content="summary_large_image" />
-                <meta property="twitter:url" content="https://hardrock.ai/" />
-                <meta property="twitter:title" content="Hard Rock - Intelligent Marketing Solutions" />
-                <meta property="twitter:description" content="We combine creative storytelling with cutting-edge AI technology to deliver data-driven marketing strategies that scale." />
-                <meta property="twitter:image" content="https://hardrock.ai/og-image.jpg" />
-
-                {/* Structured Data */}
-                <script type="application/ld+json">
-                    {JSON.stringify({
-                        "@context": "https://schema.org",
-                        "@type": "MarketingAgency",
-                        "name": "Hard Rock",
-                        "url": "https://hardrock.ai",
-                        "logo": "https://hardrock.ai/logo.png",
-                        "description": "Intelligent Marketing Solutions combining creativity and AI.",
-                        "address": {
-                            "@type": "PostalAddress",
-                            "streetAddress": "123 Innovation Drive",
-                            "addressLocality": "Tech City",
-                            "addressRegion": "TC",
-                            "postalCode": "12345",
-                            "addressCountry": "US"
-                        },
-                        "contactPoint": {
-                            "@type": "ContactPoint",
-                            "telephone": "+1-555-0123",
-                            "contactType": "customer service"
-                        },
-                        "sameAs": [
-                            "https://twitter.com/hardrockai",
-                            "https://linkedin.com/company/hardrockai"
-                        ]
-                    })}
-                </script>
+                {/* Page-specific meta tags only - global SEO is in app.blade.php */}
             </Head>
             
             <SmoothScroll>
