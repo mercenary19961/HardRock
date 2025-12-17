@@ -174,7 +174,6 @@ export default function ContactUs() {
         if (isFormValid()) {
             post(route('contact.store'), {
                 preserveScroll: true,
-                preserveState: true,
                 onSuccess: () => {
                     // Track Facebook Pixel Lead event
                     if (typeof window !== 'undefined' && (window as any).fbq) {
@@ -186,6 +185,7 @@ export default function ContactUs() {
                         });
                     }
 
+                    // Clear all form data
                     reset();
                     setErrors({});
                     clearErrors();
@@ -552,9 +552,9 @@ export default function ContactUs() {
                             <div className="hidden lg:flex justify-center">
                                 <button
                                     type="submit"
-                                    disabled={!isFormValid()}
+                                    disabled={!isFormValid() || processing}
                                     className={`relative w-2/4 py-6 px-8 rounded-full text-2xl transition-all duration-300 ${
-                                        isFormValid()
+                                        isFormValid() && !processing
                                             ? 'bg-gradient-to-r from-brand-purple to-brand-red text-white cursor-pointer hover:scale-105 hover:shadow-2xl hover:shadow-brand-purple/50 active:scale-95 animate-pulse-glow'
                                             : 'bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-500 cursor-not-allowed'
                                     } ${
@@ -563,7 +563,10 @@ export default function ContactUs() {
                                             : 'font-poppins font-bold'
                                     }`}
                                 >
-                                    {isArabic ? 'قــــــــدّم' : 'SUBMIT'}
+                                    {processing
+                                        ? (isArabic ? 'جاري الإرسال...' : 'SUBMITTING...')
+                                        : (isArabic ? 'قــــــــدّم' : 'SUBMIT')
+                                    }
                                 </button>
                             </div>
 
@@ -683,14 +686,14 @@ export default function ContactUs() {
                         onClick={(e) => {
                             e.preventDefault();
                             const form = document.querySelector('form');
-                            if (form) {
+                            if (form && !processing) {
                                 const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
                                 form.dispatchEvent(submitEvent);
                             }
                         }}
-                        disabled={!isFormValid()}
+                        disabled={!isFormValid() || processing}
                         className={`relative w-2/4 py-6 px-8 rounded-full text-2xl transition-all duration-300 ${
-                            isFormValid()
+                            isFormValid() && !processing
                                 ? 'bg-gradient-to-r from-brand-purple to-brand-red text-white cursor-pointer hover:scale-105 hover:shadow-2xl hover:shadow-brand-purple/50 active:scale-95 animate-pulse-glow'
                                 : 'bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-500 cursor-not-allowed'
                         } ${
@@ -699,7 +702,10 @@ export default function ContactUs() {
                                 : 'font-poppins font-bold'
                         }`}
                     >
-                        {isArabic ? 'قــــــــدّم' : 'SUBMIT'}
+                        {processing
+                            ? (isArabic ? 'جاري الإرسال...' : 'SUBMITTING...')
+                            : (isArabic ? 'قــــــــدّم' : 'SUBMIT')
+                        }
                     </button>
                 </div>
             </div>
