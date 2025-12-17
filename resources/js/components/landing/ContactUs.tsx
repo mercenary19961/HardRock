@@ -172,9 +172,16 @@ export default function ContactUs() {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (isFormValid()) {
+            const startTime = performance.now();
+            console.log('[FORM] Submission started');
+
             post(route('contact.store'), {
                 preserveScroll: true,
                 onSuccess: () => {
+                    const endTime = performance.now();
+                    const duration = Math.round(endTime - startTime);
+                    console.log(`[FORM] Submission completed in ${duration}ms`);
+
                     // Track Facebook Pixel Lead event
                     if (typeof window !== 'undefined' && (window as any).fbq) {
                         (window as any).fbq('track', 'Lead', {
@@ -194,7 +201,9 @@ export default function ContactUs() {
                     setTimeout(() => setShowNotification(false), 5000);
                 },
                 onError: (errors) => {
-                    console.error('Form submission errors:', errors);
+                    const endTime = performance.now();
+                    const duration = Math.round(endTime - startTime);
+                    console.error(`[FORM] Submission failed after ${duration}ms:`, errors);
                 }
             });
         }
