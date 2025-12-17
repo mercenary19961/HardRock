@@ -177,6 +177,8 @@ export default function ContactUs() {
 
             post(route('contact.store'), {
                 preserveScroll: true,
+                preserveState: false,
+                replace: true,
                 onSuccess: () => {
                     const endTime = performance.now();
                     const duration = Math.round(endTime - startTime);
