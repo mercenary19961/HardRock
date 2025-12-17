@@ -276,6 +276,8 @@ export default function ContactUs() {
                             <div className="relative">
                                 <input
                                     type="text"
+                                    id="personalName"
+                                    name="personalName"
                                     value={data.personalName}
                                     onChange={(e) => {
                                         setData('personalName', e.target.value);
@@ -309,6 +311,7 @@ export default function ContactUs() {
                                     }}
                                 />
                                 <label
+                                    htmlFor="personalName"
                                     className={`absolute transition-all duration-300 pointer-events-none ${
                                         focusedField === 'personalName' || data.personalName
                                             ? isArabic
@@ -342,6 +345,8 @@ export default function ContactUs() {
                             <div className="relative">
                                 <input
                                     type="text"
+                                    id="companyName"
+                                    name="companyName"
                                     value={data.companyName}
                                     onChange={(e) => {
                                         setData('companyName', e.target.value);
@@ -375,6 +380,7 @@ export default function ContactUs() {
                                     }}
                                 />
                                 <label
+                                    htmlFor="companyName"
                                     className={`absolute transition-all duration-300 pointer-events-none ${
                                         focusedField === 'companyName' || data.companyName
                                             ? isArabic
@@ -408,6 +414,8 @@ export default function ContactUs() {
                             <div className="relative">
                                 <input
                                     type="tel"
+                                    id="phoneNumber"
+                                    name="phoneNumber"
                                     value={data.phoneNumber}
                                     onChange={(e) => {
                                         setData('phoneNumber', e.target.value);
@@ -441,6 +449,7 @@ export default function ContactUs() {
                                     }}
                                 />
                                 <label
+                                    htmlFor="phoneNumber"
                                     className={`absolute transition-all duration-300 pointer-events-none ${
                                         focusedField === 'phoneNumber' || data.phoneNumber
                                             ? isArabic
@@ -474,6 +483,8 @@ export default function ContactUs() {
                             <div className="relative">
                                 <input
                                     type="email"
+                                    id="email"
+                                    name="email"
                                     value={data.email}
                                     onChange={(e) => {
                                         setData('email', e.target.value);
@@ -507,6 +518,7 @@ export default function ContactUs() {
                                     }}
                                 />
                                 <label
+                                    htmlFor="email"
                                     className={`absolute transition-all duration-300 pointer-events-none ${
                                         focusedField === 'email' || data.email
                                             ? isArabic
@@ -640,6 +652,8 @@ export default function ContactUs() {
                                 >
                                     <div className="bg-white dark:bg-black rounded-[3rem] p-6">
                                         <textarea
+                                            id="moreDetails"
+                                            name="moreDetails"
                                             value={data.moreDetails}
                                             onChange={(e) =>
                                                 setData('moreDetails', e.target.value)
