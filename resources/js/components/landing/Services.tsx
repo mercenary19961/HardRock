@@ -199,10 +199,9 @@ export default function Services() {
                         >
                             <div className="block group pointer-events-none">
                             {/* Title - Hidden on mobile, shown on desktop */}
-                            <h1 className={`hidden lg:block text-4xl md:text-4xl lg:text-5xl xl:text-5xl 2xl:text-6xl font-black mb-10 md:mb-12 ${
+                            <h1 className={`hidden lg:block text-4xl md:text-4xl lg:text-5xl xl:text-5xl 2xl:text-6xl font-black mb-0 lg:mt-0 ${
                                 isArabic ? 'font-tajawal' : 'font-sf-pro'
                             }`} style={isArabic ? {
-                                lineHeight: '2',
                                 overflow: 'visible'
                             } : { lineHeight: '1.2' }}>
                                 {isArabic ? (
