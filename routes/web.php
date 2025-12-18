@@ -12,12 +12,10 @@ Route::get('/', function () {
 // Contact Form Submission
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
-// Admin Dashboard (Simple authentication for you only)
-// TODO: Implement simple admin dashboard
-// Route::middleware('auth')->group(function () {
-//     Route::get('/admin', function () {
-//         return Inertia::render('Admin/Dashboard');
-//     })->name('admin.dashboard');
-// });
+// Admin Dashboard (Protected by admin middleware)
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/contacts', [\App\Http\Controllers\Admin\ContactController::class, 'index'])->name('contacts.index');
+    Route::delete('/contacts/{contact}', [\App\Http\Controllers\Admin\ContactController::class, 'destroy'])->name('contacts.destroy');
+});
 
 require __DIR__.'/auth.php';
