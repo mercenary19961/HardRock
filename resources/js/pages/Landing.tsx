@@ -14,7 +14,7 @@ import SmoothScroll from '@/components/SmoothScroll';
 export default function Landing() {
     return (
         <>
-            <Head>
+            <Head title="Home">
                 {/* Page-specific meta tags only - global SEO is in app.blade.php */}
             </Head>
             
