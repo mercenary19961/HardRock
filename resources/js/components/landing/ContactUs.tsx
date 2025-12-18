@@ -584,6 +584,25 @@ export default function ContactUs() {
                                     .animate-pulse-glow {
                                         animation: pulse-glow 2s ease-in-out infinite;
                                     }
+
+                                    /* Override autofill styles */
+                                    input:-webkit-autofill,
+                                    input:-webkit-autofill:hover,
+                                    input:-webkit-autofill:focus,
+                                    input:-webkit-autofill:active {
+                                        -webkit-background-clip: text;
+                                        -webkit-text-fill-color: currentColor;
+                                        transition: background-color 5000s ease-in-out 0s;
+                                        box-shadow: inset 0 0 20px 20px transparent !important;
+                                    }
+
+                                    /* For dark mode */
+                                    .dark input:-webkit-autofill,
+                                    .dark input:-webkit-autofill:hover,
+                                    .dark input:-webkit-autofill:focus,
+                                    .dark input:-webkit-autofill:active {
+                                        -webkit-text-fill-color: white;
+                                    }
                                 `
                             }} />
                         </form>
