@@ -6,14 +6,18 @@ import { createInertiaApp } from '@inertiajs/react';
 import { createRoot } from 'react-dom/client';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 
-// Explicitly import Landing page
+// Explicitly import pages
 import Landing from '@/pages/Landing';
+import Login from '@/pages/Auth/Login';
+import AdminContacts from '@/pages/Admin/Contacts';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 // Map of page names to components
 const pages: Record<string, any> = {
     'Landing': Landing,
+    'Auth/Login': Login,
+    'Admin/Contacts': AdminContacts,
 };
 
 createInertiaApp({
