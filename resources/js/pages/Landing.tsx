@@ -4,10 +4,6 @@ import Hero from '@/components/landing/Hero';
 import WhyHardRock from '@/components/landing/WhyHardRock';
 import Services from '@/components/landing/Services';
 import ContactUs from '@/components/landing/ContactUs';
-// import Testimonials from '@/components/landing/Testimonials';
-// import About from '@/components/landing/About';
-// import TechnicalCapabilities from '@/components/landing/TechnicalCapabilities';
-// import Contact from '@/components/landing/Contact';
 import Footer from '@/components/landing/Footer';
 import SmoothScroll from '@/components/SmoothScroll';
 
@@ -15,7 +11,6 @@ export default function Landing() {
     return (
         <>
             <Head title="Home">
-                {/* Page-specific meta tags only - global SEO is in app.blade.php */}
             </Head>
             
             <SmoothScroll>
@@ -27,10 +22,6 @@ export default function Landing() {
                         <WhyHardRock />
                         <Services />
                         <ContactUs />
-                        {/* <Testimonials />
-                        <About />
-                        <TechnicalCapabilities />
-                        <Contact /> */}
                     </main>
 
                     <Footer />
