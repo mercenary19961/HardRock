@@ -279,6 +279,7 @@ export default function ContactUs() {
                                     type="text"
                                     id="personalName"
                                     name="personalName"
+                                    autoComplete="name"
                                     value={data.personalName}
                                     onChange={(e) => {
                                         setData('personalName', e.target.value);
@@ -348,6 +349,7 @@ export default function ContactUs() {
                                     type="text"
                                     id="companyName"
                                     name="companyName"
+                                    autoComplete="organization"
                                     value={data.companyName}
                                     onChange={(e) => {
                                         setData('companyName', e.target.value);
@@ -417,6 +419,7 @@ export default function ContactUs() {
                                     type="tel"
                                     id="phoneNumber"
                                     name="phoneNumber"
+                                    autoComplete="tel"
                                     value={data.phoneNumber}
                                     onChange={(e) => {
                                         setData('phoneNumber', e.target.value);
@@ -486,6 +489,7 @@ export default function ContactUs() {
                                     type="email"
                                     id="email"
                                     name="email"
+                                    autoComplete="email"
                                     value={data.email}
                                     onChange={(e) => {
                                         setData('email', e.target.value);
@@ -602,6 +606,20 @@ export default function ContactUs() {
                                     .dark input:-webkit-autofill:focus,
                                     .dark input:-webkit-autofill:active {
                                         -webkit-text-fill-color: white;
+                                    }
+
+                                    /* Fix caret (cursor) color */
+                                    input {
+                                        caret-color: black;
+                                    }
+                                    .dark input {
+                                        caret-color: white;
+                                    }
+                                    textarea {
+                                        caret-color: black;
+                                    }
+                                    .dark textarea {
+                                        caret-color: white;
                                     }
                                 `
                             }} />
