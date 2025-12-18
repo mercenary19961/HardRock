@@ -280,6 +280,10 @@ export default function ContactUs() {
                                     id="personalName"
                                     name="personalName"
                                     autoComplete="name"
+                                    spellCheck="false"
+                                    data-gramm="false"
+                                    data-gramm_editor="false"
+                                    data-enable-grammarly="false"
                                     value={data.personalName}
                                     onChange={(e) => {
                                         setData('personalName', e.target.value);
@@ -310,6 +314,7 @@ export default function ContactUs() {
                                                 : theme === 'light' ? '2px solid #000000' : '2px solid #ffffff',
                                         outline: 'none',
                                         boxShadow: 'none',
+                                        color: theme === 'light' ? '#000000' : '#ffffff',
                                     }}
                                 />
                                 <label
@@ -350,6 +355,10 @@ export default function ContactUs() {
                                     id="companyName"
                                     name="companyName"
                                     autoComplete="organization"
+                                    spellCheck="false"
+                                    data-gramm="false"
+                                    data-gramm_editor="false"
+                                    data-enable-grammarly="false"
                                     value={data.companyName}
                                     onChange={(e) => {
                                         setData('companyName', e.target.value);
@@ -380,6 +389,7 @@ export default function ContactUs() {
                                                 : theme === 'light' ? '2px solid #000000' : '2px solid #ffffff',
                                         outline: 'none',
                                         boxShadow: 'none',
+                                        color: theme === 'light' ? '#000000' : '#ffffff',
                                     }}
                                 />
                                 <label
@@ -595,9 +605,10 @@ export default function ContactUs() {
                                     input:-webkit-autofill:focus,
                                     input:-webkit-autofill:active {
                                         -webkit-background-clip: text;
-                                        -webkit-text-fill-color: currentColor;
+                                        -webkit-text-fill-color: #000000 !important;
                                         transition: background-color 5000s ease-in-out 0s;
                                         box-shadow: inset 0 0 20px 20px transparent !important;
+                                        color: #000000 !important;
                                     }
 
                                     /* For dark mode */
@@ -605,7 +616,8 @@ export default function ContactUs() {
                                     .dark input:-webkit-autofill:hover,
                                     .dark input:-webkit-autofill:focus,
                                     .dark input:-webkit-autofill:active {
-                                        -webkit-text-fill-color: white;
+                                        -webkit-text-fill-color: #ffffff !important;
+                                        color: #ffffff !important;
                                     }
 
                                     /* Fix caret (cursor) color */
