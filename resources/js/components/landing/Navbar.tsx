@@ -17,7 +17,8 @@ export default function Navbar() {
     ];
 
     return (
-        <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-black/90 backdrop-blur-md border-b-2" style={{ borderImage: 'linear-gradient(to right, rgba(112, 67, 153, 0.6), rgba(201, 55, 39, 0.6)) 1' }}>
+        // className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-black/90 backdrop-blur-md border-b-2" style={{ borderImage: 'linear-gradient(to right, rgba(112, 67, 153, 0.6), rgba(201, 55, 39, 0.6)) 1' }}>
+        <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-black/90 backdrop-blur-md border-b border-white/80" >
             <div className="w-full px-4 sm:px-12 lg:px-16 xl:px-20">
                 <div className="flex items-center justify-between h-20 gap-4">
                     {/* Logo */}
