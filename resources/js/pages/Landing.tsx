@@ -12,7 +12,7 @@ import SmoothScroll from '@/components/SmoothScroll';
 export default function Landing() {
     const snowflake1 = useMemo(() => {
         const img = new Image();
-        img.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iI2ZmZmZmZiIgZD0iTTEyIDJsMS41IDQuNUwxOCA3bC00LjUgMS41TDEyIDEzTDEwLjUgOC41IDYgN0w5LjUgNS41TDEyIDJ6Ii8+PC9zdmc+';
+        img.src = '/images/snowflake.webp';
         return img;
     }, []);
 
@@ -42,9 +42,9 @@ export default function Landing() {
             <SmoothScroll>
                 <div className="min-h-screen bg-background text-foreground font-sans antialiased selection:bg-primary/20 selection:text-primary">
                     <Snowfall
-                        snowflakeCount={150}
+                        snowflakeCount={100}
                         color="#ffffff"
-                        radius={[8.0, 16.0]}
+                        radius={[3.0, 16.0]}
                         speed={[0.5, 2.0]}
                         wind={[-0.5, 1.0]}
                         rotationSpeed={[-1.0, 1.0]}
