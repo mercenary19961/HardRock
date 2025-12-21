@@ -4,12 +4,15 @@ import './i18n'; // Initialize i18n
 
 import { createInertiaApp } from '@inertiajs/react';
 import { createRoot } from 'react-dom/client';
+import { lazy, Suspense } from 'react';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 
-// Explicitly import pages
+// Import Landing page eagerly (always needed on home page)
 import Landing from '@/pages/Landing';
-import Login from '@/pages/Auth/Login';
-import AdminContacts from '@/pages/Admin/Contacts';
+
+// Lazy load admin pages (code splitting - only loads when needed)
+const Login = lazy(() => import('@/pages/Auth/Login'));
+const AdminContacts = lazy(() => import('@/pages/Admin/Contacts'));
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -36,7 +39,9 @@ createInertiaApp({
 
         root.render(
             <ThemeProvider>
-                <App {...props} />
+                <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-white dark:bg-black"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-purple"></div></div>}>
+                    <App {...props} />
+                </Suspense>
             </ThemeProvider>
         );
     },

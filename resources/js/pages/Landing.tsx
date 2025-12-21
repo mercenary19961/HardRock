@@ -22,6 +22,11 @@ export default function Landing() {
                 <meta httpEquiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
                 <meta httpEquiv="Pragma" content="no-cache" />
                 <meta httpEquiv="Expires" content="0" />
+
+                {/* Preload critical resources */}
+                <link rel="preload" href="/images/hero_image_snow.webp" as="image" type="image/webp" />
+                <link rel="preload" href="/images/snowflake.webp" as="image" type="image/webp" />
+
                 <script
                     dangerouslySetInnerHTML={{
                         __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -45,7 +50,7 @@ export default function Landing() {
             <SmoothScroll>
                 <div className="min-h-screen bg-background text-foreground font-sans antialiased selection:bg-primary/20 selection:text-primary">
                     <Snowfall
-                        snowflakeCount={100}
+                        snowflakeCount={50}
                         color="#ffffff"
                         radius={[3.0, 16.0]}
                         speed={[0.5, 2.0]}
