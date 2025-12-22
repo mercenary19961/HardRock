@@ -6,6 +6,7 @@ import { createInertiaApp } from '@inertiajs/react';
 import { createRoot } from 'react-dom/client';
 import { lazy, Suspense } from 'react';
 import { ThemeProvider } from '@/contexts/ThemeContext';
+import { PageLoader, SuspenseLoader } from '@/components/ui/page-loader';
 
 // Import Landing page eagerly (always needed on home page)
 import Landing from '@/pages/Landing';
@@ -49,13 +50,12 @@ createInertiaApp({
 
         root.render(
             <ThemeProvider>
-                <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-white dark:bg-black"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-purple"></div></div>}>
+                <PageLoader />
+                <Suspense fallback={<SuspenseLoader />}>
                     <App {...props} />
                 </Suspense>
             </ThemeProvider>
         );
     },
-    progress: {
-        color: '#4B5563',
-    },
+    progress: false,
 });
