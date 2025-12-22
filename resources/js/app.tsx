@@ -10,8 +10,12 @@ import { ThemeProvider } from '@/contexts/ThemeContext';
 // Import Landing page eagerly (always needed on home page)
 import Landing from '@/pages/Landing';
 
-// Lazy load admin pages (code splitting - only loads when needed)
+// Lazy load auth pages (code splitting - only loads when needed)
 const Login = lazy(() => import('@/pages/Auth/Login'));
+const ForgotPassword = lazy(() => import('@/pages/Auth/ForgotPassword'));
+const ResetPassword = lazy(() => import('@/pages/Auth/ResetPassword'));
+
+// Lazy load admin pages
 const AdminContacts = lazy(() => import('@/pages/Admin/Contacts'));
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
@@ -20,6 +24,8 @@ const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 const pages: Record<string, any> = {
     'Landing': Landing,
     'Auth/Login': Login,
+    'Auth/ForgotPassword': ForgotPassword,
+    'Auth/ResetPassword': ResetPassword,
     'Admin/Contacts': AdminContacts,
 };
 
