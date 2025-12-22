@@ -1,16 +1,40 @@
 import { PropsWithChildren } from 'react';
 import { Link, usePage } from '@inertiajs/react';
-
-interface User {
-    id: number;
-    name: string;
-    email: string;
-    is_admin: boolean;
-}
+import { User } from '@/types';
 
 interface DashboardLayoutProps extends PropsWithChildren {
     header?: string;
 }
+
+// Role badge with icon
+const ShieldIcon = ({ className }: { className?: string }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+        <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
+        <path d="m9 12 2 2 4-4" />
+    </svg>
+);
+
+const UserIcon = ({ className }: { className?: string }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+        <circle cx="12" cy="7" r="4" />
+    </svg>
+);
+
+const RoleBadge = ({ isAdmin }: { isAdmin: boolean }) => {
+    if (isAdmin) {
+        return (
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-brand-purple/10 text-brand-purple" title="Admin">
+                <ShieldIcon className="size-3.5" />
+            </span>
+        );
+    }
+    return (
+        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300" title="Team Member">
+            <UserIcon className="size-3.5" />
+        </span>
+    );
+};
 
 export default function DashboardLayout({ header, children }: DashboardLayoutProps) {
     const { auth } = usePage().props as { auth: { user: User } };
@@ -33,6 +57,12 @@ export default function DashboardLayout({ header, children }: DashboardLayoutPro
 
                             {/* Navigation Links */}
                             <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <Link
+                                    href={route('dashboard.index')}
+                                    className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-700 focus:outline-none focus:text-gray-700 dark:focus:text-gray-300 focus:border-gray-300 dark:focus:border-gray-700 transition duration-150 ease-in-out"
+                                >
+                                    Dashboard
+                                </Link>
                                 <Link
                                     href={route('dashboard.contacts.index')}
                                     className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-700 focus:outline-none focus:text-gray-700 dark:focus:text-gray-300 focus:border-gray-300 dark:focus:border-gray-700 transition duration-150 ease-in-out"
@@ -61,11 +91,7 @@ export default function DashboardLayout({ header, children }: DashboardLayoutPro
                                     <span className="text-sm text-gray-700 dark:text-gray-300">
                                         {auth.user.name}
                                     </span>
-                                    {auth.user.is_admin && (
-                                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-brand-purple/10 text-brand-purple">
-                                            Admin
-                                        </span>
-                                    )}
+                                    <RoleBadge isAdmin={auth.user.is_admin} />
                                 </div>
                                 <Link
                                     href={route('logout')}
@@ -81,6 +107,7 @@ export default function DashboardLayout({ header, children }: DashboardLayoutPro
                         {/* Mobile menu button */}
                         <div className="flex items-center sm:hidden">
                             <div className="flex items-center gap-3">
+                                <RoleBadge isAdmin={auth.user.is_admin} />
                                 <span className="text-sm text-gray-700 dark:text-gray-300">
                                     {auth.user.name}
                                 </span>

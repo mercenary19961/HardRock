@@ -1,8 +1,9 @@
-// Admin User (for future dashboard)
+// User (for dashboard)
 export interface User {
     id: number;
     name: string;
     email: string;
+    is_admin: boolean;
 }
 
 // Contact Form (to be implemented)

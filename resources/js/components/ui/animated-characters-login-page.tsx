@@ -559,7 +559,7 @@ export function AnimatedCharactersLoginPage({
             /* Authenticated User View */
             <div className="space-y-5">
               <a
-                href="/dashboard/contacts"
+                href="/dashboard"
                 className="flex items-center justify-center w-full h-12 text-base font-medium bg-brand-purple hover:bg-brand-purple/90 text-white rounded-md transition-colors"
               >
                 Go to Dashboard
