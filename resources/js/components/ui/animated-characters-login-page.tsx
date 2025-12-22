@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, FormEvent } from "react";
+import { router } from "@inertiajs/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -191,6 +192,8 @@ interface AnimatedCharactersLoginPageProps {
   setRemember: (remember: boolean) => void;
   processing: boolean;
   errors: { email?: string; password?: string };
+  isAuthenticated?: boolean;
+  userName?: string;
 }
 
 export function AnimatedCharactersLoginPage({
@@ -203,6 +206,8 @@ export function AnimatedCharactersLoginPage({
   setRemember,
   processing,
   errors,
+  isAuthenticated = false,
+  userName,
 }: AnimatedCharactersLoginPageProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [mouseX, setMouseX] = useState<number>(0);
@@ -542,96 +547,121 @@ export function AnimatedCharactersLoginPage({
 
           {/* Header */}
           <div className="text-center mb-10">
-            <h1 className="text-3xl font-bold tracking-tight mb-2">Welcome back!</h1>
-            <p className="text-muted-foreground text-sm">Please enter your details</p>
+            <h1 className="text-3xl font-bold tracking-tight mb-2">
+              {isAuthenticated ? `Welcome, ${userName}!` : 'Welcome back!'}
+            </h1>
+            <p className="text-muted-foreground text-sm">
+              {isAuthenticated ? 'You are already logged in' : 'Please enter your details'}
+            </p>
           </div>
 
-          {/* Login Form */}
-          <form onSubmit={onSubmit} className="space-y-5">
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-sm font-medium">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="admin@hardrock-co.com"
-                value={email}
-                autoComplete="email"
-                onChange={(e) => setEmail(e.target.value)}
-                onFocus={() => setIsTyping(true)}
-                onBlur={() => setIsTyping(false)}
-                required
-                className="h-12 bg-background border-border/60 focus:border-brand-purple"
-              />
-              {errors.email && (
-                <p className="text-sm text-red-600 dark:text-red-400">{errors.email}</p>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="password" className="text-sm font-medium">Password</Label>
-              <div className="relative">
-                <Input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="••••••••"
-                  value={password}
-                  autoComplete="current-password"
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  className="h-12 pr-10 bg-background border-border/60 focus:border-brand-purple"
-                />
+          {isAuthenticated ? (
+            /* Authenticated User View */
+            <div className="space-y-5">
+              <a
+                href="/dashboard/contacts"
+                className="flex items-center justify-center w-full h-12 text-base font-medium bg-brand-purple hover:bg-brand-purple/90 text-white rounded-md transition-colors"
+              >
+                Go to Dashboard
+              </a>
+              <div className="text-center">
                 <button
                   type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  onClick={() => router.post('/logout')}
+                  className="text-sm text-brand-purple hover:underline font-medium"
                 >
-                  {showPassword ? (
-                    <EyeOff className="size-5" />
-                  ) : (
-                    <Eye className="size-5" />
-                  )}
+                  Sign out and use a different account
                 </button>
               </div>
-              {errors.password && (
-                <p className="text-sm text-red-600 dark:text-red-400">{errors.password}</p>
-              )}
             </div>
-
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="remember"
-                  checked={remember}
-                  onCheckedChange={(checked) => setRemember(checked as boolean)}
+          ) : (
+            /* Login Form */
+            <form onSubmit={onSubmit} className="space-y-5">
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-sm font-medium">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="admin@hardrock-co.com"
+                  value={email}
+                  autoComplete="email"
+                  onChange={(e) => setEmail(e.target.value)}
+                  onFocus={() => setIsTyping(true)}
+                  onBlur={() => setIsTyping(false)}
+                  required
+                  className="h-12 bg-background border-border/60 focus:border-brand-purple"
                 />
-                <Label
-                  htmlFor="remember"
-                  className="text-sm font-normal cursor-pointer"
-                >
-                  Remember for 30 days
-                </Label>
+                {errors.email && (
+                  <p className="text-sm text-red-600 dark:text-red-400">{errors.email}</p>
+                )}
               </div>
-              <a
-                href="/forgot-password"
-                className="text-sm text-brand-purple hover:underline font-medium"
-              >
-                Forgot password?
-              </a>
-            </div>
 
-            <Button
-              type="submit"
-              className="w-full h-12 text-base font-medium bg-brand-purple hover:bg-brand-purple/90"
-              size="lg"
-              disabled={processing}
-            >
-              {processing ? "Signing in..." : "Log in"}
-            </Button>
-          </form>
+              <div className="space-y-2">
+                <Label htmlFor="password" className="text-sm font-medium">Password</Label>
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="••••••••"
+                    value={password}
+                    autoComplete="current-password"
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    className="h-12 pr-10 bg-background border-border/60 focus:border-brand-purple"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="size-5" />
+                    ) : (
+                      <Eye className="size-5" />
+                    )}
+                  </button>
+                </div>
+                {errors.password && (
+                  <p className="text-sm text-red-600 dark:text-red-400">{errors.password}</p>
+                )}
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="remember"
+                    checked={remember}
+                    onCheckedChange={(checked) => setRemember(checked as boolean)}
+                  />
+                  <Label
+                    htmlFor="remember"
+                    className="text-sm font-normal cursor-pointer"
+                  >
+                    Remember for 30 days
+                  </Label>
+                </div>
+                <a
+                  href="/forgot-password"
+                  className="text-sm text-brand-purple hover:underline font-medium"
+                >
+                  Forgot password?
+                </a>
+              </div>
+
+              <Button
+                type="submit"
+                className="w-full h-12 text-base font-medium bg-brand-purple hover:bg-brand-purple/90"
+                size="lg"
+                disabled={processing}
+              >
+                {processing ? "Signing in..." : "Log in"}
+              </Button>
+            </form>
+          )}
 
           {/* Sign Up Link */}
           <div className="text-center text-sm text-muted-foreground mt-8">
-            Admin access only
+            Team access only
           </div>
 
           {/* Mobile Footer Links */}

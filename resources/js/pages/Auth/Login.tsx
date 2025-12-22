@@ -1,8 +1,15 @@
 import { FormEvent } from 'react';
-import { Head, useForm } from '@inertiajs/react';
+import { Head, useForm, usePage } from '@inertiajs/react';
 import { AnimatedCharactersLoginPage } from '@/components/ui/animated-characters-login-page';
 
+interface User {
+    id: number;
+    name: string;
+    email: string;
+}
+
 export default function Login() {
+    const { auth } = usePage().props as { auth: { user: User | null } };
     const { data, setData, post, processing, errors } = useForm({
         email: '',
         password: '',
@@ -16,7 +23,7 @@ export default function Login() {
 
     return (
         <>
-            <Head title="Admin Login" />
+            <Head title={auth.user ? "Dashboard" : "Team Login"} />
             <AnimatedCharactersLoginPage
                 onSubmit={handleSubmit}
                 email={data.email}
@@ -27,6 +34,8 @@ export default function Login() {
                 setRemember={(remember) => setData('remember', remember)}
                 processing={processing}
                 errors={errors}
+                isAuthenticated={!!auth.user}
+                userName={auth.user?.name}
             />
         </>
     );

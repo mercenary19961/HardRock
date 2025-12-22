@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Models\Contact;
@@ -13,13 +13,18 @@ class ContactController extends Controller
     {
         $contacts = Contact::orderBy('created_at', 'desc')->get();
 
-        return Inertia::render('Admin/Contacts', [
+        return Inertia::render('Dashboard/Contacts', [
             'contacts' => $contacts
         ]);
     }
 
     public function destroy(Contact $contact)
     {
+        // Only admins can delete contacts
+        if (!auth()->user()->is_admin) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $contact->delete();
 
         return back()->with('success', 'Contact deleted successfully');

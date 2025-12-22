@@ -1,5 +1,5 @@
-import { Head, router } from '@inertiajs/react';
-import AdminLayout from '@/layouts/AdminLayout';
+import { Head, router, usePage } from '@inertiajs/react';
+import DashboardLayout from '@/layouts/DashboardLayout';
 import { useState } from 'react';
 
 interface Contact {
@@ -18,12 +18,13 @@ interface ContactsProps {
 }
 
 export default function Contacts({ contacts }: ContactsProps) {
+    const { auth } = usePage().props as { auth: { user: { is_admin: boolean } } };
     const [deletingId, setDeletingId] = useState<number | null>(null);
 
     const handleDelete = (contactId: number) => {
         if (confirm('Are you sure you want to delete this contact?')) {
             setDeletingId(contactId);
-            router.delete(route('admin.contacts.destroy', contactId), {
+            router.delete(route('dashboard.contacts.destroy', contactId), {
                 onFinish: () => setDeletingId(null),
             });
         }
@@ -40,7 +41,7 @@ export default function Contacts({ contacts }: ContactsProps) {
     };
 
     return (
-        <AdminLayout header="Contact Submissions">
+        <DashboardLayout header="Contact Submissions">
             <Head title="Contacts" />
 
             <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
@@ -74,9 +75,12 @@ export default function Contacts({ contacts }: ContactsProps) {
                                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                             Submitted
                                         </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                            Actions
-                                        </th>
+                                        {/* Only show Actions column for admins */}
+                                        {auth.user.is_admin && (
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                                Actions
+                                            </th>
+                                        )}
                                     </tr>
                                 </thead>
                                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -126,15 +130,18 @@ export default function Contacts({ contacts }: ContactsProps) {
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                                                 {formatDate(contact.created_at)}
                                             </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm">
-                                                <button
-                                                    onClick={() => handleDelete(contact.id)}
-                                                    disabled={deletingId === contact.id}
-                                                    className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 disabled:opacity-50"
-                                                >
-                                                    {deletingId === contact.id ? 'Deleting...' : 'Delete'}
-                                                </button>
-                                            </td>
+                                            {/* Only show delete button for admins */}
+                                            {auth.user.is_admin && (
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm">
+                                                    <button
+                                                        onClick={() => handleDelete(contact.id)}
+                                                        disabled={deletingId === contact.id}
+                                                        className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 disabled:opacity-50"
+                                                    >
+                                                        {deletingId === contact.id ? 'Deleting...' : 'Delete'}
+                                                    </button>
+                                                </td>
+                                            )}
                                         </tr>
                                     ))}
                                 </tbody>
@@ -143,6 +150,6 @@ export default function Contacts({ contacts }: ContactsProps) {
                     )}
                 </div>
             </div>
-        </AdminLayout>
+        </DashboardLayout>
     );
 }
