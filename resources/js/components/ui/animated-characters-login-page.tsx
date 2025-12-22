@@ -612,7 +612,7 @@ export function AnimatedCharactersLoginPage({
                 </Label>
               </div>
               <a
-                href="#"
+                href="/forgot-password"
                 className="text-sm text-brand-purple hover:underline font-medium"
               >
                 Forgot password?
