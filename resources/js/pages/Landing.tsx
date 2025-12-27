@@ -1,6 +1,4 @@
 import { Head } from '@inertiajs/react';
-import { useMemo } from 'react';
-import Snowfall from 'react-snowfall';
 import Navbar from '@/components/landing/Navbar';
 import Hero from '@/components/landing/Hero';
 import WhyHardRock from '@/components/landing/WhyHardRock';
@@ -10,12 +8,6 @@ import Footer from '@/components/landing/Footer';
 import SmoothScroll from '@/components/SmoothScroll';
 
 export default function Landing() {
-    const snowflake1 = useMemo(() => {
-        const img = new Image();
-        img.src = '/images/snowflake.webp';
-        return img;
-    }, []);
-
     return (
         <>
             <Head title="Home">
@@ -24,8 +16,7 @@ export default function Landing() {
                 <meta httpEquiv="Expires" content="0" />
 
                 {/* Preload critical resources */}
-                <link rel="preload" href="/images/hero_image_snow.webp" as="image" type="image/webp" />
-                <link rel="preload" href="/images/snowflake.webp" as="image" type="image/webp" />
+                <link rel="preload" href="/images/hero-icon.webp" as="image" type="image/webp" />
 
                 <script
                     dangerouslySetInnerHTML={{
@@ -49,21 +40,6 @@ export default function Landing() {
 
             <SmoothScroll>
                 <div className="min-h-screen bg-background text-foreground font-sans antialiased selection:bg-primary/20 selection:text-primary">
-                    <Snowfall
-                        snowflakeCount={50}
-                        color="#ffffff"
-                        radius={[3.0, 16.0]}
-                        speed={[0.5, 2.0]}
-                        wind={[-0.5, 1.0]}
-                        rotationSpeed={[-1.0, 1.0]}
-                        images={[snowflake1]}
-                        style={{
-                            position: 'fixed',
-                            width: '100vw',
-                            height: '100vh',
-                            zIndex: 50
-                        }}
-                    />
                     <noscript>
                         <iframe
                             src="https://www.googletagmanager.com/ns.html?id=GTM-TJTKSH9J"
