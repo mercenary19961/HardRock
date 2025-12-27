@@ -650,7 +650,7 @@ export function AnimatedCharactersLoginPage({
 
               <Button
                 type="submit"
-                className="w-full h-12 text-base font-medium bg-brand-purple hover:bg-brand-purple/90"
+                className="w-full h-12 text-base text-white font-medium bg-brand-purple hover:bg-brand-purple/90"
                 size="lg"
                 disabled={processing}
               >
