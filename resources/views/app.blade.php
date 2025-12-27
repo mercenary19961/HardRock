@@ -47,7 +47,7 @@
         <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.png">
 
         <!-- Preload Critical Images -->
-        <link rel="preload" as="image" href="/images/hero-icon.webp" fetchpriority="high">
+        <link rel="preload" as="image" href="/images/hero_image_snow.webp" fetchpriority="high">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
