@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Models\Contact;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class ContactController extends Controller
@@ -21,7 +21,9 @@ class ContactController extends Controller
     public function destroy(Contact $contact)
     {
         // Only admins can delete contacts
-        if (!auth()->user()->is_admin) {
+        $user = Auth::user();
+
+        if (!$user || !$user->is_admin) {
             abort(403, 'Unauthorized action.');
         }
 

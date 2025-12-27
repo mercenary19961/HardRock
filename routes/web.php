@@ -12,8 +12,10 @@ Route::get('/', function () {
     return Inertia::render('Landing');
 })->name('home');
 
-// Contact Form Submission
-Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+// Contact Form Submission (rate limited: 5 requests per minute per IP)
+Route::post('/contact', [ContactController::class, 'store'])
+    ->middleware('throttle:5,1')
+    ->name('contact.store');
 
 // Dashboard (Protected - accessible by all authenticated team members)
 Route::middleware(['auth'])->prefix('dashboard')->name('dashboard.')->group(function () {

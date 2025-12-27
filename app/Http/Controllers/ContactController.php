@@ -13,12 +13,12 @@ class ContactController extends Controller
     {
         try {
             $validated = $request->validate([
-                'personalName' => 'required|string|min:2',
-                'companyName' => 'nullable|string|min:2',
-                'phoneNumber' => 'required|string|min:7|max:15',
-                'email' => 'required|email',
-                'services' => 'nullable|array',
-                'moreDetails' => 'nullable|string',
+                'personalName' => 'required|string|min:2|max:100',
+                'companyName' => 'nullable|string|min:2|max:100',
+                'phoneNumber' => 'required|string|min:7|max:20',
+                'email' => 'required|email|max:255',
+                'services' => 'nullable|array|max:10',
+                'moreDetails' => 'nullable|string|max:5000',
             ]);
 
             // Create contact record
