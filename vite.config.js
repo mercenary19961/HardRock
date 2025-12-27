@@ -27,4 +27,36 @@ export default defineConfig({
             host: 'localhost',
         },
     },
+    build: {
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    // Core React - rarely changes
+                    'vendor-react': ['react', 'react-dom'],
+                    // Inertia.js
+                    'vendor-inertia': ['@inertiajs/react'],
+                    // UI components - Radix primitives
+                    'vendor-radix': [
+                        '@radix-ui/react-checkbox',
+                        '@radix-ui/react-dialog',
+                        '@radix-ui/react-dropdown-menu',
+                        '@radix-ui/react-label',
+                        '@radix-ui/react-select',
+                        '@radix-ui/react-slot',
+                        '@radix-ui/react-tooltip',
+                        '@radix-ui/react-navigation-menu',
+                        '@radix-ui/react-collapsible',
+                        '@radix-ui/react-separator',
+                        '@radix-ui/react-toggle',
+                        '@radix-ui/react-toggle-group',
+                        '@radix-ui/react-avatar',
+                    ],
+                    // Animation library - large
+                    'vendor-motion': ['framer-motion'],
+                    // i18n - only used on landing page
+                    'vendor-i18n': ['i18next', 'react-i18next', 'i18next-browser-languagedetector'],
+                },
+            },
+        },
+    },
 });
