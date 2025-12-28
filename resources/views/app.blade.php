@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title inertia>{{ config('app.name', 'Laravel') }}</title>
+        <title inertia>HardRock | Data-Driven Digital Marketing, Software & AI Solutions</title>
 
         <!-- SEO Meta Tags -->
         <meta name="description" content="HardRock delivers data-driven digital marketing, AI solutions, and cutting-edge technology to elevate your brand. Expert services in Paid Ads, SEO, Social Media, Branding & PR in Amman, Jordan.">
