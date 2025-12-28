@@ -60,30 +60,21 @@ export default function Hero() {
                                 {t('title.gradient')}
                             </motion.h1>
                         ) : (
-                            <>
-                                <motion.h2
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.8, delay: 0.2 }}
-                                    className="text-xl xs:text-3xl sm:text-4xl md:text-4xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold text-black dark:text-white text-center mb-2 font-sf-pro"
-                                    style={{ lineHeight: '1.5' }}
-                                >
+                            <motion.h1
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.8, delay: 0.2 }}
+                                className="text-center font-sf-pro"
+                                style={{ lineHeight: '1.5' }}
+                            >
+                                <span className="block text-xl xs:text-3xl sm:text-4xl md:text-4xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold text-black dark:text-white mb-2" style={{ lineHeight: '1.5' }}>
                                     {t('title.line1')}<br />
                                     {t('title.line2')}
-                                </motion.h2>
-
-                                <motion.h1
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.8, delay: 0.3 }}
-                                    className="text-4xl xs:text-5xl sm:text-6xl md:text-6xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold text-center mb-4 font-sf-pro"
-                                    style={{ lineHeight: '1.5' }}
-                                >
-                                    <span className="bg-gradient-to-r from-brand-purple to-brand-red bg-clip-text text-transparent">
-                                        {t('title.gradient')}
-                                    </span>
-                                </motion.h1>
-                            </>
+                                </span>
+                                <span className="block text-4xl xs:text-5xl sm:text-6xl md:text-6xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold bg-gradient-to-r from-brand-purple to-brand-red bg-clip-text text-transparent mb-4" style={{ lineHeight: '1.5' }}>
+                                    {t('title.gradient')}
+                                </span>
+                            </motion.h1>
                         )}
 
                         <motion.p

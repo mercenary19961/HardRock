@@ -3,12 +3,10 @@
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
     <!-- Homepage -->
     <url>
-        <loc>https://hardrock-co.com/</loc>
-        <lastmod>2025-12-17</lastmod>
+        <loc>https://www.hardrock-co.com/</loc>
+        <lastmod>2025-12-28</lastmod>
         <changefreq>weekly</changefreq>
         <priority>1.0</priority>
-        <!-- Alternate languages -->
-        <xhtml:link rel="alternate" hreflang="en" href="https://hardrock-co.com/" />
-        <xhtml:link rel="alternate" hreflang="ar" href="https://hardrock-co.com/" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hardrock-co.com/" />
     </url>
 </urlset>

@@ -17,29 +17,27 @@
 
         <!-- Open Graph / Facebook -->
         <meta property="og:type" content="website">
-        <meta property="og:url" content="https://hardrock-co.com/">
+        <meta property="og:url" content="https://www.hardrock-co.com/">
         <meta property="og:title" content="HardRock | Data-Driven Digital Marketing & AI Solutions">
         <meta property="og:description" content="Elevate your brand with performance marketing, AI-powered solutions, and strategic digital transformation. Based in Amman, serving globally.">
-        <meta property="og:image" content="https://hardrock-co.com/images/og-image-2.webp">
+        <meta property="og:image" content="https://www.hardrock-co.com/images/og-image-2.webp">
         <meta property="og:site_name" content="HardRock">
         <meta property="og:locale" content="en_US">
         <meta property="og:locale:alternate" content="ar_AR">
 
         <!-- Twitter -->
         <meta property="twitter:card" content="summary_large_image">
-        <meta property="twitter:url" content="https://hardrock-co.com/">
+        <meta property="twitter:url" content="https://www.hardrock-co.com/">
         <meta property="twitter:title" content="HardRock | Data-Driven Digital Marketing & AI Solutions">
         <meta property="twitter:description" content="Elevate your brand with performance marketing, AI-powered solutions, and strategic digital transformation. Based in Amman, serving globally.">
-        <meta property="twitter:image" content="https://hardrock-co.com/images/og-image-2.webp">
+        <meta property="twitter:image" content="https://www.hardrock-co.com/images/og-image-2.webp">
 
         <!-- Additional SEO -->
-        <link rel="canonical" href="https://hardrock-co.com/">
+        <link rel="canonical" href="https://www.hardrock-co.com/">
         <meta name="theme-color" content="#8B5CF6">
 
-        <!-- hreflang for bilingual SEO -->
-        <link rel="alternate" hreflang="en" href="https://hardrock-co.com/">
-        <link rel="alternate" hreflang="ar" href="https://hardrock-co.com/">
-        <link rel="alternate" hreflang="x-default" href="https://hardrock-co.com/">
+        <!-- hreflang - single bilingual page -->
+        <link rel="alternate" hreflang="x-default" href="https://www.hardrock-co.com/">
 
         <!-- Favicon -->
         <link rel="icon" type="image/x-icon" href="/favicon.ico">
