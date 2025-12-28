@@ -4,7 +4,7 @@
     "@@context": "https://schema.org",
     "@@type": "ProfessionalService",
     "name": "HardRock Marketing & Technology",
-    "image": "https://hardrock-co.com/images/og-image-2.webp",
+    "image": "https://www.hardrock-co.com/images/og-image-2.webp",
     "description": "Data-driven digital marketing agency specializing in Paid Ads, SEO, Social Media, Branding, PR, and AI solutions in Amman, Jordan",
     "address": {
         "@@type": "PostalAddress",
@@ -19,7 +19,7 @@
         "latitude": 31.99275,
         "longitude": 35.84867
     },
-    "url": "https://hardrock-co.com",
+    "url": "https://www.hardrock-co.com",
     "telephone": "+962-79-170-0034",
     "email": "sales@hardrock-co.com",
     "priceRange": "$$",
@@ -64,7 +64,7 @@
     "@@context": "https://schema.org",
     "@@type": "LocalBusiness",
     "name": "HardRock Marketing & Technology",
-    "image": "https://hardrock-co.com/images/og-image-2.webp",
+    "image": "https://www.hardrock-co.com/images/og-image-2.webp",
     "address": {
         "@@type": "PostalAddress",
         "streetAddress": "Amir Ben Malek St., Khalda",
@@ -78,7 +78,7 @@
         "latitude": 31.99275,
         "longitude": 35.84867
     },
-    "url": "https://hardrock-co.com",
+    "url": "https://www.hardrock-co.com",
     "telephone": "+962-79-170-0034",
     "email": "sales@hardrock-co.com",
     "priceRange": "$$",
