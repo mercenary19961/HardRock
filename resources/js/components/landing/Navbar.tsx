@@ -98,6 +98,9 @@ export default function Navbar() {
                         <button
                             onClick={() => setIsOpen(!isOpen)}
                             className="inline-flex items-center justify-center p-2 rounded-md text-black dark:text-white hover:text-pink-500 focus:outline-none transition-colors"
+                            aria-label={isOpen ? "Close menu" : "Open menu"}
+                            aria-expanded={isOpen}
+                            aria-controls="mobile-menu"
                         >
                             {isOpen ? <XIcon className="h-6 w-6" /> : <MenuIcon className="h-6 w-6" />}
                         </button>
@@ -107,20 +110,21 @@ export default function Navbar() {
 
             {/* Mobile Menu */}
             <motion.div
+                id="mobile-menu"
                 initial={false}
                 animate={isOpen ? "open" : "closed"}
                 variants={{
                     open: { opacity: 1, height: "auto" },
                     closed: { opacity: 0, height: 0 }
                 }}
-                className="md:hidden overflow-hidden bg-black/95 border-b border-white/10"
+                className="md:hidden overflow-hidden bg-white/95 dark:bg-black/95 border-b border-gray-200 dark:border-white/10"
             >
                 <div className="px-4 pt-2 pb-4 space-y-2">
                     {navLinks.map((link) => (
                         <a
                             key={link.name}
                             href={link.href}
-                            className="text-white/90 hover:text-white block px-3 py-3 rounded-md text-base font-poppins rtl:font-tajawal rtl:font-normal transition-colors"
+                            className="text-black/90 dark:text-white/90 hover:text-brand-purple dark:hover:text-white block px-3 py-3 rounded-md text-base font-poppins rtl:font-tajawal rtl:font-normal transition-colors"
                             onClick={() => setIsOpen(false)}
                         >
                             {link.name}
