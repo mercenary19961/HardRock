@@ -43,4 +43,8 @@ return [
         'ad_account_id' => env('FACEBOOK_AD_ACCOUNT_ID'),
     ],
 
+    'linkedin' => [
+        'partner_id' => env('LINKEDIN_PARTNER_ID'),
+    ],
+
 ];
