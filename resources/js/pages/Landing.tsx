@@ -5,6 +5,7 @@ import WhyHardRock from '@/components/landing/WhyHardRock';
 import Services from '@/components/landing/Services';
 import ContactUs from '@/components/landing/ContactUs';
 import Footer from '@/components/landing/Footer';
+import WhatsAppButton from '@/components/landing/WhatsAppButton';
 import SmoothScroll from '@/components/SmoothScroll';
 
 export default function Landing() {
@@ -58,6 +59,7 @@ export default function Landing() {
                     </main>
 
                     <Footer />
+                    <WhatsAppButton />
                 </div>
             </SmoothScroll>
         </>
