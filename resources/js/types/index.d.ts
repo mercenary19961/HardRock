@@ -6,9 +6,7 @@ export interface User {
     is_admin: boolean;
 }
 
-// Contact Form (to be implemented)
 export interface ContactFormData {
-    // TODO: Define contact form fields
     name: string;
     email: string;
     message: string;
