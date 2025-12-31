@@ -1,4 +1,5 @@
-import { motion } from 'framer-motion';
+import { motion, useAnimationControls } from 'framer-motion';
+import { useEffect } from 'react';
 
 const WhatsAppIcon = ({ className }: { className?: string }) => (
     <svg
@@ -12,16 +13,49 @@ const WhatsAppIcon = ({ className }: { className?: string }) => (
 );
 
 export default function WhatsAppButton() {
+    const controls = useAnimationControls();
+
+    useEffect(() => {
+        const runAnimation = async () => {
+            // Wait 5 seconds before first appearance
+            await new Promise(resolve => setTimeout(resolve, 5000));
+
+            // Loop forever
+            while (true) {
+                // Slide in from right (0.5s)
+                await controls.start({
+                    x: 0,
+                    opacity: 1,
+                    transition: { duration: 0.5, ease: "easeOut" }
+                });
+
+                // Stay visible for 10 seconds
+                await new Promise(resolve => setTimeout(resolve, 10000));
+
+                // Slide out to right (3s)
+                await controls.start({
+                    x: 100,
+                    opacity: 0,
+                    transition: { duration: 3, ease: "easeIn" }
+                });
+
+                // Wait 5 seconds before showing again
+                await new Promise(resolve => setTimeout(resolve, 5000));
+            }
+        };
+
+        runAnimation();
+    }, [controls]);
+
     return (
         <motion.a
             href="https://wa.me/962791700034"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Chat on WhatsApp"
-            className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50 flex items-center justify-center w-12 h-12 md:w-14 md:h-14 bg-[#25D366] rounded-full shadow-lg hover:shadow-xl hover:scale-110 transition-all duration-300"
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 1, duration: 0.3 }}
+            className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50 flex items-center justify-center w-12 h-12 md:w-14 md:h-14 bg-[#25D366] rounded-full shadow-lg hover:shadow-xl transition-shadow duration-300"
+            initial={{ x: 100, opacity: 0 }}
+            animate={controls}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
         >
