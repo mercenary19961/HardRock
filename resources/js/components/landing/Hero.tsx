@@ -54,7 +54,7 @@ export default function Hero() {
                                 style={{ lineHeight: '1.6', paddingTop: '8px' }}
                             >
                                 {t('title.line1')}<br />
-                                <span className="bg-gradient-to-r from-brand-purple to-brand-red bg-clip-text text-transparent">
+                                <span className="text-brand-purple md:bg-gradient-to-r md:from-brand-purple md:to-brand-red md:bg-clip-text md:text-transparent">
                                     {t('title.line2')}
                                 </span><br />
                                 {t('title.gradient')}
@@ -142,7 +142,7 @@ export default function Hero() {
                                 <>
                                     <span className="text-black dark:text-white">نصل بـــــــك إلى</span>
                                     <br />
-                                    <span className="bg-gradient-to-r from-brand-purple to-brand-red bg-clip-text text-transparent">القمـــــــــــــــــــــــــــــــة</span>
+                                    <span className="text-brand-purple md:bg-gradient-to-r md:from-brand-purple md:to-brand-red md:bg-clip-text md:text-transparent">القمـــــــــــــــــــــــــــــــة</span>
                                 </>
                             ) : (
                                 <>
