@@ -263,7 +263,7 @@ export default function ContactUs() {
                     {isArabic ? (
                         <>
                             <span className="text-black dark:text-white">تواصـــــل </span>
-                            <span className="bg-gradient-to-r from-brand-purple to-brand-red bg-clip-text text-transparent">
+                            <span className="text-brand-purple md:bg-gradient-to-r md:from-brand-purple md:to-brand-red md:bg-clip-text md:text-transparent">
                                 معنا
                             </span>
                         </>
