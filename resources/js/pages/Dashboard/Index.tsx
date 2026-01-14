@@ -1,7 +1,7 @@
-import { Head, Link, usePage } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import DashboardLayout from '@/layouts/DashboardLayout';
 import { Banner } from '@/components/ui/banner';
-import { User } from '@/types';
+import { PageProps } from '@/types';
 
 // Icons
 const UsersIcon = ({ className }: { className?: string }) => (
@@ -55,12 +55,11 @@ interface DashboardStats {
     recentContacts: Contact[];
 }
 
-interface DashboardIndexProps {
+interface DashboardIndexProps extends PageProps {
     stats: DashboardStats;
 }
 
-export default function DashboardIndex({ stats }: DashboardIndexProps) {
-    const { auth } = usePage().props as { auth: { user: User } };
+export default function DashboardIndex({ stats, auth }: DashboardIndexProps) {
 
     const formatDate = (dateString: string) => {
         return new Date(dateString).toLocaleDateString('en-US', {
@@ -83,7 +82,7 @@ export default function DashboardIndex({ stats }: DashboardIndexProps) {
                 className="rounded-lg mb-6"
             >
                 <span className="relative z-10">
-                    Welcome to HardRock Dashboard, {auth.user.name}!
+                    Welcome to HardRock Dashboard, {auth?.user.name}!
                 </span>
             </Banner>
 
@@ -160,7 +159,7 @@ export default function DashboardIndex({ stats }: DashboardIndexProps) {
                         >
                             View Contact Submissions
                         </Link>
-                        {auth.user.is_admin && (
+                        {auth?.user.is_admin && (
                             <Link
                                 href={route('dashboard.users.index')}
                                 className="block w-full text-left px-3 py-2 text-sm rounded-lg bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"

@@ -39,12 +39,13 @@
         <!-- hreflang - single bilingual page -->
         <link rel="alternate" hreflang="x-default" href="https://www.hardrock-co.com/">
 
-        <!-- Favicon -->
-        <link rel="icon" type="image/x-icon" href="/favicon.ico">
-        <link rel="icon" type="image/png" sizes="48x48" href="/images/favicon-48x48.png">
-        <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon-96x96.png">
-        <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon-192x192.png">
-        <link rel="apple-touch-icon" sizes="192x192" href="/images/favicon-192x192.png">
+        <!-- Favicon (larger sizes first for Google SERP compatibility) -->
+        <link rel="icon" href="https://www.hardrock-co.com/images/favicon-48x48.png" sizes="48x48" type="image/png">
+        <link rel="icon" href="https://www.hardrock-co.com/images/favicon-96x96.png" sizes="96x96" type="image/png">
+        <link rel="icon" href="https://www.hardrock-co.com/images/favicon-192x192.png" sizes="192x192" type="image/png">
+        <link rel="apple-touch-icon" sizes="192x192" href="https://www.hardrock-co.com/images/favicon-192x192.png">
+        <!-- Fallback for legacy browsers -->
+        <link rel="shortcut icon" href="https://www.hardrock-co.com/favicon.ico">
 
         <!-- Preload Critical Images -->
         <link rel="preload" as="image" href="/images/hero-icon.webp" fetchpriority="high">
