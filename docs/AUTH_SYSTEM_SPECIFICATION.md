@@ -24,7 +24,7 @@ This document provides a complete specification for recreating the Login, Forgot
 ## Technology Stack
 
 ### Backend
-- **Framework**: Laravel 11+ (PHP 8.2+)
+- **Framework**: Laravel 12 (PHP 8.2+)
 - **Authentication**: Laravel Breeze with Inertia.js
 - **Session Management**: Laravel session-based authentication
 - **Password Hashing**: bcrypt (Laravel's default)
@@ -994,7 +994,7 @@ CREATE TABLE sessions (
 ### Composer Packages
 ```json
 {
-  "laravel/framework": "^11.0",
+  "laravel/framework": "^12.0",
   "inertiajs/inertia-laravel": "^1.0"
 }
 ```

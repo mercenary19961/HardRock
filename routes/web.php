@@ -17,6 +17,19 @@ Route::post('/contact', [ContactController::class, 'store'])
     ->middleware('throttle:5,1')
     ->name('contact.store');
 
+// Services Page (with optional service slug, defaults to 'branding')
+Route::get('/services/{slug?}', function (string $slug = 'branding') {
+    $validSlugs = ['social-media', 'paid-ads', 'seo', 'pr-social-listening', 'branding', 'software-ai'];
+
+    if (!in_array($slug, $validSlugs)) {
+        abort(404);
+    }
+
+    return Inertia::render('Services', [
+        'serviceSlug' => $slug,
+    ]);
+})->name('services');
+
 // Dashboard (Protected - accessible by all authenticated team members)
 Route::middleware(['auth'])->prefix('dashboard')->name('dashboard.')->group(function () {
     // Dashboard Home
