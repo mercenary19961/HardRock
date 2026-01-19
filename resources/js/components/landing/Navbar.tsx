@@ -2,7 +2,7 @@ import { Link } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import ThemeToggle from '@/components/ThemeToggle';
+import CinematicSwitch from '@/components/ui/cinematic-glow-toggle';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 const MenuIcon = ({ className }: { className?: string }) => (
@@ -44,7 +44,7 @@ export default function Navbar() {
 
     const navLinks = [
         { name: t('nav.whyHardrock'), href: '#why-hardrock' },
-        { name: t('nav.services'), href: '#services' },
+        { name: t('nav.services'), href: '/services' },
     ];
 
     return (
@@ -85,13 +85,13 @@ export default function Navbar() {
                         >
                             {t('nav.contactUs')}
                         </a>
-                        <ThemeToggle />
+                        <CinematicSwitch />
                         <LanguageSwitcher />
                     </div>
 
                     {/* Mobile menu button */}
                     <div className="md:hidden flex items-center gap-2">
-                        <ThemeToggle />
+                        <CinematicSwitch />
                         <LanguageSwitcher />
                         <button
                             onClick={() => setIsOpen(!isOpen)}

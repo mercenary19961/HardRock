@@ -9,12 +9,14 @@ import enWhyHardRock from './locales/en/whyHardRock.json';
 import enServices from './locales/en/services.json';
 import enContactUs from './locales/en/contactUs.json';
 import enFooter from './locales/en/footer.json';
+import enServiceDetail from './locales/en/serviceDetail.json';
 import arCommon from './locales/ar/common.json';
 import arHero from './locales/ar/hero.json';
 import arWhyHardRock from './locales/ar/whyHardRock.json';
 import arServices from './locales/ar/services.json';
 import arContactUs from './locales/ar/contactUs.json';
 import arFooter from './locales/ar/footer.json';
+import arServiceDetail from './locales/ar/serviceDetail.json';
 
 i18n
   .use(LanguageDetector) // Detect user language
@@ -28,6 +30,7 @@ i18n
         services: enServices,
         contactUs: enContactUs,
         footer: enFooter,
+        serviceDetail: enServiceDetail,
       },
       ar: {
         common: arCommon,
@@ -36,6 +39,7 @@ i18n
         services: arServices,
         contactUs: arContactUs,
         footer: arFooter,
+        serviceDetail: arServiceDetail,
       },
     },
     fallbackLng: 'en', // Default language

@@ -15,6 +15,7 @@ import ResetPassword from '@/pages/Auth/ResetPassword';
 import DashboardIndex from '@/pages/Dashboard/Index';
 import DashboardContacts from '@/pages/Dashboard/Contacts';
 import DashboardUsers from '@/pages/Dashboard/Users';
+import Services from '@/pages/Services';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -27,6 +28,7 @@ const pages: Record<string, any> = {
     'Dashboard/Index': DashboardIndex,
     'Dashboard/Contacts': DashboardContacts,
     'Dashboard/Users': DashboardUsers,
+    'Services': Services,
 };
 
 createInertiaApp({

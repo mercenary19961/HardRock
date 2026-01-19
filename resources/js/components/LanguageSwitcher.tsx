@@ -33,7 +33,7 @@ export default function LanguageSwitcher() {
   return (
     <button
       onClick={toggleLanguage}
-      className="flex items-center gap-1.5 md:gap-2 px-2 md:px-3 py-1.5 md:py-2 rounded-lg border border-gray-300 dark:border-white/20 hover:border-brand-purple dark:hover:border-brand-purple transition-all text-black dark:text-white hover:text-brand-purple dark:hover:text-brand-purple"
+      className="flex items-center gap-1.5 md:gap-2 px-2 md:px-3 py-1.5 md:py-2 rounded-xl bg-white/50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 backdrop-blur-sm shadow-md hover:border-brand-purple dark:hover:border-brand-purple transition-all text-black dark:text-white hover:text-brand-purple dark:hover:text-brand-purple"
       aria-label="Switch language"
     >
       <GlobeIcon className="w-3.5 h-3.5 md:w-4 md:h-4" />

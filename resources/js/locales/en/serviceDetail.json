@@ -1,0 +1,226 @@
+{
+  "social-media": {
+    "name": "Social Media Management",
+    "hero": {
+      "title": "Social Media Management",
+      "subtitle": "End-to-end social media management delivering high-impact content and continuous growth through strategic, data driven execution"
+    },
+    "sections": [
+      {
+        "subtitle": "Strategic Planning & Market Intelligence",
+        "description": "We build social media strategies based on real data and solid research, so your brand's voice, positioning, and content are clear, relevant, and built to perform."
+      },
+      {
+        "subtitle": "Content Strategy & Editorial Calendar",
+        "description": "We build a structured, insight-based content calendar that outlines themes, posting schedules, and campaign directions. This ensures consistent communication, balanced content variety, and alignment with seasonal trends, product launches, and business goals."
+      },
+      {
+        "subtitle": "Full Content Creation (Images & Videos)",
+        "description": "Our creative team produces high-quality, platform-optimized content that reflects your brand identity and speaks directly to your audience. This includes professional image design and creative visuals, short-form video creation (Reels, TikToks, shorts, and promotional clips), and copywriting and message development tailored to each platform. All content is crafted to be thumb-stopping, engaging, and aligned with the latest digital trends."
+      },
+      {
+        "subtitle": "Content Execution & Publishing",
+        "description": "We manage end-to-end content publishing, optimizing posts for audience engagement and platform performance."
+      },
+      {
+        "subtitle": "Competitive Analysis & Benchmarking",
+        "description": "We analyze competitors and benchmark performance to spot opportunities, track trends, and position your brand as an industry leader."
+      },
+      {
+        "subtitle": "Performance Insights & Reporting",
+        "description": "We provide detailed reports on reach, engagement, growth, and content effectiveness, with actionable recommendations"
+      }
+    ],
+    "cta": {
+      "title": "Ready to Transform Your Social Media Presence?",
+      "description": "Let's create a social media strategy that drives real results for your business.",
+      "buttonText": "Get Started"
+    }
+  },
+  "paid-ads": {
+    "name": "Meta & Google Ads Management",
+    "hero": {
+      "title": "Meta & Google Ads Management",
+      "subtitle": "We run data-driven Meta and Google Ads to maximize visibility, boost conversions, and achieve measurable results across major platforms."
+    },
+    "sections": [
+      {
+        "subtitle": "Advertising Strategy & Market Analysis",
+        "description": "We develop a customized advertising strategy aligned with your business objectives, whether it's brand awareness, lead generation, conversions, or online sales. Our process includes market and industry analysis, competitor research and benchmarking, audience segmentation and targeting, and clear KPI setting (CPR, CPA, CPL, CTR, etc)."
+      },
+      {
+        "subtitle": "Campaign Planning & Structure",
+        "description": "We design a professional and well-structured campaign setup. This includes campaign type selection (Search, Display, Video, Conversion, Retargeting, Lookalike Audiences, etc), strategic ad grouping and audience mapping, budget allocation and bidding strategy, and custom funnel design for prospecting, retargeting, and remarketing."
+      },
+      {
+        "subtitle": "Creative Development & Ad Production",
+        "description": "We craft compelling creatives optimized for every channel. This includes static and motion graphics, short-form promotional videos, platform-optimized ad copy and headlines, and creative testing (A/B & multivariate). All creatives are designed to capture attention, improve click-through rates, and drive conversions."
+      },
+      {
+        "subtitle": "Campaign Execution & Optimization",
+        "description": "We run full campaign execution with constant optimization for efficiency. Our optimization process includes daily performance monitoring, bidding and budget adjustments, creative and audience testing, keyword and placement optimization, and improvement of conversion paths and landing page recommendations."
+      },
+      {
+        "subtitle": "Full-Funnel Retargeting & Audience Building",
+        "description": "We build custom audiences and retarget them across various stages of the marketing funnel. This includes website visitors retargeting, add-to-cart and abandoned checkout retargeting, video viewers and engagement audiences, and Lookalike audiences (Meta) & Similar Audiences (Google)."
+      },
+      {
+        "subtitle": "Performance Reporting & Insights",
+        "description": "We provide detailed, transparent monthly reports covering all KPIs and campaign outcomes. Our reports include performance breakdown by channel, audience, and creative, insights on user behavior and market trends, optimization recommendations, and budget guidance for next steps and scaling."
+      }
+    ],
+    "cta": {
+      "title": "Ready to Maximize Your Ad Performance?",
+      "description": "Let's build high-converting campaigns that deliver measurable results for your business.",
+      "buttonText": "Get Started"
+    }
+  },
+  "seo": {
+    "name": "SEO (Search Engine Optimization)",
+    "hero": {
+      "title": "SEO (Search Engine Optimization)",
+      "subtitle": "Our SEO services use data-driven strategies and optimization to boost visibility, increase organic traffic, and deliver sustainable long-term search performance."
+    },
+    "sections": [
+      {
+        "subtitle": "SEO Strategy & Market Analysis",
+        "description": "We begin with a complete audit of your website and digital presence. Our team conducts in-depth industry and market analysis, competitor keyword and content benchmarking, audience intent and search behavior research, and current website performance evaluation. This enables us to define a clear roadmap based on high-value keywords and impactful ranking opportunities."
+      },
+      {
+        "subtitle": "Technical SEO Optimization",
+        "description": "We ensure your website is fully optimized for search engine crawling, indexing, and performance. Our technical SEO work includes website speed optimization, mobile responsiveness improvements, fixing indexing and crawl errors, URL structure and sitemap enhancements, schema markup implementation, and on-page technical hygiene (meta tags, headers, alt texts). A technically sound website improves visibility and strengthens ranking potential."
+      },
+      {
+        "subtitle": "On-Page & Content Optimization",
+        "description": "We optimize your content to match search intent and increase keyword relevance. Our on-page optimization includes keyword research and targeting, optimized landing pages, blog articles, and product descriptions, internal linking structure improvements, content gap analysis and recommendations, and meta titles, descriptions, and header optimization."
+      },
+      {
+        "subtitle": "Off-Page SEO & Authority Building",
+        "description": "We enhance your website's credibility and authority across the web through ethical, high-quality tactics: backlink development and outreach, brand mentions and digital PR opportunities, competitor link analysis, and local SEO signals (Google Business Profile, citations, reviews)."
+      },
+      {
+        "subtitle": "Local SEO (If Applicable)",
+        "description": "For businesses targeting specific regions, we optimize your presence in local searches: Google Maps listing optimization, local keyword targeting, local directory management, and geo-targeted content strategies."
+      },
+      {
+        "subtitle": "Continuous Monitoring, Optimization & Reporting",
+        "description": "SEO is an ongoing process. We continuously monitor performance and refine strategies based on ranking improvements, organic traffic growth, page performance analytics, keyword opportunities, and technical updates. We provide monthly reports with insights and actionable recommendations for sustained improvement. Why This Service Matters: SEO is essential for long-term digital success. Our systematic, full-spectrum approach helps your brand rank higher, attract qualified traffic, and build trust, without relying solely on paid advertising."
+      }
+    ],
+    "cta": {
+      "title": "Ready to Dominate Search Rankings?",
+      "description": "Let's optimize your online presence and drive sustainable organic growth.",
+      "buttonText": "Get Started"
+    }
+  },
+  "pr-social-listening": {
+    "name": "PR & Social Listening",
+    "hero": {
+      "title": "PR & Social Listening",
+      "subtitle": "Hard Rock delivers integrated digital PR and advanced social listening solutions to strengthen reputation, increase visibility, and uncover real-time opportunities."
+    },
+    "sections": [
+      {
+        "subtitle": "PR Strategy & Brand Positioning",
+        "description": "Developing PR strategies aligned with business and marketing objectives, shaping clear brand positioning, messaging architecture, and strong narratives that connect with target audiences. We plan and execute PR campaigns across launches, seasonal activations, corporate initiatives, and product or service communications, supported by reputation benchmarking and market perception analysis to ensure impact and relevance."
+      },
+      {
+        "subtitle": "Media Relations & Earned Coverage",
+        "description": "We manage regional media relations across MENA, covering online, print, TV, and radio outlets. We handle press release writing, editing, Arabic/English translation, and distribution, alongside proactive media pitching, story placement, and exclusive features. Our team prepares full media kits, company fact sheets, and spokesperson profiles, coordinates interviews with clear briefing notes and talking points, and organizes press conferences and media roundtables to amplify brand presence."
+      },
+      {
+        "subtitle": "Digital PR & Online Visibility",
+        "description": "Hard Rock delivers digital PR campaigns across online publications and high-impact platforms, using earned and hybrid tactics to grow brand mentions and visibility. We also manage online reputation through structured review strategies, while continuously monitoring digital channels to detect risks early and respond quickly during potential crises."
+      },
+      {
+        "subtitle": "Influencer & KOL PR",
+        "description": "Identifying the right influencers and KOLs through reputation fit and audience relevance analysis, then activates earned and hybrid outreach programs including PR seeding. We coordinate content to ensure alignment with brand messages and campaign objectives, and track performance across reach, engagement, sentiment, and conversions when applicable."
+      },
+      {
+        "subtitle": "PR Monitoring, Reporting & Insights",
+        "description": "We provide full media monitoring across news, social, and digital channels, delivering detailed coverage analysis including volume, outlet tier, message pull-through, and tone/sentiment. We benchmark share of voice against competitors and issue monthly or quarterly PR performance reports with clear insights and recommendations."
+      }
+    ],
+    "cta": {
+      "title": "Ready to Strengthen Your Brand's Reputation?",
+      "description": "Let's build a strategic PR and social listening plan that protects and elevates your brand.",
+      "buttonText": "Get Started"
+    }
+  },
+  "branding": {
+    "name": "Branding",
+    "hero": {
+      "title": "Branding",
+      "subtitle": "We build strong, memorable brand identities through strategy and impactful design including brand strategy, logo design, voice, visuals and messaging for a unified presence across all platforms."
+    },
+  "sections": [
+    {
+      "subtitle": "Brand Strategy Development",
+      "description": "Clarify your brand’s purpose, values, and positioning with real market context—then turn that into a strong personality and a clear differentiation plan. This includes defining your audience, competitive space, messaging pillars, and the reasons customers should choose you, so every design and marketing decision stays aligned."
+    },
+    {
+      "subtitle": "Logo & Visual Identity Design",
+      "description": "A memorable logo is only the start. This stage delivers a scalable logo system that works everywhere (social, web, print), along with key variations (primary, secondary, icon, monochrome) and clear usage rules to keep the identity consistent across every touchpoint."
+    },
+    {
+      "subtitle": "Color Palette Creation",
+      "description": "Build a cohesive color system that reflects your brand and supports readability, contrast, and accessibility. You’ll get primary and secondary palettes, accent options, and practical guidance for using them consistently across websites, social content, presentations, and print."
+    },
+    {
+      "subtitle": "Brand Voice & Tone",
+      "description": "Shape the way the brand sounds—confident, friendly, premium, bold, or minimal—based on your audience and positioning. Tone rules, writing examples, and messaging do’s and don’ts ensure consistency across teams, platforms, and campaigns."
+    },
+    {
+      "subtitle": "Tagline / Slogan Development",
+      "description": "Turn your positioning into a short, memorable line that communicates value fast. Multiple tagline options are developed, refined, and tested for clarity, tone, and usability across ads, social media, websites, and brand materials."
+    },
+    {
+      "subtitle": "Target Audience Definition",
+      "description": "Pinpoint the customer segments that matter most by mapping needs, motivations, behaviors, and pain points. Audience personas and a communication approach help your brand attract the right people, convert more effectively, and build long-term trust."
+    }
+  ],
+    "cta": {
+      "title": "Ready to Build a Powerful Brand Identity?",
+      "description": "Let's create a brand that stands out, connects deeply, and drives lasting success.",
+      "buttonText": "Get Started"
+    }
+  },
+  "software-ai": {
+    "name": "Software & AI Solutions",
+    "hero": {
+      "title": "Software & AI Solutions",
+      "subtitle": "Hard Rock delivers advanced AI Agent and Software solutions that enhance performance, streamline operations, and support scalable, efficient growth."
+    },
+    "sections": [
+      {
+        "subtitle": "Custom Software Development",
+        "description": "We design and build custom web-based software tailored to your business needs. From internal dashboards to client-facing platforms, our solutions focus on clean architecture, scalability, and seamless integration with existing systems."
+      },
+      {
+        "subtitle": "AI Integration & Automation",
+        "description": "We integrate AI-powered features into existing systems to automate workflows, enhance customer interaction, and improve operational efficiency. Our focus is on practical AI use cases such as chat-based assistance, process automation, and intelligent data handling."
+      },
+      {
+        "subtitle": "Data Analytics & Insights",
+        "description": "We help businesses make better decisions by organizing and visualizing their data through dashboards and reporting tools. Our approach turns operational data into clear insights that support growth, performance tracking, and optimization."
+      },
+      {
+        "subtitle": "Cloud & Deployment Solutions",
+        "description": "We deploy and manage modern web applications using cloud-based infrastructure with a focus on reliability, security, and cost efficiency. Our solutions ensure smooth deployment, version control, and scalable environments as your business grows."
+      },
+      {
+        "subtitle": "AI Agent Implementation",
+        "description": "We implement AI agents that assist with customer support, lead handling, and internal operations. These agents are customized to your business workflows and integrated into websites or platforms to deliver consistent and efficient interactions."
+      },
+      {
+        "subtitle": "Maintenance, Support & Optimization",
+        "description": "We provide ongoing maintenance and technical support to ensure your systems remain stable, secure, and up to date. Our support includes performance optimization, updates, and continuous improvements as your needs evolve."
+      }
+    ],
+    "cta": {
+      "title": "Ready to Transform Your Business with AI & Software?",
+      "description": "Let's build intelligent solutions that drive efficiency, innovation, and growth.",
+      "buttonText": "Get Started"
+    }
+  }
+}

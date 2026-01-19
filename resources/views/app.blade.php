@@ -47,9 +47,6 @@
         <!-- Fallback for legacy browsers -->
         <link rel="shortcut icon" href="https://www.hardrock-co.com/favicon.ico">
 
-        <!-- Preload Critical Images -->
-        <link rel="preload" as="image" href="/images/hero-icon.webp" fetchpriority="high">
-
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

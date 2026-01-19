@@ -4,6 +4,7 @@ import Hero from '@/components/landing/Hero';
 import WhyHardRock from '@/components/landing/WhyHardRock';
 import Services from '@/components/landing/Services';
 import ContactUs from '@/components/landing/ContactUs';
+import LocationMap from '@/components/landing/LocationMap';
 import Footer from '@/components/landing/Footer';
 import WhatsAppButton from '@/components/landing/WhatsAppButton';
 import SmoothScroll from '@/components/SmoothScroll';
@@ -56,6 +57,7 @@ export default function Landing() {
                         <WhyHardRock />
                         <Services />
                         <ContactUs />
+                        <LocationMap />
                     </main>
 
                     <Footer />

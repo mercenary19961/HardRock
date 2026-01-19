@@ -12,5 +12,15 @@
   "language": {
     "en": "English",
     "ar": "العربية"
+  },
+  "location": {
+    "title": "موقعنا",
+    "address": "العنوان",
+    "addressValue": "عمّان، الأردن",
+    "phone": "الهاتف",
+    "email": "البريد الإلكتروني",
+    "hours": "ساعات العمل",
+    "hoursValue": "الأحد - الخميس: 9 صباحاً - 5 مساءً",
+    "getDirections": "احصل على الاتجاهات"
   }
 }
