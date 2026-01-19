@@ -207,7 +207,7 @@ interface FlowchartSectionProps {
 
 function FlowchartSection({ title, sections, serviceSlug, isArabic, isLightMode }: FlowchartSectionProps) {
     return (
-        <section className="relative z-10 py-16 md:py-24">
+        <section className="relative z-10 py-16 md:py-20">
             <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Service Title with gradient */}
                 <motion.div
@@ -329,7 +329,7 @@ function FlowItem({ section, index, serviceSlug, isArabic, isEven, isLightMode }
     );
 
     return (
-        <div className="relative mb-16 md:mb-32">
+        <div className="relative mb-10 md:mb-14">
             {/* Mobile: Stack layout */}
             <motion.div
                 initial={{ opacity: 0, y: 50 }}

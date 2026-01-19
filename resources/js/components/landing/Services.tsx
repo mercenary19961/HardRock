@@ -1,3 +1,4 @@
+import { Link } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -218,9 +219,10 @@ export default function Services() {
                                 )}
                             </h1>
 
-                            {/* Service Image */}
-                            <div
-                                className="relative w-full max-w-sm mb-8 flex items-center justify-center mx-auto lg:mx-0"
+                            {/* Service Image - Clickable link to service page */}
+                            <Link
+                                href={selectedService.link}
+                                className="relative w-full max-w-sm mb-8 flex items-center justify-center mx-auto lg:mx-0 cursor-pointer pointer-events-auto transition-transform hover:scale-105"
                                 style={{
                                     height: '280px',
                                     marginLeft: window.innerWidth >= 1024 ? imageMargin.left : 'auto',
@@ -245,7 +247,7 @@ export default function Services() {
                                     loading="lazy"
                                     className="relative z-10 w-full h-full object-contain drop-shadow-2xl hidden dark:block"
                                 />
-                            </div>
+                            </Link>
 
                             {/* Service Description */}
                             <div style={{ minHeight: '180px' }} className="max-w-2xl mx-auto lg:mx-0">
