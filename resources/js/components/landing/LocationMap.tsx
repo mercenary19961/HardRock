@@ -76,25 +76,29 @@ export default function LocationMap() {
             icon: MapPinIcon,
             label: t('location.address', 'Address'),
             value: t('location.addressValue', 'Amman, Jordan'),
-            href: 'https://maps.app.goo.gl/6mK9yKbDoU7UW82a9'
+            href: 'https://maps.app.goo.gl/6mK9yKbDoU7UW82a9',
+            forceLtr: false
         },
         {
             icon: PhoneIcon,
             label: t('location.phone', 'Phone'),
             value: '+962 79 170 0034',
-            href: 'tel:+962791700034'
+            href: 'tel:+962791700034',
+            forceLtr: true
         },
         {
             icon: MailIcon,
             label: t('location.email', 'Email'),
             value: 'sales@hardrock-co.com',
-            href: 'mailto:sales@hardrock-co.com'
+            href: 'mailto:sales@hardrock-co.com',
+            forceLtr: true
         },
         {
             icon: ClockIcon,
             label: t('location.hours', 'Working Hours'),
             value: t('location.hoursValue', 'Sun - Thu: 9AM - 5PM'),
-            href: null
+            href: null,
+            forceLtr: false
         }
     ];
 
@@ -160,12 +164,16 @@ export default function LocationMap() {
                                                 href={item.href}
                                                 target={item.href.startsWith('http') ? '_blank' : undefined}
                                                 rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                                                className={`text-sm md:text-base text-gray-900 dark:text-white hover:text-brand-purple dark:hover:text-brand-purple transition-colors ${isArabic ? 'font-tajawal' : 'font-poppins'}`}
+                                                dir={item.forceLtr ? 'ltr' : undefined}
+                                                className={`text-xs md:text-sm text-gray-900 dark:text-white hover:text-brand-purple dark:hover:text-brand-purple transition-colors ${isArabic && !item.forceLtr ? 'font-tajawal' : 'font-poppins'} ${item.forceLtr && isArabic ? 'inline-block' : ''}`}
                                             >
                                                 {item.value}
                                             </a>
                                         ) : (
-                                            <p className={`text-sm md:text-base text-gray-900 dark:text-white ${isArabic ? 'font-tajawal' : 'font-poppins'}`}>
+                                            <p
+                                                dir={item.forceLtr ? 'ltr' : undefined}
+                                                className={`text-xs md:text-sm text-gray-900 dark:text-white ${isArabic && !item.forceLtr ? 'font-tajawal' : 'font-poppins'}`}
+                                            >
                                                 {item.value}
                                             </p>
                                         )}
