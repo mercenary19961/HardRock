@@ -228,8 +228,14 @@ function FlowchartSection({ title, sections, serviceSlug, isArabic, isLightMode 
 
                 {/* Flow Items Container */}
                 <div className="relative z-10">
-                    {/* Center line - hidden on mobile */}
-                    <div className="hidden md:block absolute left-1/2 top-0 bottom-0 -translate-x-1/2 w-px bg-brand-red" />
+                    {/* Center line - hidden on mobile, fades in on scroll */}
+                    <motion.div
+                        initial={{ opacity: 0, scaleY: 0 }}
+                        whileInView={{ opacity: 1, scaleY: 1 }}
+                        viewport={{ once: true, margin: '-50px' }}
+                        transition={{ duration: 1.5, delay: 0.3, ease: 'easeOut' }}
+                        className="hidden md:block absolute left-1/2 top-0 bottom-0 -translate-x-1/2 w-px bg-brand-red origin-top"
+                    />
 
                     {sections.map((section, index) => (
                         <FlowItem
@@ -298,7 +304,7 @@ function FlowItem({ section, index, serviceSlug, isArabic, isEven, isLightMode }
             <img
                 src={imagePath}
                 alt={section.subtitle}
-                className="w-full max-w-[250px] md:max-w-[500px] h-auto"
+                className="w-full max-w-[250px] md:max-w-[450px] h-auto"
                 loading="lazy"
             />
         </motion.div>
@@ -329,14 +335,14 @@ function FlowItem({ section, index, serviceSlug, isArabic, isEven, isLightMode }
     );
 
     return (
-        <div className="relative mb-10 md:mb-14">
+        <div className="relative mb-8 md:mb-">
             {/* Mobile: Stack layout */}
             <motion.div
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-100px' }}
                 transition={{ duration: 0.6 }}
-                className="flex flex-col items-center gap-4 md:hidden"
+                className="flex flex-col items-center gap-3 md:hidden"
             >
                 {imageContent}
                 {textContent}
@@ -348,7 +354,7 @@ function FlowItem({ section, index, serviceSlug, isArabic, isEven, isLightMode }
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-100px' }}
                 transition={{ duration: 0.6 }}
-                className="hidden md:grid md:grid-cols-2 md:gap-16 lg:gap-24 items-center"
+                className="hidden md:grid md:grid-cols-2 md:gap-10 lg:gap-16 items-center"
             >
                 {isEven ? (
                     <>

@@ -153,32 +153,32 @@
       "title": "Branding",
       "subtitle": "We build strong, memorable brand identities through strategy and impactful design including brand strategy, logo design, voice, visuals and messaging for a unified presence across all platforms."
     },
-    "sections": [
-      {
-        "subtitle": "Brand Strategy Development",
-        "description": "Define brand purpose, values, and positioning. Establish brand personality and market differentiation."
-      },
-      {
-        "subtitle": "Logo & Visual Identity Design",
-        "description": "Create a unique, memorable, and versatile logo. Provide multiple logo variations and usage guidelines."
-      },
-      {
-        "subtitle": "Color Palette Creation",
-        "description": "Develop a cohesive and impactful brand color system. Ensure consistency across digital and print applications."
-      },
-      {
-        "subtitle": "Brand Voice & Tone",
-        "description": "Define the communication style that reflects your brand identity. Provide guidelines for consistent messaging across all platforms."
-      },
-      {
-        "subtitle": "Tagline / Slogan Development",
-        "description": "Craft a clear, remarkable, and brand-aligned tagline. Highlight the brand's value and positioning."
-      },
-      {
-        "subtitle": "Target Audience Definition",
-        "description": "Identify ideal customer segments. Establish audience needs, motivations, and communication approach."
-      }
-    ],
+  "sections": [
+    {
+      "subtitle": "Brand Strategy Development",
+      "description": "Clarify your brand’s purpose, values, and positioning with real market context—then turn that into a strong personality and a clear differentiation plan. This includes defining your audience, competitive space, messaging pillars, and the reasons customers should choose you, so every design and marketing decision stays aligned."
+    },
+    {
+      "subtitle": "Logo & Visual Identity Design",
+      "description": "A memorable logo is only the start. This stage delivers a scalable logo system that works everywhere (social, web, print), along with key variations (primary, secondary, icon, monochrome) and clear usage rules to keep the identity consistent across every touchpoint."
+    },
+    {
+      "subtitle": "Color Palette Creation",
+      "description": "Build a cohesive color system that reflects your brand and supports readability, contrast, and accessibility. You’ll get primary and secondary palettes, accent options, and practical guidance for using them consistently across websites, social content, presentations, and print."
+    },
+    {
+      "subtitle": "Brand Voice & Tone",
+      "description": "Shape the way the brand sounds—confident, friendly, premium, bold, or minimal—based on your audience and positioning. Tone rules, writing examples, and messaging do’s and don’ts ensure consistency across teams, platforms, and campaigns."
+    },
+    {
+      "subtitle": "Tagline / Slogan Development",
+      "description": "Turn your positioning into a short, memorable line that communicates value fast. Multiple tagline options are developed, refined, and tested for clarity, tone, and usability across ads, social media, websites, and brand materials."
+    },
+    {
+      "subtitle": "Target Audience Definition",
+      "description": "Pinpoint the customer segments that matter most by mapping needs, motivations, behaviors, and pain points. Audience personas and a communication approach help your brand attract the right people, convert more effectively, and build long-term trust."
+    }
+  ],
     "cta": {
       "title": "Ready to Build a Powerful Brand Identity?",
       "description": "Let's create a brand that stands out, connects deeply, and drives lasting success.",
