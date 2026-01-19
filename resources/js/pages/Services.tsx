@@ -260,12 +260,32 @@ interface FlowItemProps {
     isLightMode: boolean;
 }
 
+// Map of subtitles that have light mode images available
+const LIGHT_MODE_IMAGES: Record<string, string[]> = {
+    'social-media': [
+        'Content Strategy & Editorial Calendar',
+        'Performance Insights & Reporting',
+    ],
+    'seo': [
+        'SEO Strategy & Market Analysis',
+        'On-Page & Content Optimization',
+        'Continuous Monitoring, Optimization & Reporting',
+    ],
+    'pr-social-listening': [
+        'PR Strategy & Brand Positioning',
+        'Influencer & KOL PR',
+    ],
+};
+
 function FlowItem({ section, index, serviceSlug, isArabic, isEven, isLightMode }: FlowItemProps) {
     const imageNumber = index + 1;
     const darkImagePath = `/images/services/${serviceSlug}/${imageNumber}.webp`;
-    // Light mode images are named after the subtitle with "-light mode.webp" suffix
+
+    // Check if this subtitle has a light mode image
+    const hasLightModeImage = LIGHT_MODE_IMAGES[serviceSlug]?.includes(section.subtitle) ?? false;
     const lightImagePath = `/images/services/${serviceSlug}/${section.subtitle}-light mode.webp`;
-    const imagePath = isLightMode ? lightImagePath : darkImagePath;
+
+    const imagePath = isLightMode && hasLightModeImage ? lightImagePath : darkImagePath;
 
     const imageContent = (
         <motion.div
@@ -280,12 +300,6 @@ function FlowItem({ section, index, serviceSlug, isArabic, isEven, isLightMode }
                 alt={section.subtitle}
                 className="w-full max-w-[250px] md:max-w-[500px] h-auto"
                 loading="lazy"
-                // Fallback to dark image if light mode image fails to load
-                onError={(e) => {
-                    if (isLightMode) {
-                        (e.target as HTMLImageElement).src = darkImagePath;
-                    }
-                }}
             />
         </motion.div>
     );
