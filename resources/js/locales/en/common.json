@@ -12,5 +12,15 @@
   "language": {
     "en": "English",
     "ar": "Arabic"
+  },
+  "location": {
+    "title": "Find Us",
+    "address": "Address",
+    "addressValue": "Amman, Jordan",
+    "phone": "Phone",
+    "email": "Email",
+    "hours": "Working Hours",
+    "hoursValue": "Sun - Thu: 9AM - 5PM",
+    "getDirections": "Get Directions"
   }
 }
