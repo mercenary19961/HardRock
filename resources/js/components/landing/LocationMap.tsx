@@ -76,7 +76,7 @@ export default function LocationMap() {
             icon: MapPinIcon,
             label: t('location.address', 'Address'),
             value: t('location.addressValue', 'Amman, Jordan'),
-            href: 'https://maps.google.com/?q=31.99276407247539,35.84856305260722'
+            href: 'https://maps.app.goo.gl/6mK9yKbDoU7UW82a9'
         },
         {
             icon: PhoneIcon,
@@ -176,7 +176,7 @@ export default function LocationMap() {
 
                         {/* Get Directions Button */}
                         <motion.a
-                            href="https://maps.google.com/?q=31.99276407247539,35.84856305260722"
+                            href="https://maps.app.goo.gl/6mK9yKbDoU7UW82a9"
                             target="_blank"
                             rel="noopener noreferrer"
                             initial={{ opacity: 0, y: 10 }}
