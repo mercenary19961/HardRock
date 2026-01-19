@@ -87,22 +87,27 @@
         @endif
         <!-- End Meta Pixel Code -->
 
-        <!-- LinkedIn Insight Tag -->
+        <!-- LinkedIn Insight Tag (with error suppression for ad blockers) -->
         @if(config('services.linkedin.partner_id'))
         <script type="text/javascript">
-            _linkedin_partner_id = "{{ config('services.linkedin.partner_id') }}";
-            window._linkedin_data_partner_ids = window._linkedin_data_partner_ids || [];
-            window._linkedin_data_partner_ids.push(_linkedin_partner_id);
+            try {
+                _linkedin_partner_id = "{{ config('services.linkedin.partner_id') }}";
+                window._linkedin_data_partner_ids = window._linkedin_data_partner_ids || [];
+                window._linkedin_data_partner_ids.push(_linkedin_partner_id);
+            } catch (e) { /* Silently fail if blocked */ }
         </script>
         <script type="text/javascript">
             (function(l) {
-                if (!l){window.lintrk = function(a,b){window.lintrk.q.push([a,b])};
-                window.lintrk.q=[]}
-                var s = document.getElementsByTagName("script")[0];
-                var b = document.createElement("script");
-                b.type = "text/javascript";b.async = true;
-                b.src = "https://snap.licdn.com/li.lms-analytics/insight.min.js";
-                s.parentNode.insertBefore(b, s);
+                try {
+                    if (!l){window.lintrk = function(a,b){window.lintrk.q.push([a,b])};
+                    window.lintrk.q=[]}
+                    var s = document.getElementsByTagName("script")[0];
+                    var b = document.createElement("script");
+                    b.type = "text/javascript";b.async = true;
+                    b.src = "https://snap.licdn.com/li.lms-analytics/insight.min.js";
+                    b.onerror = function() { /* Silently fail if blocked */ };
+                    s.parentNode.insertBefore(b, s);
+                } catch (e) { /* Silently fail if blocked */ }
             })(window.lintrk);
         </script>
         <noscript>
