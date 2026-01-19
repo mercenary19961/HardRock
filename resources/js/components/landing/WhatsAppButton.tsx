@@ -1,5 +1,5 @@
 import { motion, useAnimationControls } from 'framer-motion';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 const WhatsAppIcon = ({ className }: { className?: string }) => (
     <svg
@@ -14,37 +14,58 @@ const WhatsAppIcon = ({ className }: { className?: string }) => (
 
 export default function WhatsAppButton() {
     const controls = useAnimationControls();
+    const isMountedRef = useRef(true);
 
     useEffect(() => {
+        isMountedRef.current = true;
+
+        const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
         const runAnimation = async () => {
             // Wait 5 seconds before first appearance
-            await new Promise(resolve => setTimeout(resolve, 5000));
+            await sleep(5000);
 
-            // Loop forever
-            while (true) {
+            // Loop while component is mounted
+            while (isMountedRef.current) {
+                if (!isMountedRef.current) break;
+
                 // Slide in from right (0.5s)
-                await controls.start({
-                    x: 0,
-                    opacity: 1,
-                    transition: { duration: 0.5, ease: "easeOut" }
-                });
+                try {
+                    await controls.start({
+                        x: 0,
+                        opacity: 1,
+                        transition: { duration: 0.5, ease: "easeOut" }
+                    });
+                } catch { break; }
+
+                if (!isMountedRef.current) break;
 
                 // Stay visible for 10 seconds
-                await new Promise(resolve => setTimeout(resolve, 10000));
+                await sleep(10000);
+
+                if (!isMountedRef.current) break;
 
                 // Slide out to right (3s)
-                await controls.start({
-                    x: 100,
-                    opacity: 0,
-                    transition: { duration: 3, ease: "easeIn" }
-                });
+                try {
+                    await controls.start({
+                        x: 100,
+                        opacity: 0,
+                        transition: { duration: 3, ease: "easeIn" }
+                    });
+                } catch { break; }
+
+                if (!isMountedRef.current) break;
 
                 // Wait 5 seconds before showing again
-                await new Promise(resolve => setTimeout(resolve, 5000));
+                await sleep(5000);
             }
         };
 
         runAnimation();
+
+        return () => {
+            isMountedRef.current = false;
+        };
     }, [controls]);
 
     return (

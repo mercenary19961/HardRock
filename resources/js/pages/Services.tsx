@@ -1,10 +1,13 @@
 import { Head, router } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import { useRef, useState, useEffect } from 'react';
 import Navbar from '@/components/landing/Navbar';
 import Footer from '@/components/landing/Footer';
 import WhatsAppButton from '@/components/landing/WhatsAppButton';
 import SmoothScroll from '@/components/SmoothScroll';
+import ExpandableServiceSelector from '@/components/ui/expandable-service-selector';
+import { useTheme } from '@/contexts/ThemeContext';
 
 interface ServiceSection {
     subtitle: string;
@@ -40,7 +43,9 @@ const SERVICE_SLUGS = [
 
 export default function Services({ serviceSlug }: ServicesProps) {
     const { t, i18n } = useTranslation('serviceDetail');
+    const { theme } = useTheme();
     const isArabic = i18n.language === 'ar';
+    const isLightMode = theme === 'light';
 
     const serviceData = t(serviceSlug, { returnObjects: true }) as ServiceData;
     const sections = serviceData?.sections || [];
@@ -62,29 +67,34 @@ export default function Services({ serviceSlug }: ServicesProps) {
             </Head>
 
             <SmoothScroll>
-                <div className="min-h-screen bg-black text-white font-sans antialiased selection:bg-primary/20 selection:text-primary">
+                <div className={`min-h-screen font-sans antialiased selection:bg-primary/20 selection:text-primary ${
+                    isLightMode ? 'bg-white text-gray-900' : 'bg-black text-white'
+                }`}>
                     <Navbar />
 
                     <main className="pt-20 relative">
-                        {/* Background with purple glow spots - positioned absolutely on page */}
-                        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                            <div className="absolute top-[100px] ltr:left-[10%] rtl:right-[10%] w-[400px] h-[400px] bg-brand-purple/40 rounded-full blur-[100px]" />
-                            <div className="absolute top-[400px] ltr:right-[5%] rtl:left-[5%] w-[350px] h-[350px] bg-brand-purple/35 rounded-full blur-[130px]" />
-                            <div className="absolute top-[800px] ltr:left-0 rtl:right-0 w-[500px] h-[500px] bg-brand-red/30 rounded-full blur-[160px]" />
-                            <div className="absolute top-[1200px] ltr:right-[15%] rtl:left-[15%] w-[300px] h-[300px] bg-brand-purple/40 rounded-full blur-[100px]" />
-                            <div className="absolute top-[1600px] ltr:left-[20%] rtl:right-[20%] w-[450px] h-[450px] bg-brand-purple/35 rounded-full blur-[140px]" />
-                            <div className="absolute top-[2000px] ltr:right-0 rtl:left-0 w-[400px] h-[400px] bg-brand-purple/40 rounded-full blur-[120px]" />
-                            <div className="absolute top-[2400px] ltr:left-[30%] rtl:right-[30%] w-[350px] h-[350px] bg-brand-red/30 rounded-full blur-[130px]" />
-                            <div className="absolute top-[2800px] ltr:right-[10%] rtl:left-[10%] w-[400px] h-[400px] bg-brand-purple/40 rounded-full blur-[150px]" />
-                            <div className="absolute top-[3200px] ltr:left-[5%] rtl:right-[5%] w-[450px] h-[450px] bg-brand-purple/35 rounded-full blur-[140px]" />
-                            <div className="absolute top-[3600px] ltr:right-[20%] rtl:left-[20%] w-[350px] h-[350px] bg-brand-red/30 rounded-full blur-[120px]" />
-                        </div>
+                        {/* Background with purple glow spots - positioned absolutely on page (hidden in light mode) */}
+                        {!isLightMode && (
+                            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                                <div className="absolute top-[100px] ltr:left-[10%] rtl:right-[10%] w-[400px] h-[400px] bg-brand-purple/40 rounded-full blur-[100px]" />
+                                <div className="absolute top-[400px] ltr:right-[5%] rtl:left-[5%] w-[350px] h-[350px] bg-brand-purple/35 rounded-full blur-[130px]" />
+                                <div className="absolute top-[800px] ltr:left-0 rtl:right-0 w-[500px] h-[500px] bg-brand-red/30 rounded-full blur-[160px]" />
+                                <div className="absolute top-[1200px] ltr:right-[15%] rtl:left-[15%] w-[300px] h-[300px] bg-brand-purple/40 rounded-full blur-[100px]" />
+                                <div className="absolute top-[1600px] ltr:left-[20%] rtl:right-[20%] w-[450px] h-[450px] bg-brand-purple/35 rounded-full blur-[140px]" />
+                                <div className="absolute top-[2000px] ltr:right-0 rtl:left-0 w-[400px] h-[400px] bg-brand-purple/40 rounded-full blur-[120px]" />
+                                <div className="absolute top-[2400px] ltr:left-[30%] rtl:right-[30%] w-[350px] h-[350px] bg-brand-red/30 rounded-full blur-[130px]" />
+                                <div className="absolute top-[2800px] ltr:right-[10%] rtl:left-[10%] w-[400px] h-[400px] bg-brand-purple/40 rounded-full blur-[150px]" />
+                                <div className="absolute top-[3200px] ltr:left-[5%] rtl:right-[5%] w-[450px] h-[450px] bg-brand-purple/35 rounded-full blur-[140px]" />
+                                <div className="absolute top-[3600px] ltr:right-[20%] rtl:left-[20%] w-[350px] h-[350px] bg-brand-red/30 rounded-full blur-[120px]" />
+                            </div>
+                        )}
 
                         {/* Service Selector */}
                         <ServiceSelector
                             currentSlug={serviceSlug}
                             onServiceChange={handleServiceChange}
                             isArabic={isArabic}
+                            isLightMode={isLightMode}
                         />
 
                         {/* Flowchart Section */}
@@ -93,6 +103,7 @@ export default function Services({ serviceSlug }: ServicesProps) {
                             sections={sections}
                             serviceSlug={serviceSlug}
                             isArabic={isArabic}
+                            isLightMode={isLightMode}
                         />
 
                         {/* CTA Section */}
@@ -102,6 +113,7 @@ export default function Services({ serviceSlug }: ServicesProps) {
                             buttonText={serviceData?.cta?.buttonText}
                             onButtonClick={scrollToContact}
                             isArabic={isArabic}
+                            isLightMode={isLightMode}
                         />
                     </main>
 
@@ -118,38 +130,69 @@ interface ServiceSelectorProps {
     currentSlug: string;
     onServiceChange: (slug: string) => void;
     isArabic: boolean;
+    isLightMode: boolean;
 }
 
-function ServiceSelector({ currentSlug, onServiceChange, isArabic }: ServiceSelectorProps) {
+function ServiceSelector({ currentSlug, onServiceChange, isArabic, isLightMode }: ServiceSelectorProps) {
     const { t } = useTranslation('serviceDetail');
+    const [isVisible, setIsVisible] = useState(false);
+    const hasScrolledDown = useRef(false);
+    const lastScrollY = useRef(0);
+    const scrollThreshold = 50; // Minimum scroll down before we start tracking scroll up
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const currentScrollY = window.scrollY;
+
+            // Once visible, stay visible permanently (until page refresh)
+            if (isVisible) {
+                lastScrollY.current = currentScrollY;
+                return;
+            }
+
+            // Track if user has scrolled down enough
+            if (currentScrollY > scrollThreshold) {
+                hasScrolledDown.current = true;
+            }
+
+            // Show permanently when user scrolls up after having scrolled down
+            if (hasScrolledDown.current && currentScrollY < lastScrollY.current) {
+                setIsVisible(true);
+            }
+
+            lastScrollY.current = currentScrollY;
+        };
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [isVisible]);
+
+    const services = SERVICE_SLUGS.map((slug) => ({
+        slug,
+        name: t(`${slug}.name`),
+    }));
 
     return (
-        <section className="relative z-10 py-6 md:py-8 border-b border-white/10">
+        <motion.section
+            className="relative z-10 py-4 md:py-6"
+            initial={{ height: 0, opacity: 0, overflow: 'hidden' }}
+            animate={{
+                height: isVisible ? 'auto' : 0,
+                opacity: isVisible ? 1 : 0,
+                overflow: isVisible ? 'visible' : 'hidden'
+            }}
+            transition={{ duration: 0.4, ease: 'easeInOut' }}
+        >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex flex-wrap justify-center gap-2 md:gap-3">
-                    {SERVICE_SLUGS.map((slug) => {
-                        const serviceName = t(`${slug}.name`);
-                        const isActive = slug === currentSlug;
-
-                        return (
-                            <button
-                                key={slug}
-                                onClick={() => onServiceChange(slug)}
-                                className={`px-4 py-2 md:px-6 md:py-2.5 rounded-full text-sm md:text-base transition-all duration-300 ${
-                                    isArabic ? 'font-tajawal' : 'font-poppins'
-                                } ${
-                                    isActive
-                                        ? 'bg-gradient-to-r from-brand-purple to-brand-red text-white shadow-lg shadow-brand-purple/25'
-                                        : 'bg-white/10 text-white/80 hover:bg-white/20'
-                                }`}
-                            >
-                                {serviceName}
-                            </button>
-                        );
-                    })}
-                </div>
+                <ExpandableServiceSelector
+                    services={services}
+                    currentSlug={currentSlug}
+                    onServiceChange={onServiceChange}
+                    isArabic={isArabic}
+                    isLightMode={isLightMode}
+                />
             </div>
-        </section>
+        </motion.section>
     );
 }
 
@@ -159,65 +202,35 @@ interface FlowchartSectionProps {
     sections: ServiceSection[];
     serviceSlug: string;
     isArabic: boolean;
+    isLightMode: boolean;
 }
 
-function FlowchartSection({ title, sections, serviceSlug, isArabic }: FlowchartSectionProps) {
+function FlowchartSection({ title, sections, serviceSlug, isArabic, isLightMode }: FlowchartSectionProps) {
     return (
         <section className="relative z-10 py-16 md:py-24">
-            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                {/* Service Title with gradient and starting circle */}
+            <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                {/* Service Title with gradient */}
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
-                    className="relative flex items-center justify-center gap-4 mb-8"
+                    className="relative flex items-center justify-center gap-2 mb-16 z-10"
                 >
                     <h1 className={`text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-center ${
                         isArabic ? 'font-tajawal' : 'font-sf-pro'
                     }`}>
-                        <span className="text-white">{title?.split(' ').slice(0, -1).join(' ')} </span>
+                        <span className={isLightMode ? 'text-gray-900' : 'text-white'}>{title?.split(' ').slice(0, -1).join(' ')} </span>
                         <span className="bg-gradient-to-r from-brand-purple to-brand-red bg-clip-text text-transparent">
                             {title?.split(' ').slice(-1)}
                         </span>
                     </h1>
-                    {/* Starting white dot */}
-                    <div className="w-6 h-6 rounded-full bg-white shadow-lg shadow-white/30" />
                 </motion.div>
 
-                {/* Gradient line from title to first image */}
-                <motion.div
-                    initial={{ scaleY: 0, opacity: 0 }}
-                    animate={{ scaleY: 1, opacity: 1 }}
-                    transition={{ duration: 0.8, delay: 0.3 }}
-                    className="relative flex justify-center mb-8"
-                    style={{ transformOrigin: 'top' }}
-                >
-                    <svg
-                        width="200"
-                        height="120"
-                        viewBox="0 0 200 120"
-                        fill="none"
-                        className={`${isArabic ? 'scale-x-[-1]' : ''}`}
-                    >
-                        <defs>
-                            <linearGradient id="title-line-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stopColor="#704399" />
-                                <stop offset="100%" stopColor="#C93727" />
-                            </linearGradient>
-                        </defs>
-                        {/* Curved line from center going down and to the left */}
-                        <path
-                            d="M 100 0 Q 100 60 20 120"
-                            stroke="url(#title-line-gradient)"
-                            strokeWidth="3"
-                            strokeLinecap="round"
-                            fill="none"
-                        />
-                    </svg>
-                </motion.div>
+                {/* Flow Items Container */}
+                <div className="relative z-10">
+                    {/* Center line - hidden on mobile */}
+                    <div className="hidden md:block absolute left-1/2 top-0 bottom-0 -translate-x-1/2 w-px bg-brand-red" />
 
-                {/* Flow Items */}
-                <div className="relative">
                     {sections.map((section, index) => (
                         <FlowItem
                             key={index}
@@ -227,6 +240,7 @@ function FlowchartSection({ title, sections, serviceSlug, isArabic }: FlowchartS
                             serviceSlug={serviceSlug}
                             isArabic={isArabic}
                             isEven={index % 2 === 0}
+                            isLightMode={isLightMode}
                         />
                     ))}
                 </div>
@@ -243,118 +257,109 @@ interface FlowItemProps {
     serviceSlug: string;
     isArabic: boolean;
     isEven: boolean;
+    isLightMode: boolean;
 }
 
-function FlowItem({ section, index, totalItems, serviceSlug, isArabic, isEven }: FlowItemProps) {
+function FlowItem({ section, index, serviceSlug, isArabic, isEven, isLightMode }: FlowItemProps) {
     const imageNumber = index + 1;
-    const imagePath = `/images/services/${serviceSlug}/${imageNumber}.webp`;
-    const isLast = index === totalItems - 1;
+    const darkImagePath = `/images/services/${serviceSlug}/${imageNumber}.webp`;
+    // Light mode images are named after the subtitle with "-light mode.webp" suffix
+    const lightImagePath = `/images/services/${serviceSlug}/${section.subtitle}-light mode.webp`;
+    const imagePath = isLightMode ? lightImagePath : darkImagePath;
+
+    const imageContent = (
+        <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className={`flex ${isEven ? 'justify-end' : 'justify-start'}`}
+        >
+            <img
+                src={imagePath}
+                alt={section.subtitle}
+                className="w-full max-w-[250px] md:max-w-[500px] h-auto"
+                loading="lazy"
+                // Fallback to dark image if light mode image fails to load
+                onError={(e) => {
+                    if (isLightMode) {
+                        (e.target as HTMLImageElement).src = darkImagePath;
+                    }
+                }}
+            />
+        </motion.div>
+    );
+
+    const textContent = (
+        <motion.div
+            initial={{ opacity: 0, x: isEven ? 30 : -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className={`flex flex-col justify-center text-center items-center ${
+                isArabic ? 'md:text-right md:items-end' : 'md:text-left md:items-start'
+            }`}
+        >
+            <h3 className={`text-xl md:text-2xl lg:text-3xl font-bold mb-4 w-full ${
+                isLightMode ? 'text-gray-900' : 'text-white'
+            } ${isArabic ? 'font-tajawal md:text-right' : 'font-sf-pro md:text-left'}`}>
+                {section.subtitle}
+            </h3>
+
+            <p className={`leading-relaxed max-w-lg ${
+                isLightMode ? 'text-gray-600' : 'text-gray-400'
+            } ${isArabic ? 'font-tajawal text-lg md:text-xl md:text-right' : 'font-poppins text-base md:text-lg lg:text-xl md:text-left'}`}>
+                {section.description}
+            </p>
+        </motion.div>
+    );
 
     return (
-        <div className="relative">
-            {/* Curved Arrow Path - SVG */}
-            {!isLast && (
-                <motion.svg
-                    initial={{ pathLength: 0, opacity: 0 }}
-                    whileInView={{ pathLength: 1, opacity: 1 }}
-                    viewport={{ once: true, margin: '-50px' }}
-                    transition={{ duration: 1, delay: 0.3 }}
-                    className={`absolute w-full h-32 md:h-40 bottom-0 translate-y-1/2 ${
-                        isEven ? '' : 'scale-x-[-1]'
-                    }`}
-                    viewBox="0 0 400 100"
-                    preserveAspectRatio="none"
-                    fill="none"
-                >
-                    <defs>
-                        <linearGradient id={`gradient-${index}`} x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" stopColor="#704399" />
-                            <stop offset="100%" stopColor="#C93727" />
-                        </linearGradient>
-                    </defs>
-                    <motion.path
-                        d={isEven
-                            ? "M 50 10 Q 200 10 200 50 Q 200 90 350 90"
-                            : "M 350 10 Q 200 10 200 50 Q 200 90 50 90"
-                        }
-                        stroke={`url(#gradient-${index})`}
-                        strokeWidth="3"
-                        strokeLinecap="round"
-                        fill="none"
-                        initial={{ pathLength: 0 }}
-                        whileInView={{ pathLength: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 1.2, delay: 0.5 }}
-                    />
-                    {/* Arrow head */}
-                    <motion.circle
-                        cx={isEven ? "350" : "50"}
-                        cy="90"
-                        r="6"
-                        fill={`url(#gradient-${index})`}
-                        initial={{ opacity: 0, scale: 0 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.3, delay: 1.5 }}
-                    />
-                </motion.svg>
-            )}
-
-            {/* Content Row */}
+        <div className="relative mb-16 md:mb-32">
+            {/* Mobile: Stack layout */}
             <motion.div
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-100px' }}
                 transition={{ duration: 0.6 }}
-                className={`flex flex-col md:flex-row items-center gap-8 md:gap-12 mb-24 md:mb-32 ${
-                    isEven ? 'md:flex-row' : 'md:flex-row-reverse'
-                }`}
+                className="flex flex-col items-center gap-4 md:hidden"
             >
-                {/* Image */}
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: 0.2 }}
-                    className="flex-shrink-0 w-full md:w-[280px] lg:w-[320px]"
-                >
-                    <div className="relative">
-                        <img
-                            src={imagePath}
-                            alt={section.subtitle}
-                            className="w-full h-auto"
-                            loading="lazy"
-                        />
-                        {/* Connection dot */}
-                        <div className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-gradient-to-r from-brand-purple to-brand-red shadow-lg shadow-brand-purple/50 ${
-                            isEven ? '-right-2' : '-left-2'
-                        }`} />
-                    </div>
-                </motion.div>
-
-                {/* Text Content */}
-                <motion.div
-                    initial={{ opacity: 0, x: isEven ? 30 : -30 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: 0.3 }}
-                    className={`flex-1 ${isEven ? 'md:text-left' : 'md:text-right'} text-center`}
-                >
-                    <h3 className={`text-xl md:text-2xl lg:text-3xl font-bold text-white mb-4 ${
-                        isArabic ? 'font-tajawal' : 'font-sf-pro'
-                    }`}>
-                        {section.subtitle}
-                    </h3>
-
-                    <p className={`text-gray-400 leading-relaxed max-w-lg ${
-                        isEven ? 'md:mr-auto' : 'md:ml-auto'
-                    } mx-auto md:mx-0 ${
-                        isArabic ? 'font-tajawal text-base md:text-lg' : 'font-poppins text-sm md:text-base'
-                    }`}>
-                        {section.description}
-                    </p>
-                </motion.div>
+                {imageContent}
+                {textContent}
             </motion.div>
+
+            {/* Desktop: Two-column grid with centered gap */}
+            <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-100px' }}
+                transition={{ duration: 0.6 }}
+                className="hidden md:grid md:grid-cols-2 md:gap-16 lg:gap-24 items-center"
+            >
+                {isEven ? (
+                    <>
+                        {imageContent}
+                        {textContent}
+                    </>
+                ) : (
+                    <>
+                        {textContent}
+                        {imageContent}
+                    </>
+                )}
+            </motion.div>
+
+            {/* Circle on the center line - hidden on mobile */}
+            <motion.div
+                initial={{ opacity: 0, scale: 0 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: 0.4 }}
+                className={`hidden md:block absolute top-1/2 -translate-y-1/2 z-10 w-3 h-3 rounded-full shadow-lg ${
+                    isLightMode ? 'bg-brand-red shadow-brand-red/40' : 'bg-white shadow-white/40'
+                }`}
+                style={{ left: 'calc(50% - 6px)' }}
+            />
         </div>
     );
 }
@@ -366,9 +371,10 @@ interface CTASectionProps {
     buttonText: string;
     onButtonClick: () => void;
     isArabic: boolean;
+    isLightMode: boolean;
 }
 
-function CTASection({ title, description, buttonText, onButtonClick, isArabic }: CTASectionProps) {
+function CTASection({ title, description, buttonText, onButtonClick, isArabic, isLightMode }: CTASectionProps) {
     return (
         <section className="relative z-10 py-16 md:py-24">
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -377,17 +383,21 @@ function CTASection({ title, description, buttonText, onButtonClick, isArabic }:
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6 }}
-                    className="bg-gradient-to-r from-brand-purple/20 to-brand-red/20 backdrop-blur-sm border border-white/10 rounded-3xl p-8 md:p-12 lg:p-16"
+                    className={`backdrop-blur-sm rounded-3xl p-8 md:p-12 lg:p-16 ${
+                        isLightMode
+                            ? 'bg-gradient-to-r from-brand-purple/10 to-brand-red/10 border border-gray-200'
+                            : 'bg-gradient-to-r from-brand-purple/20 to-brand-red/20 border border-white/10'
+                    }`}
                 >
-                    <h2 className={`text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-4 ${
-                        isArabic ? 'font-tajawal' : 'font-sf-pro'
-                    }`}>
+                    <h2 className={`text-2xl md:text-3xl lg:text-4xl font-bold mb-4 ${
+                        isLightMode ? 'text-gray-900' : 'text-white'
+                    } ${isArabic ? 'font-tajawal' : 'font-sf-pro'}`}>
                         {title}
                     </h2>
 
-                    <p className={`text-gray-400 mb-8 max-w-2xl mx-auto ${
-                        isArabic ? 'font-tajawal text-lg' : 'font-poppins text-base md:text-lg'
-                    }`}>
+                    <p className={`mb-8 max-w-2xl mx-auto ${
+                        isLightMode ? 'text-gray-600' : 'text-gray-400'
+                    } ${isArabic ? 'font-tajawal text-lg' : 'font-poppins text-base md:text-lg'}`}>
                         {description}
                     </p>
 
