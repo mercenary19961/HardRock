@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import { MagnetizeButton } from '@/components/ui/magnetize-button';
 
 export default function Hero() {
     const { t, i18n } = useTranslation('hero');
@@ -95,13 +96,17 @@ export default function Hero() {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8, delay: 0.6 }}
                         >
-                            <button onClick={scrollToContact} className={`group relative bg-gradient-to-r from-brand-purple to-brand-red rounded-full text-md xs:text-lg sm:text-lg md:text-xl lg:text-2xl font-medium hover:shadow-2xl hover:shadow-brand-red/20 transition-all duration-300 hover:scale-105 tracking-wide overflow-hidden ${
-                                isArabic ? 'font-cairo py-2 md:py-4 px-4 sm:px-8 md:px-12 lg:px-12 xl:px-24' : 'font-sf-pro py-2 md:py-4 px-4 xs:px-16 sm:px-16 md:px-24'
-                            }`}>
-                                <span className="relative z-10 text-white transition-all duration-300">
+                            <MagnetizeButton
+                                onClick={scrollToContact}
+                                particleCount={14}
+                                className={`group relative bg-gradient-to-r from-brand-purple to-brand-red rounded-full text-md xs:text-lg sm:text-lg md:text-xl lg:text-2xl font-medium hover:shadow-2xl hover:shadow-brand-red/20 transition-all duration-300 hover:scale-105 tracking-wide overflow-hidden ${
+                                    isArabic ? 'font-cairo py-2 md:py-4 px-4 sm:px-8 md:px-12 lg:px-12 xl:px-24' : 'font-sf-pro py-2 md:py-4 px-4 xs:px-16 sm:px-16 md:px-24'
+                                }`}
+                            >
+                                <span className="text-white transition-all duration-300">
                                     {t('cta')}
                                 </span>
-                            </button>
+                            </MagnetizeButton>
                         </motion.div>
                     </motion.div>
 
