@@ -137,7 +137,7 @@ const ExpandableServiceSelector: React.FC<ExpandableServiceSelectorProps> = ({
                             style={{ flex: 1 }}
                             animate={{
                                 flex: getFlexValue(index, service.slug),
-                                opacity: isOtherHovered ? 0 : 1,
+                                opacity: isOtherHovered ? 0.2 : 1,
                             }}
                             transition={{ duration: 0.5, ease: 'easeInOut' }}
                             onMouseEnter={() => setHoveredIndex(index)}
