@@ -30,6 +30,7 @@ interface ServiceData {
 
 interface ServicesProps {
     serviceSlug: string;
+    fromNav?: boolean;
 }
 
 const SERVICE_SLUGS = [
@@ -41,7 +42,7 @@ const SERVICE_SLUGS = [
     'software-ai',
 ] as const;
 
-export default function Services({ serviceSlug }: ServicesProps) {
+export default function Services({ serviceSlug, fromNav = false }: ServicesProps) {
     const { t, i18n } = useTranslation('serviceDetail');
     const { theme } = useTheme();
     const isArabic = i18n.language === 'ar';
@@ -95,6 +96,7 @@ export default function Services({ serviceSlug }: ServicesProps) {
                             onServiceChange={handleServiceChange}
                             isArabic={isArabic}
                             isLightMode={isLightMode}
+                            showImmediately={fromNav}
                         />
 
                         {/* Flowchart Section */}
@@ -131,16 +133,23 @@ interface ServiceSelectorProps {
     onServiceChange: (slug: string) => void;
     isArabic: boolean;
     isLightMode: boolean;
+    showImmediately?: boolean;
 }
 
-function ServiceSelector({ currentSlug, onServiceChange, isArabic, isLightMode }: ServiceSelectorProps) {
+function ServiceSelector({ currentSlug, onServiceChange, isArabic, isLightMode, showImmediately = false }: ServiceSelectorProps) {
     const { t } = useTranslation('serviceDetail');
-    const [isVisible, setIsVisible] = useState(false);
+    const [isVisible, setIsVisible] = useState(showImmediately);
     const hasScrolledDown = useRef(false);
     const lastScrollY = useRef(0);
     const scrollThreshold = 50; // Minimum scroll down before we start tracking scroll up
 
     useEffect(() => {
+        // If showImmediately is true, selector is already visible, no need for scroll logic
+        if (showImmediately) {
+            setIsVisible(true);
+            return;
+        }
+
         const handleScroll = () => {
             const currentScrollY = window.scrollY;
 
@@ -165,7 +174,7 @@ function ServiceSelector({ currentSlug, onServiceChange, isArabic, isLightMode }
 
         window.addEventListener('scroll', handleScroll, { passive: true });
         return () => window.removeEventListener('scroll', handleScroll);
-    }, [isVisible]);
+    }, [isVisible, showImmediately]);
 
     const services = SERVICE_SLUGS.map((slug) => ({
         slug,
@@ -214,9 +223,9 @@ function FlowchartSection({ title, sections, serviceSlug, isArabic, isLightMode 
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
-                    className="relative flex items-center justify-center gap-2 mb-16 z-10"
+                    className="relative flex items-center justify-center gap-2 mb-4 md:mb-16 z-10"
                 >
-                    <h1 className={`text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-center ${
+                    <h1 className={`text-4xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-center ${
                         isArabic ? 'font-tajawal' : 'font-sf-pro'
                     }`}>
                         <span className={isLightMode ? 'text-gray-900' : 'text-white'}>{title?.split(' ').slice(0, -1).join(' ')} </span>
@@ -304,7 +313,7 @@ function FlowItem({ section, index, serviceSlug, isArabic, isEven, isLightMode }
             <img
                 src={imagePath}
                 alt={section.subtitle}
-                className="w-full max-w-[250px] md:max-w-[450px] h-auto"
+                className="w-full max-w-[250px] md:max-w-[450px] h-auto]"
                 loading="lazy"
             />
         </motion.div>

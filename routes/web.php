@@ -18,7 +18,7 @@ Route::post('/contact', [ContactController::class, 'store'])
     ->name('contact.store');
 
 // Services Page (with optional service slug, defaults to 'branding')
-Route::get('/services/{slug?}', function (string $slug = 'branding') {
+Route::get('/services/{slug?}', function (Illuminate\Http\Request $request, string $slug = 'branding') {
     $validSlugs = ['social-media', 'paid-ads', 'seo', 'pr-social-listening', 'branding', 'software-ai'];
 
     if (!in_array($slug, $validSlugs)) {
@@ -27,6 +27,7 @@ Route::get('/services/{slug?}', function (string $slug = 'branding') {
 
     return Inertia::render('Services', [
         'serviceSlug' => $slug,
+        'fromNav' => $request->query('from') === 'nav',
     ]);
 })->name('services');
 
