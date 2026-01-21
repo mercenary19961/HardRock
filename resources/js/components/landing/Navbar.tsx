@@ -44,7 +44,7 @@ export default function Navbar() {
 
     const navLinks = [
         { name: t('nav.whyHardrock'), href: '#why-hardrock' },
-        { name: t('nav.services'), href: '/services' },
+        { name: t('nav.services'), href: '/services?from=nav' },
     ];
 
     return (
