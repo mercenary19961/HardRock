@@ -77,28 +77,32 @@ export default function LocationMap() {
             label: t('location.address', 'Address'),
             value: t('location.addressValue', 'Amman, Jordan'),
             href: 'https://maps.app.goo.gl/6mK9yKbDoU7UW82a9',
-            forceLtr: false
+            forceLtr: false,
+            hideOnMobile: false
         },
         {
             icon: PhoneIcon,
             label: t('location.phone', 'Phone'),
             value: '+962 79 170 0034',
             href: 'tel:+962791700034',
-            forceLtr: true
+            forceLtr: true,
+            hideOnMobile: true
         },
         {
             icon: MailIcon,
             label: t('location.email', 'Email'),
             value: 'sales@hardrock-co.com',
             href: 'mailto:sales@hardrock-co.com',
-            forceLtr: true
+            forceLtr: true,
+            hideOnMobile: true
         },
         {
             icon: ClockIcon,
             label: t('location.hours', 'Working Hours'),
             value: t('location.hoursValue', 'Sun - Thu: 9AM - 5PM'),
             href: null,
-            forceLtr: false
+            forceLtr: false,
+            hideOnMobile: false
         }
     ];
 
@@ -129,20 +133,21 @@ export default function LocationMap() {
                     whileInView={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.6 }}
                     viewport={{ once: true }}
-                    className={`absolute top-1/2 -translate-y-1/2 md:top-auto md:translate-y-0 md:bottom-8 lg:bottom-12 ${isArabic ? 'right-4 sm:right-6 lg:right-8' : 'left-4 sm:left-6 lg:left-8'}`}
+                    className={`absolute top-4 right-4 md:top-auto md:right-auto md:bottom-8 lg:bottom-12 ${isArabic ? 'md:right-4 sm:md:right-6 lg:right-8' : 'md:left-4 sm:md:left-6 lg:left-8'}`}
                     dir={isArabic ? 'rtl' : 'ltr'}
                 >
-                    <div className="bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xl rounded-2xl p-6 md:p-8 shadow-2xl border border-zinc-200 dark:border-zinc-800 max-w-sm">
+                    <div className="bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xl rounded-2xl p-4 md:p-8 shadow-2xl border border-zinc-200 dark:border-zinc-800 max-w-[280px] md:max-w-sm">
                         {/* Card Header */}
-                        <div className="mb-6">
-                            <h3 className={`text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-2 ${isArabic ? 'font-tajawal' : 'font-sf-pro'}`}>
-                                {t('location.title', 'Find Us')}
+                        <div className="mb-0 md:mb-6">
+                            <h3 className={`text-xl md:text-3xl font-bold text-gray-900 dark:text-white mb-2 ${isArabic ? 'font-tajawal' : 'font-sf-pro'}`}>
+                                <span className="md:hidden">{t('location.titleMobile', 'Find Us Here')}</span>
+                                <span className="hidden md:inline">{t('location.title', 'Find Us')}</span>
                             </h3>
                             <div className="w-16 h-1 bg-gradient-to-r from-brand-purple to-brand-red rounded-full" />
                         </div>
 
-                        {/* Contact Info List */}
-                        <div className="space-y-4">
+                        {/* Contact Info List - Hidden on mobile */}
+                        <div className="hidden md:block space-y-3 md:space-y-4">
                             {contactInfo.map((item, index) => (
                                 <motion.div
                                     key={index}
@@ -152,8 +157,8 @@ export default function LocationMap() {
                                     viewport={{ once: true }}
                                     className="flex items-start gap-3"
                                 >
-                                    <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-brand-purple/10 to-brand-red/10 flex items-center justify-center">
-                                        <item.icon className="w-5 h-5 text-brand-purple" />
+                                    <div className="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 rounded-full bg-gradient-to-br from-brand-purple/10 to-brand-red/10 flex items-center justify-center">
+                                        <item.icon className="w-4 h-4 md:w-5 md:h-5 text-brand-purple" />
                                     </div>
                                     <div className="flex-1 min-w-0">
                                         <p className={`text-xs text-gray-500 dark:text-gray-400 mb-0.5 ${isArabic ? 'font-tajawal' : 'font-poppins'}`}>
@@ -191,7 +196,7 @@ export default function LocationMap() {
                             whileInView={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.4, delay: 0.5 }}
                             viewport={{ once: true }}
-                            className={`mt-6 w-full flex items-center justify-center gap-2 bg-gradient-to-r from-brand-purple to-brand-red text-white px-6 py-3 rounded-full text-sm md:text-base font-medium hover:shadow-lg hover:shadow-brand-purple/30 transition-all duration-300 ${isArabic ? 'font-tajawal' : 'font-poppins'}`}
+                            className={`mt-4 md:mt-6 w-full flex items-center justify-center gap-2 bg-gradient-to-r from-brand-purple to-brand-red text-white px-4 md:px-6 py-2.5 md:py-3 rounded-full text-sm md:text-base font-medium hover:shadow-lg hover:shadow-brand-purple/30 transition-all duration-300 ${isArabic ? 'font-tajawal' : 'font-poppins'}`}
                         >
                             <MapPinIcon className="w-4 h-4" />
                             {t('location.getDirections', 'Get Directions')}

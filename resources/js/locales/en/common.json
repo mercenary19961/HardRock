@@ -15,6 +15,7 @@
   },
   "location": {
     "title": "Find Us",
+    "titleMobile": "Find Us Here",
     "address": "Address",
     "addressValue": "Amman, Jordan",
     "phone": "Phone",

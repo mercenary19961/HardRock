@@ -15,6 +15,7 @@
   },
   "location": {
     "title": "موقعنا",
+    "titleMobile": "موقعنا",
     "address": "العنوان",
     "addressValue": "عمّان، الأردن",
     "phone": "الهاتف",
