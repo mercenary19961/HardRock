@@ -359,7 +359,7 @@ function FlowItem({ section, serviceSlug, isArabic, isEven, isLightMode }: FlowI
     );
 
     return (
-        <div className="relative mb-8 md:mb-">
+        <div className="relative mb-24 md:mb-24">
             {/* Mobile: Stack layout */}
             <motion.div
                 initial={{ opacity: 0, y: 50 }}
