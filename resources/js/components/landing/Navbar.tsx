@@ -49,19 +49,19 @@ export default function Navbar() {
 
     return (
         <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-black/90 backdrop-blur-md border-b border-white/80 overflow-x-hidden">
-            <div className="w-full px-4 sm:px-12 lg:px-16 xl:px-20">
+            <div className="w-full ltr:pl-2 ltr:pr-4 rtl:pr-2 rtl:pl-4 sm:px-12 lg:px-16 xl:px-20">
                 <div className="flex items-center justify-between h-20 gap-2 sm:gap-4">
                     {/* Logo */}
                     <Link href="/" className="flex-shrink-0">
                         <img
                             src="/images/HOR-BLACK LOGO.svg"
                             alt="HardRock"
-                            className="h-8 w-auto dark:hidden"
+                            className="h-5 sm:h-8 w-auto dark:hidden"
                         />
                         <img
                             src="/images/OR-WHITE LOGO.svg"
                             alt="HardRock"
-                            className="h-8 w-auto hidden dark:block"
+                            className="h-5 sm:h-8 w-auto hidden dark:block"
                         />
                     </Link>
 
