@@ -584,7 +584,7 @@ export default function ContactUs() {
                                     disabled={!isFormValid() || processing}
                                     className={`relative w-2/4 py-6 px-8 rounded-full text-2xl transition-all duration-300 ${
                                         isFormValid() && !processing
-                                            ? 'bg-gradient-to-r from-brand-purple to-brand-red text-white cursor-pointer hover:scale-105 hover:shadow-2xl hover:shadow-brand-purple/50 active:scale-95 animate-pulse-glow'
+                                            ? 'bg-gradient-to-r from-brand-purple to-brand-red text-white cursor-pointer'
                                             : 'bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-500 cursor-not-allowed'
                                     } ${
                                         isArabic
@@ -758,7 +758,7 @@ export default function ContactUs() {
                         disabled={!isFormValid() || processing}
                         className={`relative w-2/4 py-6 px-8 rounded-full text-2xl transition-all duration-300 ${
                             isFormValid() && !processing
-                                ? 'bg-gradient-to-r from-brand-purple to-brand-red text-white cursor-pointer hover:scale-105 hover:shadow-2xl hover:shadow-brand-purple/50 active:scale-95 animate-pulse-glow'
+                                ? 'bg-gradient-to-r from-brand-purple to-brand-red text-white cursor-pointer'
                                 : 'bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-500 cursor-not-allowed'
                         } ${
                             isArabic

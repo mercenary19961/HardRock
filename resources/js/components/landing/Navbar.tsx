@@ -48,9 +48,9 @@ export default function Navbar() {
     ];
 
     return (
-        <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-black/90 backdrop-blur-md border-b border-white/80" >
+        <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-black/90 backdrop-blur-md border-b border-white/80 overflow-x-hidden">
             <div className="w-full px-4 sm:px-12 lg:px-16 xl:px-20">
-                <div className="flex items-center justify-between h-20 gap-4">
+                <div className="flex items-center justify-between h-20 gap-2 sm:gap-4">
                     {/* Logo */}
                     <Link href="/" className="flex-shrink-0">
                         <img
@@ -90,7 +90,7 @@ export default function Navbar() {
                     </div>
 
                     {/* Mobile menu button */}
-                    <div className="md:hidden flex items-center gap-2">
+                    <div className="md:hidden flex items-center gap-1 sm:gap-2 flex-shrink-0">
                         <CinematicSwitch />
                         <LanguageSwitcher />
                         <button
