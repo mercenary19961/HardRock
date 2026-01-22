@@ -216,14 +216,14 @@ interface FlowchartSectionProps {
 
 function FlowchartSection({ title, sections, serviceSlug, isArabic, isLightMode }: FlowchartSectionProps) {
     return (
-        <section className="relative z-10 py-16 md:py-20">
+        <section className="relative z-10 pt-12 pb-16 md:py-20">
             <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Service Title with gradient */}
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
-                    className="relative flex items-center justify-center gap-2 mb-4 md:mb-16 z-10"
+                    className="relative flex items-center justify-center gap-2 mb-10 md:mb-16 z-10"
                 >
                     <h1 className={`text-4xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-center ${
                         isArabic ? 'font-tajawal' : 'font-sf-pro'
