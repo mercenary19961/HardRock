@@ -250,8 +250,6 @@ function FlowchartSection({ title, sections, serviceSlug, isArabic, isLightMode 
                         <FlowItem
                             key={index}
                             section={section}
-                            index={index}
-                            totalItems={sections.length}
                             serviceSlug={serviceSlug}
                             isArabic={isArabic}
                             isEven={index % 2 === 0}
@@ -267,8 +265,6 @@ function FlowchartSection({ title, sections, serviceSlug, isArabic, isLightMode 
 // Flow Item Component
 interface FlowItemProps {
     section: ServiceSection;
-    index: number;
-    totalItems: number;
     serviceSlug: string;
     isArabic: boolean;
     isEven: boolean;
@@ -292,13 +288,32 @@ const LIGHT_MODE_IMAGES: Record<string, string[]> = {
     ],
 };
 
-function FlowItem({ section, index, serviceSlug, isArabic, isEven, isLightMode }: FlowItemProps) {
-    const imageNumber = index + 1;
-    const darkImagePath = `/images/services/${serviceSlug}/${imageNumber}.webp`;
+// Map subtitles to image filenames (only for cases where they differ)
+const IMAGE_FILENAME_MAP: Record<string, Record<string, string>> = {
+    'branding': {
+        'Logo & Visual Identity Design': 'logo design',
+        'Tagline / Slogan Development': 'Tagline  Slogan Development',
+    },
+    'seo': {
+        'Local SEO (If Applicable)': 'local seo',
+    },
+    'social-media': {
+        'Strategic Planning & Market Intelligence': 'strategic planning',
+    },
+};
+
+// Helper function to get image filename from subtitle
+function getImageFilename(serviceSlug: string, subtitle: string): string {
+    return IMAGE_FILENAME_MAP[serviceSlug]?.[subtitle] || subtitle;
+}
+
+function FlowItem({ section, serviceSlug, isArabic, isEven, isLightMode }: FlowItemProps) {
+    const imageFilename = getImageFilename(serviceSlug, section.subtitle);
+    const darkImagePath = `/images/services/${serviceSlug}/${imageFilename}.webp`;
 
     // Check if this subtitle has a light mode image
     const hasLightModeImage = LIGHT_MODE_IMAGES[serviceSlug]?.includes(section.subtitle) ?? false;
-    const lightImagePath = `/images/services/${serviceSlug}/${section.subtitle}-light mode.webp`;
+    const lightImagePath = `/images/services/${serviceSlug}/${imageFilename}-light mode.webp`;
 
     const imagePath = isLightMode && hasLightModeImage ? lightImagePath : darkImagePath;
 
@@ -344,7 +359,7 @@ function FlowItem({ section, index, serviceSlug, isArabic, isEven, isLightMode }
     );
 
     return (
-        <div className="relative mb-8 md:mb-">
+        <div className="relative mb-24 md:mb-24">
             {/* Mobile: Stack layout */}
             <motion.div
                 initial={{ opacity: 0, y: 50 }}
