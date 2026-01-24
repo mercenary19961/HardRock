@@ -14,6 +14,8 @@ export default function Landing() {
     // Defer analytics scripts until after page is interactive
     useEffect(() => {
         const loadAnalytics = () => {
+            const ids = (window as any).__ANALYTICS_IDS__ || {};
+
             // GTM
             const gtmScript = document.createElement('script');
             gtmScript.innerHTML = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -35,6 +37,36 @@ export default function Landing() {
                 gtag('js', new Date());
                 gtag('config', 'G-TFQFC7Q08R');`;
             document.head.appendChild(ga4Config);
+
+            // Facebook Pixel
+            if (ids.fbPixelId) {
+                const fbScript = document.createElement('script');
+                fbScript.innerHTML = `!function(f,b,e,v,n,t,s)
+                    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+                    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+                    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+                    n.queue=[];t=b.createElement(e);t.async=!0;
+                    t.src=v;s=b.getElementsByTagName(e)[0];
+                    s.parentNode.insertBefore(t,s)}(window,document,'script',
+                    'https://connect.facebook.net/en_US/fbevents.js');
+                    fbq('init','${ids.fbPixelId}');
+                    fbq('track','PageView');`;
+                document.head.appendChild(fbScript);
+            }
+
+            // LinkedIn Insight Tag
+            if (ids.linkedinPartnerId) {
+                const liScript = document.createElement('script');
+                liScript.innerHTML = `_linkedin_partner_id="${ids.linkedinPartnerId}";
+                    window._linkedin_data_partner_ids=window._linkedin_data_partner_ids||[];
+                    window._linkedin_data_partner_ids.push(_linkedin_partner_id);`;
+                document.head.appendChild(liScript);
+
+                const liTrackScript = document.createElement('script');
+                liTrackScript.async = true;
+                liTrackScript.src = 'https://snap.licdn.com/li.lms-analytics/insight.min.js';
+                document.head.appendChild(liTrackScript);
+            }
         };
 
         // Load after the page is idle, or after 3.5s as fallback
@@ -63,10 +95,18 @@ export default function Landing() {
                     
                     <main>
                         <Hero />
-                        <WhyHardRock />
-                        <Services />
-                        <ContactUs />
-                        <LocationMap />
+                        <div className="content-auto">
+                            <WhyHardRock />
+                        </div>
+                        <div className="content-auto">
+                            <Services />
+                        </div>
+                        <div className="content-auto">
+                            <ContactUs />
+                        </div>
+                        <div className="content-auto">
+                            <LocationMap />
+                        </div>
                     </main>
 
                     <Footer />

@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
 export default function Hero() {
@@ -20,12 +19,8 @@ export default function Hero() {
         <section className="relative min-h-screen flex items-center overflow-hidden bg-white dark:bg-black">
             {/* Purple Glow Background - Dark Mode */}
             <div className="absolute inset-0 overflow-hidden dark:block hidden">
-                {/* <div className="absolute bottom-0 left-0 w-full h-[60%] bg-gradient-to-t from-purple-900/40 via-purple-600/20 to-transparent blur-3xl" /> */}
                 <div className="absolute top-1/3 ltr:left-0 rtl:right-0 w-1/2 h-1/2 bg-gradient-to-r from-purple-600/30 to-transparent blur-[100px]" />
             </div>
-
-            {/* Light Mode Background */}
-            {/* <div className="absolute inset-0 bg-gradient-to-br from-white via-purple-50/30 to-pink-50/20 dark:hidden" /> */}
 
             {/* Background Wave */}
             <div className="hidden lg:block absolute ltr:bottom-12 ltr:left-0 rtl:bottom-12 rtl:right-0 ltr:origin-bottom-left rtl:origin-bottom-right lg:w-[40%] opacity-30 dark:opacity-60">
@@ -41,33 +36,25 @@ export default function Hero() {
             <div className="relative z-10 w-full px-8 sm:px-12 lg:px-16 xl:px-20 pt-36 pb-0 md:pt-24 md:pb-20">
                 <div className="grid lg:grid-cols-2 gap-10 items-center">
                     {/* Left Column - Text Content */}
-                    <motion.div
-                        initial={{ opacity: 0, x: -50 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.8 }}
-                        className="text-center"
+                    <div
+                        className="text-center animate-on-load fade-in-left"
+                        style={{ animationDuration: '0.8s' }}
                     >
                         {isArabic ? (
-                            <motion.h1
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.8, delay: 0.2 }}
-                                className="text-3xl md:text-4xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-bold text-black dark:text-white text-center mb-6 font-tajawal"
-                                style={{ lineHeight: '1.6', paddingTop: '8px' }}
+                            <h1
+                                className="text-3xl md:text-4xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-bold text-black dark:text-white text-center mb-6 font-tajawal animate-on-load fade-in-up"
+                                style={{ lineHeight: '1.6', paddingTop: '8px', animationDelay: '0.2s', animationDuration: '0.8s' }}
                             >
                                 {t('title.line1')}<br />
                                 <span className="text-brand-purple md:bg-gradient-to-r md:from-brand-purple md:to-brand-red md:bg-clip-text md:text-transparent">
                                     {t('title.line2')}
                                 </span><br />
                                 {t('title.gradient')}
-                            </motion.h1>
+                            </h1>
                         ) : (
-                            <motion.h1
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.8, delay: 0.2 }}
-                                className="text-center font-sf-pro"
-                                style={{ lineHeight: '1.5' }}
+                            <h1
+                                className="text-center font-sf-pro animate-on-load fade-in-up"
+                                style={{ lineHeight: '1.5', animationDelay: '0.2s', animationDuration: '0.8s' }}
                             >
                                 <span className="block text-xl xs:text-3xl sm:text-4xl md:text-4xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold text-black dark:text-white mb-2" style={{ lineHeight: '1.5' }}>
                                     {t('title.line1')}<br />
@@ -76,26 +63,23 @@ export default function Hero() {
                                 <span className="block text-4xl xs:text-5xl sm:text-6xl md:text-6xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold bg-gradient-to-r from-brand-purple to-brand-red bg-clip-text text-transparent mb-4" style={{ lineHeight: '1.5' }}>
                                     {t('title.gradient')}
                                 </span>
-                            </motion.h1>
+                            </h1>
                         )}
 
-                        <motion.p
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.4 }}
-                            className={`text-gray-700 dark:text-gray-300 mx-auto text-center leading-relaxed ${
+                        <p
+                            className={`text-gray-700 dark:text-gray-300 mx-auto text-center leading-relaxed animate-on-load fade-in-up ${
                                 isArabic
                                     ? 'text-base md:text-lg lg:text-xl xl:text-2xl mb-12 max-w-[250px] md:max-w-xs font-tajawal font-light'
                                     : 'text-sm sm:text-md md:text-lg lg:text-1xl xl:text-2xl mb-10 max-w-[250px] sm:max-w-2xl md:max-w-xl font-sf-pro font-light'
                             }`}
+                            style={{ animationDelay: '0.4s', animationDuration: '0.8s' }}
                         >
                             {t('subtitle')}
-                        </motion.p>
+                        </p>
 
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.6 }}
+                        <div
+                            className="animate-on-load fade-in-up"
+                            style={{ animationDelay: '0.6s', animationDuration: '0.8s' }}
                         >
                             <button
                                 onClick={scrollToContact}
@@ -107,15 +91,13 @@ export default function Hero() {
                                     {t('cta')}
                                 </span>
                             </button>
-                        </motion.div>
-                    </motion.div>
+                        </div>
+                    </div>
 
                     {/* Right Column - Hero Image */}
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 1, delay: 0.3 }}
-                        className="relative flex flex-col justify-center items-center"
+                    <div
+                        className="relative flex flex-col justify-center items-center animate-on-load fade-in-scale"
+                        style={{ animationDelay: '0.3s', animationDuration: '1s' }}
                     >
                         <div className="relative w-full max-w-lg">
                             {/* Glow effect behind image - reduced on mobile */}
@@ -132,17 +114,16 @@ export default function Hero() {
                         </div>
 
                         {/* "Reach The Peak" text - Mobile only */}
-                        <motion.h2
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.5 }}
-                            className={`lg:hidden text-center mt-4 text-4xl xs:text-5xl sm:text-6xl font-bold ${
+                        <h2
+                            className={`lg:hidden text-center mt-4 text-4xl xs:text-5xl sm:text-6xl font-bold animate-on-load fade-in-up ${
                                 isArabic ? 'font-tajawal' : 'font-sf-pro'
                             }`}
                             style={isArabic ? {
                                 lineHeight: '2',
-                                overflow: 'visible'
-                            } : { lineHeight: '1.5' }}
+                                overflow: 'visible',
+                                animationDelay: '0.5s',
+                                animationDuration: '0.8s'
+                            } : { lineHeight: '1.5', animationDelay: '0.5s', animationDuration: '0.8s' }}
                         >
                             {isArabic ? (
                                 <>
@@ -156,8 +137,8 @@ export default function Hero() {
                                     <span className="bg-gradient-to-r from-brand-purple to-brand-red bg-clip-text text-transparent">Peak</span>
                                 </>
                             )}
-                        </motion.h2>
-                    </motion.div>
+                        </h2>
+                    </div>
                 </div>
             </div>
         </section>
