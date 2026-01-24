@@ -6,16 +6,19 @@ import { createInertiaApp } from '@inertiajs/react';
 import { createRoot } from 'react-dom/client';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { PageLoader } from '@/components/ui/page-loader';
+import { lazy } from 'react';
 
-// Import all pages eagerly (vendor chunks handle code splitting)
+// Only eagerly import the landing page (most common entry point)
 import Landing from '@/pages/Landing';
-import Login from '@/pages/Auth/Login';
-import ForgotPassword from '@/pages/Auth/ForgotPassword';
-import ResetPassword from '@/pages/Auth/ResetPassword';
-import DashboardIndex from '@/pages/Dashboard/Index';
-import DashboardContacts from '@/pages/Dashboard/Contacts';
-import DashboardUsers from '@/pages/Dashboard/Users';
-import Services from '@/pages/Services';
+
+// Lazy-load all other pages — they won't add to initial bundle
+const Login = lazy(() => import('@/pages/Auth/Login'));
+const ForgotPassword = lazy(() => import('@/pages/Auth/ForgotPassword'));
+const ResetPassword = lazy(() => import('@/pages/Auth/ResetPassword'));
+const DashboardIndex = lazy(() => import('@/pages/Dashboard/Index'));
+const DashboardContacts = lazy(() => import('@/pages/Dashboard/Contacts'));
+const DashboardUsers = lazy(() => import('@/pages/Dashboard/Users'));
+const Services = lazy(() => import('@/pages/Services'));
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 

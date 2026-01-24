@@ -9,6 +9,11 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
     const lenisRef = useRef<Lenis | null>(null);
 
     useEffect(() => {
+        // Skip Lenis on mobile/touch devices — native scroll is already smooth
+        // and the rAF loop adds unnecessary CPU overhead
+        const isMobile = window.matchMedia('(max-width: 768px)').matches || 'ontouchstart' in window;
+        if (isMobile) return;
+
         const lenis = new Lenis({
             duration: 1.2,
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
