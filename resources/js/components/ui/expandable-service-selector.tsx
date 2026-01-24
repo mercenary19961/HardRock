@@ -85,6 +85,7 @@ const ExpandableServiceSelector: React.FC<ExpandableServiceSelectorProps> = ({
                                 <motion.img
                                     src={imageSrc}
                                     alt={service.name}
+                                    title={service.name}
                                     className="max-w-full max-h-full object-contain"
                                     animate={{ scale: isHovered ? 1.1 : 1 }}
                                     transition={{ duration: 0.3 }}
@@ -154,6 +155,7 @@ const ExpandableServiceSelector: React.FC<ExpandableServiceSelectorProps> = ({
                                 <motion.img
                                     src={imageSrc}
                                     alt={service.name}
+                                    title={service.name}
                                     className="max-w-full max-h-full object-contain"
                                     animate={{
                                         scale: isHovered ? 1.1 : 1,
