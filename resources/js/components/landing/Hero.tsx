@@ -32,6 +32,7 @@ export default function Hero() {
                 <img
                     src="/images/bg wave.webp"
                     alt=""
+                    title="Background wave decoration"
                     className="w-full h-auto object-contain ltr:-rotate-45 rtl:-rotate-[155deg] ltr:translate-x-[-50%] ltr:translate-y-[20%] rtl:translate-x-[50%] rtl:translate-y-[20%]"
                     fetchPriority="high"
                 />
@@ -124,6 +125,7 @@ export default function Hero() {
                             <img
                                 src="/images/hero-icon.webp"
                                 alt="Digital Solutions"
+                                title="Digital Solutions"
                                 className="relative z-10 w-full h-auto drop-shadow-2xl animate-float"
                                 {...{ fetchpriority: "high" } as any}
                             />
