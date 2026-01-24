@@ -33,6 +33,7 @@ export default function Hero() {
                     src="/images/bg wave.webp"
                     alt=""
                     className="w-full h-auto object-contain ltr:-rotate-45 rtl:-rotate-[155deg] ltr:translate-x-[-50%] ltr:translate-y-[20%] rtl:translate-x-[50%] rtl:translate-y-[20%]"
+                    fetchPriority="high"
                 />
             </div>
 
