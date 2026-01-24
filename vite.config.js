@@ -30,31 +30,28 @@ export default defineConfig({
     build: {
         rollupOptions: {
             output: {
-                manualChunks: {
-                    // Core React - rarely changes
-                    'vendor-react': ['react', 'react-dom'],
-                    // Inertia.js
-                    'vendor-inertia': ['@inertiajs/react'],
-                    // UI components - Radix primitives
-                    'vendor-radix': [
-                        '@radix-ui/react-checkbox',
-                        '@radix-ui/react-dialog',
-                        '@radix-ui/react-dropdown-menu',
-                        '@radix-ui/react-label',
-                        '@radix-ui/react-select',
-                        '@radix-ui/react-slot',
-                        '@radix-ui/react-tooltip',
-                        '@radix-ui/react-navigation-menu',
-                        '@radix-ui/react-collapsible',
-                        '@radix-ui/react-separator',
-                        '@radix-ui/react-toggle',
-                        '@radix-ui/react-toggle-group',
-                        '@radix-ui/react-avatar',
-                    ],
-                    // Animation library - large
-                    'vendor-motion': ['framer-motion'],
-                    // i18n - only used on landing page
-                    'vendor-i18n': ['i18next', 'react-i18next', 'i18next-browser-languagedetector'],
+                manualChunks(id) {
+                    if (id.includes('node_modules')) {
+                        if (id.includes('react-dom') || (id.includes('/react/') && !id.includes('react-i18next') && !id.includes('@inertiajs/react'))) {
+                            return 'vendor-react';
+                        }
+                        if (id.includes('@inertiajs/react')) {
+                            return 'vendor-inertia';
+                        }
+                        if (id.includes('@radix-ui')) {
+                            return 'vendor-radix';
+                        }
+                        if (id.includes('framer-motion')) {
+                            return 'vendor-motion';
+                        }
+                        if (id.includes('i18next') || id.includes('react-i18next')) {
+                            return 'vendor-i18n';
+                        }
+                    }
+                    // Group landing components into a shared chunk to avoid duplication
+                    if (id.includes('components/landing/')) {
+                        return 'landing-components';
+                    }
                 },
             },
         },

@@ -49,6 +49,9 @@
         <!-- Fallback for legacy browsers -->
         <link rel="shortcut icon" href="/favicon.ico">
 
+        <!-- Preload LCP image -->
+        <link rel="preload" as="image" href="/images/hero-icon.webp" type="image/webp">
+
         <!-- Fonts (non-render-blocking) -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
