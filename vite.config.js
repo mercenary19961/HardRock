@@ -38,9 +38,6 @@ export default defineConfig({
                         if (id.includes('@inertiajs/react')) {
                             return 'vendor-inertia';
                         }
-                        if (id.includes('@radix-ui')) {
-                            return 'vendor-radix';
-                        }
                         if (id.includes('framer-motion')) {
                             return 'vendor-motion';
                         }
