@@ -8,12 +8,12 @@ interface ServiceItem {
 
 // Map slugs to their image files
 const SERVICE_IMAGES: Record<string, string> = {
-    'social-media': '/images/services/social-media-2.webp',
-    'paid-ads': '/images/services/paid-ads-2.webp',
-    'seo': '/images/services/seo-2.webp',
-    'pr-social-listening': '/images/services/pr-2.webp',
-    'branding': '/images/services/branding-2.webp',
-    'software-ai': '/images/services/ai-2.webp',
+    'social-media': '/images/services/selector/SOCIAL-MEDIA-v2.webp',
+    'paid-ads': '/images/services/selector/PAID-ADS-v2.webp',
+    'seo': '/images/services/selector/SEO-v2.webp',
+    'pr-social-listening': '/images/services/selector/PR-v2.webp',
+    'branding': '/images/services/selector/BRANDING-v2.webp',
+    'software-ai': '/images/services/selector/AI-v2.webp',
 };
 
 interface ExpandableServiceSelectorProps {
