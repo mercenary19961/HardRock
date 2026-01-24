@@ -39,23 +39,29 @@
         <!-- hreflang - single bilingual page -->
         <link rel="alternate" hreflang="x-default" href="https://www.hardrock-co.com/">
 
-        <!-- Favicon (larger sizes first for Google SERP compatibility) -->
-        <link rel="icon" href="https://www.hardrock-co.com/images/favicon-48x48.png" sizes="48x48" type="image/png">
-        <link rel="icon" href="https://www.hardrock-co.com/images/favicon-96x96.png" sizes="96x96" type="image/png">
-        <link rel="icon" href="https://www.hardrock-co.com/images/favicon-192x192.png" sizes="192x192" type="image/png">
-        <link rel="apple-touch-icon" sizes="192x192" href="https://www.hardrock-co.com/images/favicon-192x192.png">
+        <!-- Favicon (all sizes for maximum compatibility) -->
+        <link rel="icon" href="/images/favicon-16x16.png" sizes="16x16" type="image/png">
+        <link rel="icon" href="/images/favicon-32x32.png" sizes="32x32" type="image/png">
+        <link rel="icon" href="/images/favicon-48x48.png" sizes="48x48" type="image/png">
+        <link rel="icon" href="/images/favicon-96x96.png" sizes="96x96" type="image/png">
+        <link rel="icon" href="/images/favicon-192x192.png" sizes="192x192" type="image/png">
+        <link rel="apple-touch-icon" sizes="192x192" href="/images/favicon-192x192.png">
         <!-- Fallback for legacy browsers -->
-        <link rel="shortcut icon" href="https://www.hardrock-co.com/favicon.ico">
+        <link rel="shortcut icon" href="/favicon.ico">
 
-        <!-- Fonts -->
+        <!-- Preload LCP images -->
+        <link rel="preload" as="image" href="/images/hero-icon.webp" type="image/webp" fetchpriority="high">
+        <link rel="preload" as="image" href="/images/bg%20wave.webp" type="image/webp" fetchpriority="high">
+
+        <!-- Fonts (non-render-blocking) -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="/fonts/sfpro.css">
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&family=Tajawal:wght@200;300;400;700;800&family=Cairo:wght@400&family=Poppins:wght@200;300;400;500;700&display=swap">
+        <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&family=Tajawal:wght@200;300;400;700;800&family=Cairo:wght@400&family=Poppins:wght@200;300;400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+        <noscript><link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&family=Tajawal:wght@200;300;400;700;800&family=Cairo:wght@400&family=Poppins:wght@200;300;400;500;700&display=swap" rel="stylesheet"></noscript>
+        <link rel="preload" as="style" href="/fonts/sfpro.css">
+        <link href="/fonts/sfpro.css" rel="stylesheet" media="print" onload="this.media='all'">
+        <noscript><link rel="stylesheet" href="/fonts/sfpro.css"></noscript>
 
         <!-- Scripts -->
         @routes
