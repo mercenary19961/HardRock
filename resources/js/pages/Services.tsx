@@ -328,6 +328,7 @@ function FlowItem({ section, serviceSlug, isArabic, isEven, isLightMode }: FlowI
             <img
                 src={imagePath}
                 alt={section.subtitle}
+                title={section.subtitle}
                 className="w-full max-w-[250px] md:max-w-[450px] h-auto]"
                 loading="lazy"
             />
