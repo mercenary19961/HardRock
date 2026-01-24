@@ -1,6 +1,3 @@
-import { motion, useAnimationControls } from 'framer-motion';
-import { useEffect, useRef } from 'react';
-
 const WhatsAppIcon = ({ className }: { className?: string }) => (
     <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -13,74 +10,15 @@ const WhatsAppIcon = ({ className }: { className?: string }) => (
 );
 
 export default function WhatsAppButton() {
-    const controls = useAnimationControls();
-    const isMountedRef = useRef(true);
-
-    useEffect(() => {
-        isMountedRef.current = true;
-
-        const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-
-        const runAnimation = async () => {
-            // Wait 5 seconds before first appearance
-            await sleep(5000);
-
-            // Loop while component is mounted
-            while (isMountedRef.current) {
-                if (!isMountedRef.current) break;
-
-                // Slide in from right (0.5s)
-                try {
-                    await controls.start({
-                        x: 0,
-                        opacity: 1,
-                        transition: { duration: 0.5, ease: "easeOut" }
-                    });
-                } catch { break; }
-
-                if (!isMountedRef.current) break;
-
-                // Stay visible for 10 seconds
-                await sleep(10000);
-
-                if (!isMountedRef.current) break;
-
-                // Slide out to right (3s)
-                try {
-                    await controls.start({
-                        x: 100,
-                        opacity: 0,
-                        transition: { duration: 3, ease: "easeIn" }
-                    });
-                } catch { break; }
-
-                if (!isMountedRef.current) break;
-
-                // Wait 5 seconds before showing again
-                await sleep(5000);
-            }
-        };
-
-        runAnimation();
-
-        return () => {
-            isMountedRef.current = false;
-        };
-    }, [controls]);
-
     return (
-        <motion.a
+        <a
             href="https://wa.me/962791700034"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Chat on WhatsApp"
-            className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50 flex items-center justify-center w-12 h-12 md:w-14 md:h-14 bg-[#25D366] rounded-full shadow-lg hover:shadow-xl transition-shadow duration-300"
-            initial={{ x: 100, opacity: 0 }}
-            animate={controls}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
+            className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50 flex items-center justify-center w-12 h-12 md:w-14 md:h-14 bg-[#25D366] rounded-full shadow-lg hover:shadow-xl hover:scale-110 active:scale-95 transition-all duration-300 animate-whatsapp"
         >
             <WhatsAppIcon className="w-6 h-6 md:w-7 md:h-7 text-white" />
-        </motion.a>
+        </a>
     );
 }

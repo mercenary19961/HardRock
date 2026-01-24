@@ -1,6 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import CinematicSwitch from '@/components/ui/cinematic-glow-toggle';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
@@ -41,11 +40,23 @@ const XIcon = ({ className }: { className?: string }) => (
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const { t } = useTranslation('common');
+    const menuRef = useRef<HTMLDivElement>(null);
 
     const navLinks = [
         { name: t('nav.whyHardrock'), href: '/#why-hardrock' },
         { name: t('nav.services'), href: '/services?from=nav' },
     ];
+
+    // Handle menu height for animation
+    useEffect(() => {
+        if (menuRef.current) {
+            if (isOpen) {
+                menuRef.current.style.height = `${menuRef.current.scrollHeight}px`;
+            } else {
+                menuRef.current.style.height = '0px';
+            }
+        }
+    }, [isOpen]);
 
     return (
         <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-black/90 backdrop-blur-md border-b border-white/80 overflow-x-hidden">
@@ -109,15 +120,11 @@ export default function Navbar() {
             </div>
 
             {/* Mobile Menu */}
-            <motion.div
+            <div
+                ref={menuRef}
                 id="mobile-menu"
-                initial={false}
-                animate={isOpen ? "open" : "closed"}
-                variants={{
-                    open: { opacity: 1, height: "auto" },
-                    closed: { opacity: 0, height: 0 }
-                }}
-                className="md:hidden overflow-hidden bg-white/95 dark:bg-black/95 border-b border-gray-200 dark:border-white/10"
+                className={`md:hidden overflow-hidden bg-white/95 dark:bg-black/95 border-b border-gray-200 dark:border-white/10 transition-all duration-300 ease-out ${isOpen ? 'opacity-100' : 'opacity-0'}`}
+                style={{ height: 0 }}
             >
                 <div className="px-4 pt-2 pb-4 space-y-2">
                     {navLinks.map((link) => (
@@ -138,7 +145,7 @@ export default function Navbar() {
                         {t('nav.contactUs')}
                     </a>
                 </div>
-            </motion.div>
+            </div>
         </nav>
     );
 }

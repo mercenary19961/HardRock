@@ -1,9 +1,11 @@
-import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import { useInView } from '@/hooks/useInView';
 
 export default function WhyHardRock() {
     const { t, i18n } = useTranslation('whyHardRock');
     const isArabic = i18n.language === 'ar';
+    const [imageRef, imageInView] = useInView<HTMLDivElement>();
+    const [textRef, textInView] = useInView<HTMLDivElement>();
 
     return (
         <section id="why-hardrock" className="relative pt-15 pb-10 md:pb-20 md:pt-20 lg:pb-64 overflow-hidden bg-white dark:bg-black">
@@ -17,12 +19,9 @@ export default function WhyHardRock() {
             <div className="relative z-10 w-full px-8 sm:px-12 lg:px-16 xl:px-20">
                 <div className="grid lg:grid-cols-2 gap-6 lg:gap-8 items-center">
                     {/* Image Column */}
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.8 }}
-                        viewport={{ once: true }}
-                        className={`relative ${isArabic ? 'lg:order-1' : 'lg:order-1'}`}
+                    <div
+                        ref={imageRef}
+                        className={`relative ${isArabic ? 'lg:order-1' : 'lg:order-1'} animate-on-scroll animate-scale-in ${imageInView ? 'in-view' : ''}`}
                     >
                         <div className="relative w-full max-w-md mx-auto">
                             {/* Gradient Circle Background */}
@@ -37,15 +36,12 @@ export default function WhyHardRock() {
                                 className="relative z-10 w-full h-auto drop-shadow-2xl"
                             />
                         </div>
-                    </motion.div>
+                    </div>
 
                     {/* Text Column */}
-                    <motion.div
-                        initial={{ opacity: 0, x: isArabic ? 50 : -50 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.8 }}
-                        viewport={{ once: true }}
-                        className={`${isArabic ? 'lg:order-2 text-right' : 'lg:order-2 text-left'}`}
+                    <div
+                        ref={textRef}
+                        className={`${isArabic ? 'lg:order-2 text-right' : 'lg:order-2 text-left'} animate-on-scroll ${isArabic ? 'animate-fade-in-right' : 'animate-fade-in-left'} ${textInView ? 'in-view' : ''}`}
                     >
                         <h2 className={`text-4xl xs:text-5xl sm:text-5xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-black mb-8 ${isArabic ? 'font-tajawal' : 'font-sf-pro'}`} style={isArabic ? { lineHeight: '1.6', paddingTop: '8px' } : {}}>
                             <span className="text-black dark:text-white">
@@ -74,7 +70,7 @@ export default function WhyHardRock() {
                                 {t('paragraph2.part2')}
                             </p>
                         </div>
-                    </motion.div>
+                    </div>
                 </div>
             </div>
         </section>

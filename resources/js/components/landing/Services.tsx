@@ -1,7 +1,7 @@
 import { Link } from '@inertiajs/react';
-import { motion } from 'framer-motion';
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useInView } from '@/hooks/useInView';
 
 export default function Services() {
     const { t, i18n } = useTranslation('services');
@@ -19,6 +19,9 @@ export default function Services() {
 
     const [selectedService, setSelectedService] = useState(services[0]);
     const serviceContentRef = useRef<HTMLDivElement>(null);
+    const [titleRef, titleInView] = useInView<HTMLDivElement>();
+    const [listRef, listInView] = useInView<HTMLDivElement>();
+    const [contentRef, contentInView] = useInView<HTMLDivElement>();
 
     // Handle service selection with scroll on mobile screens only
     const handleServiceClick = (service: typeof services[0]) => {
@@ -113,12 +116,9 @@ export default function Services() {
             <div className="relative z-10 w-full  px-6 sm:px-12 lg:px-16 xl:px-20">
                 <div className="flex flex-col lg:grid lg:grid-cols-2 items-start gap-4 lg:gap-8" dir="ltr">
                     {/* Title - Shows first on mobile, hidden on desktop (shown in Service Content section) */}
-                    <motion.div
-                        initial={{ opacity: 0, y: -20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8 }}
-                        viewport={{ once: true }}
-                        className={`lg:hidden w-full mb-8 ${isArabic ? 'text-right' : 'text-left'}`}
+                    <div
+                        ref={titleRef}
+                        className={`lg:hidden w-full mb-8 ${isArabic ? 'text-right' : 'text-left'} animate-on-scroll animate-fade-in-up ${titleInView ? 'in-view' : ''}`}
                         dir={isArabic ? 'rtl' : 'ltr'}
                     >
                         <h1 className={`text-4xl sm:text-5xl md:text-5xl lg:text-6xl xl:text-7xl font-black ${
@@ -141,15 +141,12 @@ export default function Services() {
                                 </>
                             )}
                         </h1>
-                    </motion.div>
+                    </div>
 
                     {/* Services List */}
-                    <motion.div
-                        initial={{ opacity: 0, x: isArabic ? 30 : 30 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.8 }}
-                        viewport={{ once: true }}
-                        className={`w-full flex justify-center lg:justify-start mb-12 lg:mb-0 ${isArabic ? 'lg:order-2' : 'lg:order-1'}`}
+                    <div
+                        ref={listRef}
+                        className={`w-full flex justify-center lg:justify-start mb-12 lg:mb-0 ${isArabic ? 'lg:order-2' : 'lg:order-1'} animate-on-scroll animate-fade-in-right ${listInView ? 'in-view' : ''}`}
                         dir={isArabic ? 'rtl' : 'ltr'}
                     >
                         <div className="grid grid-cols-2 gap-4 md:gap-4 pl-0 2xl:pl-20 lg:flex lg:flex-col lg:space-y-6 lg:flex-1 max-w-2xl lg:max-w-none">
@@ -186,16 +183,13 @@ export default function Services() {
                                 );
                             })}
                         </div>
-                    </motion.div>
+                    </div>
 
                     {/* Service Content */}
                     <div ref={serviceContentRef} className={`w-full flex justify-center lg:justify-start ${isArabic ? 'lg:order-1' : 'lg:order-2'}`}>
-                        <motion.div
-                            initial={{ opacity: 0, x: isArabic ? -30 : -30 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.8 }}
-                            viewport={{ once: true }}
-                            className={`w-full max-w-2xl lg:max-w-none ${isArabic ? 'text-center lg:text-right' : 'text-center lg:text-left'}`}
+                        <div
+                            ref={contentRef}
+                            className={`w-full max-w-2xl lg:max-w-none ${isArabic ? 'text-center lg:text-right' : 'text-center lg:text-left'} animate-on-scroll animate-fade-in-left ${contentInView ? 'in-view' : ''}`}
                             dir={isArabic ? 'rtl' : 'ltr'}
                         >
                             <div className="block group pointer-events-none">
@@ -225,8 +219,8 @@ export default function Services() {
                                 className="relative w-full max-w-sm mb-8 flex items-center justify-center mx-auto lg:mx-0 cursor-pointer pointer-events-auto transition-transform hover:scale-105"
                                 style={{
                                     height: '280px',
-                                    marginLeft: window.innerWidth >= 1024 ? imageMargin.left : 'auto',
-                                    marginRight: window.innerWidth >= 1024 ? imageMargin.right : 'auto'
+                                    marginLeft: typeof window !== 'undefined' && window.innerWidth >= 1024 ? imageMargin.left : 'auto',
+                                    marginRight: typeof window !== 'undefined' && window.innerWidth >= 1024 ? imageMargin.right : 'auto'
                                 }}
                             >
                                 {/* Glow effect */}
@@ -265,7 +259,7 @@ export default function Services() {
                                 </p>
                             </div>
                         </div>
-                        </motion.div>
+                        </div>
                     </div>
                 </div>
             </div>
