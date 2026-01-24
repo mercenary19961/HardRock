@@ -50,8 +50,8 @@
         <link rel="shortcut icon" href="/favicon.ico">
 
         <!-- Preload LCP images -->
-        <link rel="preload" as="image" href="/images/hero-icon.webp" type="image/webp">
-        <link rel="preload" as="image" href="/images/bg%20wave.webp" type="image/webp">
+        <link rel="preload" as="image" href="/images/hero-icon.webp" type="image/webp" fetchpriority="high">
+        <link rel="preload" as="image" href="/images/bg%20wave.webp" type="image/webp" fetchpriority="high">
 
         <!-- Fonts (non-render-blocking) -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -59,7 +59,9 @@
         <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&family=Tajawal:wght@200;300;400;700;800&family=Cairo:wght@400&family=Poppins:wght@200;300;400;500;700&display=swap">
         <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&family=Tajawal:wght@200;300;400;700;800&family=Cairo:wght@400&family=Poppins:wght@200;300;400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
         <noscript><link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&family=Tajawal:wght@200;300;400;700;800&family=Cairo:wght@400&family=Poppins:wght@200;300;400;500;700&display=swap" rel="stylesheet"></noscript>
-        <link rel="stylesheet" href="/fonts/sfpro.css">
+        <link rel="preload" as="style" href="/fonts/sfpro.css">
+        <link href="/fonts/sfpro.css" rel="stylesheet" media="print" onload="this.media='all'">
+        <noscript><link rel="stylesheet" href="/fonts/sfpro.css"></noscript>
 
         <!-- Scripts -->
         @routes

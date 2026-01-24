@@ -125,7 +125,7 @@ export default function Hero() {
                                 src="/images/hero-icon.webp"
                                 alt="Digital Solutions"
                                 className="relative z-10 w-full h-auto drop-shadow-2xl animate-float"
-                                fetchPriority="high"
+                                {...{ fetchpriority: "high" } as any}
                             />
                         </div>
 
