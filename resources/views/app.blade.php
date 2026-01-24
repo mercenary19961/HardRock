@@ -39,13 +39,15 @@
         <!-- hreflang - single bilingual page -->
         <link rel="alternate" hreflang="x-default" href="https://www.hardrock-co.com/">
 
-        <!-- Favicon (larger sizes first for Google SERP compatibility) -->
-        <link rel="icon" href="https://www.hardrock-co.com/images/favicon-48x48.png" sizes="48x48" type="image/png">
-        <link rel="icon" href="https://www.hardrock-co.com/images/favicon-96x96.png" sizes="96x96" type="image/png">
-        <link rel="icon" href="https://www.hardrock-co.com/images/favicon-192x192.png" sizes="192x192" type="image/png">
-        <link rel="apple-touch-icon" sizes="192x192" href="https://www.hardrock-co.com/images/favicon-192x192.png">
+        <!-- Favicon (all sizes for maximum compatibility) -->
+        <link rel="icon" href="/images/favicon-16x16.png" sizes="16x16" type="image/png">
+        <link rel="icon" href="/images/favicon-32x32.png" sizes="32x32" type="image/png">
+        <link rel="icon" href="/images/favicon-48x48.png" sizes="48x48" type="image/png">
+        <link rel="icon" href="/images/favicon-96x96.png" sizes="96x96" type="image/png">
+        <link rel="icon" href="/images/favicon-192x192.png" sizes="192x192" type="image/png">
+        <link rel="apple-touch-icon" sizes="192x192" href="/images/favicon-192x192.png">
         <!-- Fallback for legacy browsers -->
-        <link rel="shortcut icon" href="https://www.hardrock-co.com/favicon.ico">
+        <link rel="shortcut icon" href="/favicon.ico">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
