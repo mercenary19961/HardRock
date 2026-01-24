@@ -4,10 +4,10 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title inertia>HardRock | Data-Driven Digital Marketing, Software & AI Solutions</title>
+        <title inertia>HardRock | Digital Marketing Agency & AI Solutions in Jordan</title>
 
         <!-- SEO Meta Tags -->
-        <meta name="description" content="HardRock delivers data-driven digital marketing, AI solutions, and cutting-edge technology to elevate your brand. Expert services in Paid Ads, SEO, Social Media, Branding & PR in Amman, Jordan.">
+        <meta name="description" content="Scale your brand with HardRock, Amman's leading digital marketing agency. Expert AI solutions, SEO, Paid Ads, and Branding designed for data-driven growth.">
         <meta name="keywords" content="digital marketing agency jordan, paid ads meta google, social media management amman, SEO services jordan, branding agency, AI solutions, software development jordan, PR agency, digital transformation, performance marketing, growth marketing, marketing automation, jordan tech company">
         <meta name="author" content="HardRock">
         <meta name="robots" content="index, follow">
@@ -19,7 +19,7 @@
         <meta property="og:type" content="website">
         <meta property="og:url" content="https://www.hardrock-co.com/">
         <meta property="og:title" content="HardRock | Data-Driven Digital Marketing & AI Solutions">
-        <meta property="og:description" content="Elevate your brand with performance marketing, AI-powered solutions, and strategic digital transformation. Based in Amman, serving globally.">
+        <meta property="og:description" content="Transform your brand with Amman's leading experts in AI solutions, SEO, and performance marketing. Scale your business with data-backed strategies that deliver ROI.">
         <meta property="og:image" content="https://www.hardrock-co.com/images/og-image-2.webp">
         <meta property="og:site_name" content="HardRock">
         <meta property="og:locale" content="en_US">
@@ -28,8 +28,8 @@
         <!-- Twitter -->
         <meta property="twitter:card" content="summary_large_image">
         <meta property="twitter:url" content="https://www.hardrock-co.com/">
-        <meta property="twitter:title" content="HardRock | Data-Driven Digital Marketing & AI Solutions">
-        <meta property="twitter:description" content="Elevate your brand with performance marketing, AI-powered solutions, and strategic digital transformation. Based in Amman, serving globally.">
+        <meta property="twitter:title" content="HardRock | Amman’s Leading AI & Digital Marketing Agency">
+        <meta property="twitter:description" content="Scale your business with HardRock. From AI-driven SEO to high-performance Paid Ads, we deliver data-backed growth for brands in Amman and beyond. ROI starts here.">
         <meta property="twitter:image" content="https://www.hardrock-co.com/images/og-image-2.webp">
 
         <!-- Additional SEO -->
