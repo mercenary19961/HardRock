@@ -49,15 +49,13 @@
         <!-- Fallback for legacy browsers -->
         <link rel="shortcut icon" href="/favicon.ico">
 
-        <!-- Fonts -->
+        <!-- Fonts (non-render-blocking) -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+        <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&family=Tajawal:wght@200;300;400;700;800&family=Cairo:wght@400&family=Poppins:wght@200;300;400;500;700&display=swap">
+        <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&family=Tajawal:wght@200;300;400;700;800&family=Cairo:wght@400&family=Poppins:wght@200;300;400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+        <noscript><link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&family=Tajawal:wght@200;300;400;700;800&family=Cairo:wght@400&family=Poppins:wght@200;300;400;500;700&display=swap" rel="stylesheet"></noscript>
         <link rel="stylesheet" href="/fonts/sfpro.css">
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
         <!-- Scripts -->
         @routes
