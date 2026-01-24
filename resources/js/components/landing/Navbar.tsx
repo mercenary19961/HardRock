@@ -56,11 +56,13 @@ export default function Navbar() {
                         <img
                             src="/images/HOR-BLACK LOGO.svg"
                             alt="HardRock"
+                            title="HardRock"
                             className="h-5 sm:h-8 w-auto dark:hidden"
                         />
                         <img
                             src="/images/OR-WHITE LOGO.svg"
                             alt="HardRock"
+                            title="HardRock"
                             className="h-5 sm:h-8 w-auto hidden dark:block"
                         />
                     </Link>

@@ -236,6 +236,7 @@ export default function Services() {
                                 <img
                                     src={currentImage.light}
                                     alt={selectedService.name}
+                                    title={selectedService.name}
                                     loading="lazy"
                                     className="relative z-10 w-full h-full object-contain drop-shadow-2xl dark:hidden"
                                 />
@@ -244,6 +245,7 @@ export default function Services() {
                                 <img
                                     src={currentImage.dark}
                                     alt={selectedService.name}
+                                    title={selectedService.name}
                                     loading="lazy"
                                     className="relative z-10 w-full h-full object-contain drop-shadow-2xl hidden dark:block"
                                 />

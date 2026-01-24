@@ -32,6 +32,7 @@ export default function WhyHardRock() {
                             <img
                                 src="/images/why-hardrock.webp"
                                 alt="Why HardRock"
+                                title="Why HardRock"
                                 loading="lazy"
                                 className="relative z-10 w-full h-auto drop-shadow-2xl"
                             />
