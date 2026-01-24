@@ -1,16 +1,14 @@
 import { Head } from '@inertiajs/react';
-import { lazy, Suspense, useEffect } from 'react';
+import { useEffect } from 'react';
 import Navbar from '@/components/landing/Navbar';
 import Hero from '@/components/landing/Hero';
+import WhyHardRock from '@/components/landing/WhyHardRock';
+import Services from '@/components/landing/Services';
+import ContactUs from '@/components/landing/ContactUs';
+import LocationMap from '@/components/landing/LocationMap';
+import Footer from '@/components/landing/Footer';
+import WhatsAppButton from '@/components/landing/WhatsAppButton';
 import SmoothScroll from '@/components/SmoothScroll';
-
-// Lazy-load below-the-fold sections
-const WhyHardRock = lazy(() => import('@/components/landing/WhyHardRock'));
-const Services = lazy(() => import('@/components/landing/Services'));
-const ContactUs = lazy(() => import('@/components/landing/ContactUs'));
-const LocationMap = lazy(() => import('@/components/landing/LocationMap'));
-const Footer = lazy(() => import('@/components/landing/Footer'));
-const WhatsAppButton = lazy(() => import('@/components/landing/WhatsAppButton'));
 
 export default function Landing() {
     // Defer analytics scripts until after page is interactive
@@ -65,18 +63,14 @@ export default function Landing() {
                     
                     <main>
                         <Hero />
-                        <Suspense fallback={null}>
-                            <WhyHardRock />
-                            <Services />
-                            <ContactUs />
-                            <LocationMap />
-                        </Suspense>
+                        <WhyHardRock />
+                        <Services />
+                        <ContactUs />
+                        <LocationMap />
                     </main>
 
-                    <Suspense fallback={null}>
-                        <Footer />
-                        <WhatsAppButton />
-                    </Suspense>
+                    <Footer />
+                    <WhatsAppButton />
                 </div>
             </SmoothScroll>
         </>
