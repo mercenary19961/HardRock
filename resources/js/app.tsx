@@ -5,8 +5,8 @@ import './i18n';
 import { createInertiaApp } from '@inertiajs/react';
 import { createRoot } from 'react-dom/client';
 import { ThemeProvider } from '@/contexts/ThemeContext';
-import { PageLoader } from '@/components/ui/page-loader';
-import { lazy } from 'react';
+import { PageLoader, SuspenseLoader } from '@/components/ui/page-loader';
+import { lazy, Suspense } from 'react';
 
 // Only eagerly import the landing page (most common entry point)
 import Landing from '@/pages/Landing';
@@ -51,7 +51,9 @@ createInertiaApp({
         root.render(
             <ThemeProvider>
                 <PageLoader />
-                <App {...props} />
+                <Suspense fallback={<SuspenseLoader />}>
+                    <App {...props} />
+                </Suspense>
             </ThemeProvider>
         );
     },
