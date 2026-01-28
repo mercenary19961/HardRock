@@ -38,12 +38,12 @@ export default function Hero() {
                     {/* Left Column - Text Content */}
                     <div
                         className="text-center animate-on-load fade-in-left"
-                        style={{ animationDuration: '0.8s' }}
+                        style={{ animationDuration: '0.8s', opacity: 0 }}
                     >
                         {isArabic ? (
                             <h1
                                 className="text-3xl md:text-4xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-bold text-black dark:text-white text-center mb-6 font-tajawal animate-on-load fade-in-up"
-                                style={{ lineHeight: '1.6', paddingTop: '8px', animationDelay: '0.2s', animationDuration: '0.8s' }}
+                                style={{ lineHeight: '1.6', paddingTop: '8px', animationDelay: '0.2s', animationDuration: '0.8s', opacity: 0 }}
                             >
                                 {t('title.line1')}<br />
                                 <span className="text-brand-purple md:bg-gradient-to-r md:from-brand-purple md:to-brand-red md:bg-clip-text md:text-transparent">
@@ -54,7 +54,7 @@ export default function Hero() {
                         ) : (
                             <h1
                                 className="text-center font-sf-pro animate-on-load fade-in-up"
-                                style={{ lineHeight: '1.5', animationDelay: '0.2s', animationDuration: '0.8s' }}
+                                style={{ lineHeight: '1.5', animationDelay: '0.2s', animationDuration: '0.8s', opacity: 0 }}
                             >
                                 <span className="block text-xl xs:text-3xl sm:text-4xl md:text-4xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold text-black dark:text-white mb-2" style={{ lineHeight: '1.5' }}>
                                     {t('title.line1')}<br />
@@ -72,14 +72,14 @@ export default function Hero() {
                                     ? 'text-base md:text-lg lg:text-xl xl:text-2xl mb-12 max-w-[250px] md:max-w-xs font-tajawal font-light'
                                     : 'text-sm sm:text-md md:text-lg lg:text-1xl xl:text-2xl mb-10 max-w-[250px] sm:max-w-2xl md:max-w-xl font-sf-pro font-light'
                             }`}
-                            style={{ animationDelay: '0.4s', animationDuration: '0.8s' }}
+                            style={{ animationDelay: '0.4s', animationDuration: '0.8s', opacity: 0 }}
                         >
                             {t('subtitle')}
                         </p>
 
                         <div
                             className="animate-on-load fade-in-up"
-                            style={{ animationDelay: '0.6s', animationDuration: '0.8s' }}
+                            style={{ animationDelay: '0.6s', animationDuration: '0.8s', opacity: 0 }}
                         >
                             <button
                                 onClick={scrollToContact}
@@ -97,7 +97,7 @@ export default function Hero() {
                     {/* Right Column - Hero Image */}
                     <div
                         className="relative flex flex-col justify-center items-center animate-on-load fade-in-scale"
-                        style={{ animationDelay: '0.3s', animationDuration: '1s' }}
+                        style={{ animationDelay: '0.3s', animationDuration: '1s', opacity: 0 }}
                     >
                         <div className="relative w-full max-w-lg">
                             {/* Glow effect behind image - reduced on mobile */}
@@ -122,8 +122,9 @@ export default function Hero() {
                                 lineHeight: '2',
                                 overflow: 'visible',
                                 animationDelay: '0.5s',
-                                animationDuration: '0.8s'
-                            } : { lineHeight: '1.5', animationDelay: '0.5s', animationDuration: '0.8s' }}
+                                animationDuration: '0.8s',
+                                opacity: 0
+                            } : { lineHeight: '1.5', animationDelay: '0.5s', animationDuration: '0.8s', opacity: 0 }}
                         >
                             {isArabic ? (
                                 <>
