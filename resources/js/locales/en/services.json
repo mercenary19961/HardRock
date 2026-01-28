@@ -33,6 +33,7 @@
     {
       "id": "software-ai",
       "name": "Software & AI Solutions",
+      "shortName": "Software & AI",
       "description": "Hard Rock delivers advanced AI Agent and Software solutions that enhance performance, streamline operations, and support scalable, efficient growth.",
       "image": "/images/services/ai-2.webp",
       "link": "/services/software-ai"
