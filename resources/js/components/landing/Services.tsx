@@ -10,6 +10,7 @@ export default function Services() {
     const services = t('items', { returnObjects: true }) as Array<{
         id: string;
         name: string;
+        shortName?: string;
         description: string;
         image?: string;
         imageLight?: string;
@@ -177,7 +178,8 @@ export default function Services() {
                                                         ? 'font-poppins font-light text-white whitespace-nowrap'
                                                         : 'font-poppins font-extralight text-black dark:text-white whitespace-nowrap'
                                             } text-base md:text-lg lg:text-xl xl:text-2xl leading-tight`}>
-                                                {service.name}
+                                                <span className="lg:hidden">{service.shortName || service.name}</span>
+                                                <span className="hidden lg:inline">{service.name}</span>
                                             </span>
                                         </button>
                                 );
