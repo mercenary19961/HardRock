@@ -36,7 +36,9 @@
         <link rel="canonical" href="https://www.hardrock-co.com/">
         <meta name="theme-color" content="#8B5CF6">
 
-        <!-- hreflang - single bilingual page -->
+        <!-- hreflang - bilingual support (same URL serves both languages via client-side toggle) -->
+        <link rel="alternate" hreflang="en" href="https://www.hardrock-co.com/">
+        <link rel="alternate" hreflang="ar" href="https://www.hardrock-co.com/">
         <link rel="alternate" hreflang="x-default" href="https://www.hardrock-co.com/">
 
         <!-- Favicon (all sizes for maximum compatibility) -->

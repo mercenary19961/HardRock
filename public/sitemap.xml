@@ -4,9 +4,77 @@
     <!-- Homepage -->
     <url>
         <loc>https://www.hardrock-co.com/</loc>
-        <lastmod>2025-12-28</lastmod>
+        <lastmod>2025-02-03</lastmod>
         <changefreq>weekly</changefreq>
         <priority>1.0</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://www.hardrock-co.com/" />
+        <xhtml:link rel="alternate" hreflang="ar" href="https://www.hardrock-co.com/" />
         <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hardrock-co.com/" />
+    </url>
+
+    <!-- Services: Branding -->
+    <url>
+        <loc>https://www.hardrock-co.com/services/branding</loc>
+        <lastmod>2025-02-03</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.9</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://www.hardrock-co.com/services/branding" />
+        <xhtml:link rel="alternate" hreflang="ar" href="https://www.hardrock-co.com/services/branding" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hardrock-co.com/services/branding" />
+    </url>
+
+    <!-- Services: Paid Ads -->
+    <url>
+        <loc>https://www.hardrock-co.com/services/paid-ads</loc>
+        <lastmod>2025-02-03</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.9</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://www.hardrock-co.com/services/paid-ads" />
+        <xhtml:link rel="alternate" hreflang="ar" href="https://www.hardrock-co.com/services/paid-ads" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hardrock-co.com/services/paid-ads" />
+    </url>
+
+    <!-- Services: Social Media -->
+    <url>
+        <loc>https://www.hardrock-co.com/services/social-media</loc>
+        <lastmod>2025-02-03</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.9</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://www.hardrock-co.com/services/social-media" />
+        <xhtml:link rel="alternate" hreflang="ar" href="https://www.hardrock-co.com/services/social-media" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hardrock-co.com/services/social-media" />
+    </url>
+
+    <!-- Services: SEO -->
+    <url>
+        <loc>https://www.hardrock-co.com/services/seo</loc>
+        <lastmod>2025-02-03</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.9</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://www.hardrock-co.com/services/seo" />
+        <xhtml:link rel="alternate" hreflang="ar" href="https://www.hardrock-co.com/services/seo" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hardrock-co.com/services/seo" />
+    </url>
+
+    <!-- Services: PR & Social Listening -->
+    <url>
+        <loc>https://www.hardrock-co.com/services/pr-social-listening</loc>
+        <lastmod>2025-02-03</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.9</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://www.hardrock-co.com/services/pr-social-listening" />
+        <xhtml:link rel="alternate" hreflang="ar" href="https://www.hardrock-co.com/services/pr-social-listening" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hardrock-co.com/services/pr-social-listening" />
+    </url>
+
+    <!-- Services: Software & AI -->
+    <url>
+        <loc>https://www.hardrock-co.com/services/software-ai</loc>
+        <lastmod>2025-02-03</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.9</priority>
+        <xhtml:link rel="alternate" hreflang="en" href="https://www.hardrock-co.com/services/software-ai" />
+        <xhtml:link rel="alternate" hreflang="ar" href="https://www.hardrock-co.com/services/software-ai" />
+        <xhtml:link rel="alternate" hreflang="x-default" href="https://www.hardrock-co.com/services/software-ai" />
     </url>
 </urlset>
