@@ -547,6 +547,78 @@ SESSION_DRIVER=database
 
 ---
 
+## SEO Implementation
+
+### Current Status (Implemented)
+
+| Element | Status | Location |
+|---------|--------|----------|
+| Meta title & description | ✅ Done | `resources/views/app.blade.php` |
+| LocalBusiness Schema | ✅ Done | `resources/views/partials/structured-data.blade.php` |
+| ProfessionalService Schema | ✅ Done | `resources/views/partials/structured-data.blade.php` |
+| FAQPage Schema | ✅ Done | `resources/views/partials/structured-data.blade.php` |
+| Open Graph / Twitter cards | ✅ Done | `resources/views/app.blade.php` |
+| Hreflang tags (en/ar) | ✅ Done | `resources/views/app.blade.php` |
+| Sitemap with all pages | ✅ Done | `public/sitemap.xml` |
+| robots.txt | ✅ Done | `public/robots.txt` |
+| Service pages meta descriptions | ✅ Done | `resources/js/pages/Services.tsx` |
+| Geo meta tags | ✅ Done | `resources/views/app.blade.php` |
+| Image alt text | ✅ Done | All components |
+
+### TODO: When Adding News/Blog Section
+
+#### 1. Database & Backend
+- [ ] Create `posts` migration (title, slug, content, excerpt, featured_image, author_id, published_at, meta_description)
+- [ ] Create `Post` model with SEO fields
+- [ ] Create `PostController` with CRUD operations
+- [ ] Add blog routes: `/news`, `/news/{slug}`
+
+#### 2. Sitemap Updates
+- [ ] Convert static `public/sitemap.xml` to dynamic Laravel route
+- [ ] Auto-generate sitemap entries for all blog posts
+- [ ] Include `<lastmod>` based on post updated_at
+- [ ] Add image sitemap entries for featured images
+
+#### 3. Schema Markup for Blog
+- [ ] Add `Article` or `BlogPosting` schema for each post
+- [ ] Add `BreadcrumbList` schema for navigation
+- [ ] Add `AggregateRating` schema if implementing post ratings
+
+#### 4. Meta Tags for Blog Posts
+- [ ] Dynamic `<title>` per post: `{Post Title} | HardRock Blog`
+- [ ] Dynamic `<meta name="description">` from post excerpt
+- [ ] Dynamic Open Graph tags (og:title, og:description, og:image)
+- [ ] Dynamic canonical URL per post
+- [ ] Add `article:published_time` and `article:author` meta tags
+
+#### 5. Content Strategy for Local SEO
+Target these keyword themes in blog posts:
+- "digital marketing in Jordan"
+- "social media marketing Amman"
+- "SEO tips for Jordanian businesses"
+- "marketing trends MENA region"
+- "how to grow business in Jordan"
+- Case studies featuring local clients
+
+#### 6. External Actions (Not Code)
+- [ ] Submit updated sitemap to Google Search Console
+- [ ] Set up Google Business Profile with posts
+- [ ] Build backlinks from Jordanian directories and publications
+- [ ] Collect Google reviews from clients
+- [ ] Register with local business directories
+
+### SEO File Locations
+
+| File | Purpose |
+|------|---------|
+| `resources/views/app.blade.php` | Global meta tags, hreflang, OG tags |
+| `resources/views/partials/structured-data.blade.php` | JSON-LD schema markup |
+| `public/sitemap.xml` | XML sitemap (currently static) |
+| `public/robots.txt` | Crawler directives |
+| `resources/js/pages/Services.tsx` | Service page meta descriptions |
+
+---
+
 ## Related Documentation
 
 - [PROJECT_STRUCTURE.md](./PROJECT_STRUCTURE.md) - Project overview and structure
