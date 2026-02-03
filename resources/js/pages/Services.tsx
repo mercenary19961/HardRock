@@ -42,6 +42,16 @@ const SERVICE_SLUGS = [
     'software-ai',
 ] as const;
 
+// SEO meta descriptions for each service (for local SEO targeting "marketing agency jordan")
+const SERVICE_META_DESCRIPTIONS: Record<string, string> = {
+    'social-media': 'Professional social media management services in Jordan. HardRock helps brands in Amman grow their online presence with strategic content and community management.',
+    'paid-ads': 'Expert paid advertising services in Jordan. HardRock delivers high-ROI Meta and Google Ads campaigns for businesses in Amman and across the MENA region.',
+    'seo': 'Top SEO services in Jordan. HardRock helps businesses in Amman rank higher on Google with data-driven search engine optimization strategies.',
+    'pr-social-listening': 'PR and social listening services in Jordan. Monitor your brand reputation and manage public relations with HardRock, Amman\'s leading digital marketing agency.',
+    'branding': 'Professional branding services in Jordan. HardRock creates compelling brand identities for businesses in Amman looking to stand out in the market.',
+    'software-ai': 'AI solutions and software development in Jordan. HardRock builds custom AI-powered tools and software for businesses in Amman and the MENA region.',
+};
+
 export default function Services({ serviceSlug, fromNav = false }: ServicesProps) {
     const { t, i18n } = useTranslation('serviceDetail');
     const { theme } = useTheme();
@@ -61,7 +71,8 @@ export default function Services({ serviceSlug, fromNav = false }: ServicesProps
 
     return (
         <>
-            <Head title={serviceData?.hero?.title || 'Services'}>
+            <Head title={`${serviceData?.hero?.title || 'Services'} | HardRock - Digital Marketing Agency Jordan`}>
+                <meta name="description" content={SERVICE_META_DESCRIPTIONS[serviceSlug] || 'Professional digital marketing services in Jordan. HardRock helps businesses in Amman grow with data-driven marketing strategies.'} />
                 <meta httpEquiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
                 <meta httpEquiv="Pragma" content="no-cache" />
                 <meta httpEquiv="Expires" content="0" />
