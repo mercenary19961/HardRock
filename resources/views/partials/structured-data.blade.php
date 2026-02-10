@@ -97,6 +97,72 @@
 }
 </script>
 
+{{-- SiteNavigationElement Schema (helps Google generate sitelinks) --}}
+<script type="application/ld+json">
+{
+    "@@context": "https://schema.org",
+    "@@type": "WebSite",
+    "name": "HardRock",
+    "url": "https://www.hardrock-co.com",
+    "potentialAction": {
+        "@@type": "SearchAction",
+        "target": "https://www.google.com/search?q=site:hardrock-co.com+{search_term_string}",
+        "query-input": "required name=search_term_string"
+    }
+}
+</script>
+
+<script type="application/ld+json">
+{
+    "@@context": "https://schema.org",
+    "@@type": "ItemList",
+    "itemListElement": [
+        {
+            "@@type": "SiteNavigationElement",
+            "position": 1,
+            "name": "Home",
+            "url": "https://www.hardrock-co.com/"
+        },
+        {
+            "@@type": "SiteNavigationElement",
+            "position": 2,
+            "name": "Branding",
+            "url": "https://www.hardrock-co.com/services/branding"
+        },
+        {
+            "@@type": "SiteNavigationElement",
+            "position": 3,
+            "name": "Paid Ads",
+            "url": "https://www.hardrock-co.com/services/paid-ads"
+        },
+        {
+            "@@type": "SiteNavigationElement",
+            "position": 4,
+            "name": "Social Media",
+            "url": "https://www.hardrock-co.com/services/social-media"
+        },
+        {
+            "@@type": "SiteNavigationElement",
+            "position": 5,
+            "name": "SEO",
+            "url": "https://www.hardrock-co.com/services/seo"
+        },
+        {
+            "@@type": "SiteNavigationElement",
+            "position": 6,
+            "name": "PR & Social Listening",
+            "url": "https://www.hardrock-co.com/services/pr-social-listening"
+        },
+        {
+            "@@type": "SiteNavigationElement",
+            "position": 7,
+            "name": "Software & AI",
+            "url": "https://www.hardrock-co.com/services/software-ai"
+        }
+    ]
+}
+</script>
+
 {{-- FAQ Schema for Local SEO --}}
 <script type="application/ld+json">
 {
