@@ -4,6 +4,10 @@ import { useTheme } from '@/contexts/ThemeContext';
 import { useForm } from '@inertiajs/react';
 import { useInView } from '@/hooks/useInView';
 
+interface ContactUsProps {
+    skipAnimation?: boolean;
+}
+
 interface FormData {
     personalName: string;
     companyName: string;
@@ -13,7 +17,7 @@ interface FormData {
     moreDetails: string;
 }
 
-export default function ContactUs() {
+export default function ContactUs({ skipAnimation = false }: ContactUsProps) {
     const { i18n } = useTranslation('contactUs');
     const { theme } = useTheme();
     const isArabic = i18n.language === 'ar';
@@ -30,9 +34,14 @@ export default function ContactUs() {
     const [focusedField, setFocusedField] = useState<string | null>(null);
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [showNotification, setShowNotification] = useState(false);
-    const [titleRef, titleInView] = useInView<HTMLHeadingElement>();
-    const [formRef, formInView] = useInView<HTMLDivElement>();
-    const [servicesRef, servicesInView] = useInView<HTMLDivElement>();
+    const [titleRef, titleInViewRaw] = useInView<HTMLHeadingElement>();
+    const [formRef, formInViewRaw] = useInView<HTMLDivElement>();
+    const [servicesRef, servicesInViewRaw] = useInView<HTMLDivElement>();
+
+    // Skip animations when navigated directly to contact section
+    const titleInView = skipAnimation || titleInViewRaw;
+    const formInView = skipAnimation || formInViewRaw;
+    const servicesInView = skipAnimation || servicesInViewRaw;
 
     // Merge Inertia errors with local errors
     const allErrors = { ...errors, ...inertiaErrors };
@@ -525,7 +534,8 @@ export default function ContactUs() {
                                 </h2>
                                 <div className="flex flex-wrap gap-0.5 sm:gap-1 lg:gap-1 xl:gap-2 2xl:gap-3">
                                     {services.map((service) => {
-                                        const isSelected = data.services.includes(service);
+                                        const englishService = isArabic ? serviceMapping[service] : service;
+                                        const isSelected = data.services.includes(englishService);
                                         return (
                                             <span
                                                 key={service}

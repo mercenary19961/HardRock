@@ -11,6 +11,9 @@ import WhatsAppButton from '@/components/landing/WhatsAppButton';
 import SmoothScroll from '@/components/SmoothScroll';
 
 export default function Landing() {
+    // Check if navigated directly to contact section (e.g., from services page CTA)
+    const isDirectToContact = typeof window !== 'undefined' && window.location.hash === '#contact-us';
+
     // Defer analytics scripts until after page is interactive
     useEffect(() => {
         // Skip if analytics already loaded (prevents duplicates on re-mount)
@@ -112,8 +115,8 @@ export default function Landing() {
                         <div className="content-auto">
                             <Services />
                         </div>
-                        <div className="content-auto">
-                            <ContactUs />
+                        <div className={isDirectToContact ? '' : 'content-auto'}>
+                            <ContactUs skipAnimation={isDirectToContact} />
                         </div>
                         <div className="content-auto">
                             <LocationMap />
