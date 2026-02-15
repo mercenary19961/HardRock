@@ -14,6 +14,24 @@ export default function Landing() {
     // Check if navigated directly to contact section (e.g., from services page CTA)
     const isDirectToContact = typeof window !== 'undefined' && window.location.hash === '#contact-us';
 
+    // Programmatically scroll to #contact-us after DOM is fully laid out.
+    // Native hash-anchor scrolling is unreliable because content-visibility: auto
+    // gives sections placeholder heights, and Lenis overrides native scroll behavior.
+    useEffect(() => {
+        if (!isDirectToContact) return;
+
+        const timer = setTimeout(() => {
+            const el = document.getElementById('contact-us');
+            if (el) {
+                el.scrollIntoView({ behavior: 'instant', block: 'start' });
+            }
+            // Clean up the hash so refreshing doesn't re-trigger the scroll
+            history.replaceState(null, '', window.location.pathname);
+        }, 150);
+
+        return () => clearTimeout(timer);
+    }, []);
+
     // Defer analytics scripts until after page is interactive
     useEffect(() => {
         // Skip if analytics already loaded (prevents duplicates on re-mount)
@@ -109,16 +127,16 @@ export default function Landing() {
                     
                     <main>
                         <Hero />
-                        <div className="content-auto">
+                        <div className={isDirectToContact ? '' : 'content-auto'}>
                             <WhyHardRock />
                         </div>
-                        <div className="content-auto">
+                        <div className={isDirectToContact ? '' : 'content-auto'}>
                             <Services />
                         </div>
                         <div className={isDirectToContact ? '' : 'content-auto'}>
                             <ContactUs skipAnimation={isDirectToContact} />
                         </div>
-                        <div className="content-auto">
+                        <div className={isDirectToContact ? '' : 'content-auto'}>
                             <LocationMap />
                         </div>
                     </main>
