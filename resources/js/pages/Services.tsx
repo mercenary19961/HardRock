@@ -61,6 +61,10 @@ export default function Services({ serviceSlug, fromNav = false }: ServicesProps
     const serviceData = t(serviceSlug, { returnObjects: true }) as ServiceData;
     const sections = serviceData?.sections || [];
 
+    // Always use English subtitles for image filenames (images are named in English)
+    const enServiceData = t(serviceSlug, { returnObjects: true, lng: 'en' }) as ServiceData;
+    const enSections = enServiceData?.sections || [];
+
     const handleServiceChange = (slug: string) => {
         router.visit(`/services/${slug}`, { preserveScroll: false });
     };
@@ -114,6 +118,7 @@ export default function Services({ serviceSlug, fromNav = false }: ServicesProps
                         <FlowchartSection
                             title={serviceData?.hero?.title}
                             sections={sections}
+                            enSections={enSections}
                             serviceSlug={serviceSlug}
                             isArabic={isArabic}
                             isLightMode={isLightMode}
@@ -220,12 +225,13 @@ function ServiceSelector({ currentSlug, onServiceChange, isArabic, isLightMode, 
 interface FlowchartSectionProps {
     title: string;
     sections: ServiceSection[];
+    enSections: ServiceSection[];
     serviceSlug: string;
     isArabic: boolean;
     isLightMode: boolean;
 }
 
-function FlowchartSection({ title, sections, serviceSlug, isArabic, isLightMode }: FlowchartSectionProps) {
+function FlowchartSection({ title, sections, enSections, serviceSlug, isArabic, isLightMode }: FlowchartSectionProps) {
     return (
         <section className="relative z-10 pt-12 pb-16 md:py-20">
             <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -261,6 +267,7 @@ function FlowchartSection({ title, sections, serviceSlug, isArabic, isLightMode 
                         <FlowItem
                             key={index}
                             section={section}
+                            enSubtitle={enSections[index]?.subtitle || section.subtitle}
                             serviceSlug={serviceSlug}
                             isArabic={isArabic}
                             isEven={index % 2 === 0}
@@ -276,6 +283,7 @@ function FlowchartSection({ title, sections, serviceSlug, isArabic, isLightMode 
 // Flow Item Component
 interface FlowItemProps {
     section: ServiceSection;
+    enSubtitle: string;
     serviceSlug: string;
     isArabic: boolean;
     isEven: boolean;
@@ -318,12 +326,13 @@ function getImageFilename(serviceSlug: string, subtitle: string): string {
     return IMAGE_FILENAME_MAP[serviceSlug]?.[subtitle] || subtitle;
 }
 
-function FlowItem({ section, serviceSlug, isArabic, isEven, isLightMode }: FlowItemProps) {
-    const imageFilename = getImageFilename(serviceSlug, section.subtitle);
+function FlowItem({ section, enSubtitle, serviceSlug, isArabic, isEven, isLightMode }: FlowItemProps) {
+    // Always use English subtitle for image filenames (images are named in English)
+    const imageFilename = getImageFilename(serviceSlug, enSubtitle);
     const darkImagePath = `/images/services/${serviceSlug}/${imageFilename}.webp`;
 
-    // Check if this subtitle has a light mode image
-    const hasLightModeImage = LIGHT_MODE_IMAGES[serviceSlug]?.includes(section.subtitle) ?? false;
+    // Check if this English subtitle has a light mode image
+    const hasLightModeImage = LIGHT_MODE_IMAGES[serviceSlug]?.includes(enSubtitle) ?? false;
     const lightImagePath = `/images/services/${serviceSlug}/${imageFilename}-light mode.webp`;
 
     const imagePath = isLightMode && hasLightModeImage ? lightImagePath : darkImagePath;
