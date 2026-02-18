@@ -77,9 +77,13 @@ export default function Services({ serviceSlug, fromNav = false }: ServicesProps
         <>
             <Head title={`${serviceData?.hero?.title || 'Services'} | HardRock - Digital Marketing Agency Jordan`}>
                 <meta name="description" content={SERVICE_META_DESCRIPTIONS[serviceSlug] || 'Professional digital marketing services in Jordan. HardRock helps businesses in Amman grow with data-driven marketing strategies.'} />
-                <meta httpEquiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-                <meta httpEquiv="Pragma" content="no-cache" />
-                <meta httpEquiv="Expires" content="0" />
+                <meta property="og:type" content="website" />
+                <meta property="og:url" content={`https://www.hardrock-co.com/services/${serviceSlug}`} />
+                <meta property="og:title" content={`${serviceData?.hero?.title || 'Services'} | HardRock`} />
+                <meta property="og:description" content={SERVICE_META_DESCRIPTIONS[serviceSlug] || 'Professional digital marketing services in Jordan.'} />
+                <meta property="og:image" content="https://www.hardrock-co.com/images/og-image-2.webp" />
+                <meta property="og:site_name" content="HardRock" />
+                <link rel="canonical" href={`https://www.hardrock-co.com/services/${serviceSlug}`} />
             </Head>
 
             <SmoothScroll>
