@@ -103,12 +103,7 @@
     "@@context": "https://schema.org",
     "@@type": "WebSite",
     "name": "HardRock",
-    "url": "https://www.hardrock-co.com",
-    "potentialAction": {
-        "@@type": "SearchAction",
-        "target": "https://www.google.com/search?q=site:hardrock-co.com+{search_term_string}",
-        "query-input": "required name=search_term_string"
-    }
+    "url": "https://www.hardrock-co.com"
 }
 </script>
 
