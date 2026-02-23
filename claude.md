@@ -29,7 +29,7 @@ This document provides comprehensive context about the HardRock codebase to help
 | Type System | TypeScript | 5 |
 | Routing/SPA | Inertia.js | 2.0 |
 | Styling | Tailwind CSS | 3 |
-| Animations | Framer Motion | - |
+| Animations | CSS Keyframes (landing) + Framer Motion (Services page) | - |
 | Build Tool | Vite | 7 |
 | Database | MySQL | 8.0 |
 | Queue Driver | Database | - |
@@ -100,7 +100,8 @@ hardrock/
 │       │   │   ├── label.tsx
 │       │   │   ├── checkbox.tsx
 │       │   │   ├── banner.tsx
-│       │   │   └── page-loader.tsx
+│       │   │   ├── page-loader.tsx
+│       │   │   └── expandable-service-selector.tsx
 │       │   ├── landing/              # Landing page sections
 │       │   │   ├── Navbar.tsx
 │       │   │   ├── Hero.tsx
@@ -110,6 +111,9 @@ hardrock/
 │       │   │   ├── Footer.tsx
 │       │   │   └── WhatsAppButton.tsx
 │       │   ├── SmoothScroll.tsx      # Lenis smooth scrolling
+│       │
+│       ├── hooks/
+│       │   └── useInView.ts          # IntersectionObserver hook for scroll animations
 │       │   ├── ThemeToggle.tsx
 │       │   ├── LanguageSwitcher.tsx
 │       │   └── animated-characters-login-page.tsx
@@ -122,6 +126,7 @@ hardrock/
 │       │
 │       ├── pages/
 │       │   ├── Landing.tsx           # Main landing page
+│       │   ├── Services.tsx          # Service detail pages (/services/{slug})
 │       │   ├── Auth/
 │       │   │   ├── Login.tsx
 │       │   │   ├── ForgotPassword.tsx
@@ -203,7 +208,11 @@ Laravel queue system tables.
 | Method | URI | Controller | Description |
 |--------|-----|------------|-------------|
 | GET | / | - | Landing page (Inertia) |
+| GET | /services/{slug?} | - (closure) | Service detail page (defaults to 'branding') |
 | POST | /contact | ContactController@store | Contact form submission |
+
+#### Valid Service Slugs
+`social-media`, `paid-ads`, `seo`, `pr-social-listening`, `branding`, `software-ai`
 
 ### Auth Routes (Guest Only)
 | Method | URI | Name | Description |
@@ -491,6 +500,8 @@ php artisan admin:create email@example.com password "Name"
 | Feature | File(s) |
 |---------|---------|
 | Landing Page | resources/js/pages/Landing.tsx |
+| Services Page | resources/js/pages/Services.tsx |
+| Service Selector | resources/js/components/ui/expandable-service-selector.tsx |
 | Contact Form | resources/js/components/landing/ContactUs.tsx |
 | Contact Processing | app/Jobs/ProcessContactSubmission.php |
 | Login Page | resources/js/pages/Auth/Login.tsx |
@@ -504,6 +515,10 @@ php artisan admin:create email@example.com password "Name"
 | Routes | routes/web.php, routes/auth.php |
 | Admin Middleware | app/Http/Middleware/AdminMiddleware.php |
 | Facebook Service | app/Services/FacebookMarketingService.php |
+| Scroll Animations Hook | resources/js/hooks/useInView.ts |
+| CSS Animations | resources/css/app.css |
+| Service Translations (en) | resources/js/locales/en/serviceDetail.json |
+| Service Translations (ar) | resources/js/locales/ar/serviceDetail.json |
 
 ---
 
@@ -557,6 +572,8 @@ SESSION_DRIVER=database
 | LocalBusiness Schema | ✅ Done | `resources/views/partials/structured-data.blade.php` |
 | ProfessionalService Schema | ✅ Done | `resources/views/partials/structured-data.blade.php` |
 | FAQPage Schema | ✅ Done | `resources/views/partials/structured-data.blade.php` |
+| SiteNavigationElement Schema | ✅ Done | `resources/views/partials/structured-data.blade.php` |
+| ItemList Schema | ✅ Done | `resources/views/partials/structured-data.blade.php` |
 | Open Graph / Twitter cards | ✅ Done | `resources/views/app.blade.php` |
 | Hreflang tags (en/ar) | ✅ Done | `resources/views/app.blade.php` |
 | Sitemap with all pages | ✅ Done | `public/sitemap.xml` |
@@ -615,7 +632,7 @@ Target these keyword themes in blog posts:
 | `resources/views/partials/structured-data.blade.php` | JSON-LD schema markup |
 | `public/sitemap.xml` | XML sitemap (currently static) |
 | `public/robots.txt` | Crawler directives |
-| `resources/js/pages/Services.tsx` | Service page meta descriptions |
+| `resources/js/pages/Services.tsx` | Service page meta descriptions + dynamic OG tags |
 
 ---
 
