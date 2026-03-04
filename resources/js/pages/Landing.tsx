@@ -44,32 +44,6 @@ export default function Landing() {
 
             const ids = (window as any).__ANALYTICS_IDS__ || {};
 
-            // GTM
-            if (!(window as any).google_tag_manager) {
-                const gtmScript = document.createElement('script');
-                gtmScript.innerHTML = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-                    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-                    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-                    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-                    })(window,document,'script','dataLayer','GTM-TJTKSH9J');`;
-                document.head.appendChild(gtmScript);
-            }
-
-            // GA4
-            if (!(window as any).gtag) {
-                const ga4Script = document.createElement('script');
-                ga4Script.async = true;
-                ga4Script.src = 'https://www.googletagmanager.com/gtag/js?id=G-TFQFC7Q08R';
-                document.head.appendChild(ga4Script);
-
-                const ga4Config = document.createElement('script');
-                ga4Config.innerHTML = `window.dataLayer = window.dataLayer || [];
-                    function gtag(){dataLayer.push(arguments);}
-                    gtag('js', new Date());
-                    gtag('config', 'G-TFQFC7Q08R');`;
-                document.head.appendChild(ga4Config);
-            }
-
             // Facebook Pixel
             if (ids.fbPixelId && !(window as any).fbq) {
                 const fbScript = document.createElement('script');
@@ -115,14 +89,6 @@ export default function Landing() {
 
             <SmoothScroll>
                 <div className="min-h-screen bg-background text-foreground font-sans antialiased selection:bg-primary/20 selection:text-primary">
-                    <noscript>
-                        <iframe
-                            src="https://www.googletagmanager.com/ns.html?id=GTM-TJTKSH9J"
-                            height="0"
-                            width="0"
-                            style={{ display: 'none', visibility: 'hidden' }}
-                        />
-                    </noscript>
                     <Navbar />
                     
                     <main>

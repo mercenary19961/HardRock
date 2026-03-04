@@ -65,6 +65,23 @@
         <link href="/fonts/sfpro.css" rel="stylesheet" media="print" onload="this.media='all'">
         <noscript><link rel="stylesheet" href="/fonts/sfpro.css"></noscript>
 
+        <!-- Google Tag Manager -->
+        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-TJTKSH9J');</script>
+
+        <!-- GA4 + Google Ads -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-TFQFC7Q08R"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-TFQFC7Q08R');
+            gtag('config', 'AW-17900618489');
+        </script>
+
         <!-- Scripts -->
         @routes
         @viteReactRefresh
@@ -96,6 +113,10 @@
         @endif
     </head>
     <body class="font-sans antialiased">
+        <!-- Google Tag Manager (noscript) -->
+        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TJTKSH9J"
+        height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
         @inertia
     </body>
 </html>
