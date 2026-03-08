@@ -72,13 +72,12 @@
         'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
         })(window,document,'script','dataLayer','GTM-TJTKSH9J');</script>
 
-        <!-- GA4 + Google Ads -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-TFQFC7Q08R"></script>
+        <!-- Google Ads -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17900618489"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', 'G-TFQFC7Q08R');
             gtag('config', 'AW-17900618489');
         </script>
 
