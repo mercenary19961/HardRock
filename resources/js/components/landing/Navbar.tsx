@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import CinematicSwitch from '@/components/ui/cinematic-glow-toggle';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
@@ -41,6 +41,17 @@ export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const { t } = useTranslation('common');
     const menuRef = useRef<HTMLDivElement>(null);
+
+    const [showConsultation, setShowConsultation] = useState(false);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setShowConsultation((prev) => !prev);
+        }, 3000);
+        return () => clearInterval(interval);
+    }, []);
+
+    const ctaText = showConsultation ? t('nav.freeConsultation') : t('nav.contactUs');
 
     const navLinks = [
         { name: t('nav.whyHardrock'), href: '/#why-hardrock' },
@@ -94,9 +105,16 @@ export default function Navbar() {
 
                         <a
                             href="/#contact-us"
-                            className="bg-gradient-to-r from-brand-purple to-brand-red text-white px-4 lg:px-6 py-2 lg:py-2.5 rounded-full text-sm lg:text-base font-medium hover:shadow-lg hover:shadow-brand-red/50 transition-all duration-300"
+                            className="inline-flex items-center justify-center bg-gradient-to-r from-brand-purple to-brand-red text-white px-4 lg:px-6 py-2 lg:py-2.5 rounded-full text-sm lg:text-base font-medium hover:shadow-lg hover:shadow-brand-red/50 transition-all duration-300 min-w-[140px] lg:min-w-[170px]"
                         >
-                            {t('nav.contactUs')}
+                            <span key={ctaText} className="inline-flex items-center gap-1.5 animate-fade-in-nav">
+                                {!showConsultation && (
+                                    <svg className="w-4 h-4 lg:w-5 lg:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                                    </svg>
+                                )}
+                                {ctaText}
+                            </span>
                         </a>
                         <CinematicSwitch />
                         <LanguageSwitcher />
@@ -142,7 +160,14 @@ export default function Navbar() {
                         className="w-full bg-gradient-to-r from-brand-purple to-brand-red text-white px-4 py-3 rounded-full text-base font-medium hover:shadow-lg hover:shadow-brand-red/50 transition-all mt-2 block text-center"
                         onClick={() => setIsOpen(false)}
                     >
-                        {t('nav.contactUs')}
+                        <span key={ctaText} className="inline-flex items-center justify-center gap-1.5 animate-fade-in-nav">
+                            {!showConsultation && (
+                                <svg className="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                                </svg>
+                            )}
+                            {ctaText}
+                        </span>
                     </a>
                 </div>
             </div>

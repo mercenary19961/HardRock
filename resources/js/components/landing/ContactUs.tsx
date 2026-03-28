@@ -18,7 +18,7 @@ interface FormData {
 }
 
 export default function ContactUs({ skipAnimation = false }: ContactUsProps) {
-    const { i18n } = useTranslation('contactUs');
+    const { t, i18n } = useTranslation('contactUs');
     const { theme } = useTheme();
     const isArabic = i18n.language === 'ar';
 
@@ -244,33 +244,49 @@ export default function ContactUs({ skipAnimation = false }: ContactUsProps) {
             <div className="absolute top-1/2 ltr:right-1/3 rtl:left-1/3 w-32 h-32 bg-red-500/15 dark:bg-red-500/25 rounded-full blur-3xl" />
 
             <div className="relative z-10 w-full px-4 sm:px-8 md:px-12 lg:px-16 xl:px-20">
-                <h1
-                    ref={titleRef}
-                    className={`text-4xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-black mb-4 lg:mb-6 2xl:mb-16 animate-on-scroll animate-fade-in-up ${titleInView ? 'in-view' : ''} ${
-                        isArabic ? 'font-tajawal text-right' : 'font-sf-pro text-left'
-                    }`}
-                    style={isArabic ? {
-                        lineHeight: '2',
-                        overflow: 'visible',
-                        display: 'block'
-                    } : { lineHeight: '1.2' }}
-                >
-                    {isArabic ? (
-                        <>
-                            <span className="text-black dark:text-white">تواصـــــل </span>
-                            <span className="text-brand-purple md:bg-gradient-to-r md:from-brand-purple md:to-brand-red md:bg-clip-text md:text-transparent">
-                                معنا
-                            </span>
-                        </>
-                    ) : (
-                        <>
-                            <span className="text-black dark:text-white">CONTACT </span>
-                            <span className="bg-gradient-to-r from-brand-purple to-brand-red bg-clip-text text-transparent">
-                                US
-                            </span>
-                        </>
-                    )}
-                </h1>
+                <div className="grid lg:grid-cols-[40%_60%] xl:grid-cols-2 gap-4 lg:gap-6 xl:gap-16 mb-4 lg:mb-6 2xl:mb-16 items-end">
+                    <h1
+                        ref={titleRef}
+                        className={`text-4xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-black animate-on-scroll animate-fade-in-up ${titleInView ? 'in-view' : ''} ${
+                            isArabic ? 'font-tajawal text-right' : 'font-sf-pro text-left'
+                        }`}
+                        style={isArabic ? {
+                            lineHeight: '2',
+                            overflow: 'visible',
+                            display: 'block'
+                        } : { lineHeight: '1.2' }}
+                    >
+                        {isArabic ? (
+                            <>
+                                <span className="text-black dark:text-white">تواصـــــل </span>
+                                <span className="text-brand-purple md:bg-gradient-to-r md:from-brand-purple md:to-brand-red md:bg-clip-text md:text-transparent">
+                                    معنا
+                                </span>
+                            </>
+                        ) : (
+                            <>
+                                <span className="text-black dark:text-white">CONTACT </span>
+                                <span className="bg-gradient-to-r from-brand-purple to-brand-red bg-clip-text text-transparent">
+                                    US
+                                </span>
+                            </>
+                        )}
+                    </h1>
+
+                    <div className={`${isArabic ? 'ml-0 md:ml-32 lg:ml-40 xl:ml-48' : 'mr-0 md:mr-32 lg:mr-40 xl:mr-52'}`}>
+                        <a
+                            href="/consultation"
+                            className={`inline-flex items-center gap-2 bg-gradient-to-r from-brand-purple to-brand-red text-white rounded-full text-sm sm:text-base font-medium px-6 py-2.5 sm:px-8 sm:py-3 hover:shadow-lg hover:shadow-brand-red/30 transition-all duration-300 hover:scale-105 w-fit animate-on-scroll animate-fade-in-up ${titleInView ? 'in-view' : ''} ${
+                                isArabic ? 'font-cairo' : 'font-sf-pro'
+                            }`}
+                        >
+                            <svg className="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+                            </svg>
+                            {t('freeConsultation')}
+                        </a>
+                    </div>
+                </div>
 
                 <div className="grid lg:grid-cols-[40%_60%] xl:grid-cols-2 gap-12 lg:gap-6 xl:gap-16">
                     <div
