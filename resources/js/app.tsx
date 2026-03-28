@@ -19,6 +19,7 @@ const DashboardIndex = lazy(() => import('@/pages/Dashboard/Index'));
 const DashboardContacts = lazy(() => import('@/pages/Dashboard/Contacts'));
 const DashboardUsers = lazy(() => import('@/pages/Dashboard/Users'));
 const Services = lazy(() => import('@/pages/Services'));
+const Consultation = lazy(() => import('@/pages/Consultation'));
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -32,6 +33,7 @@ const pages: Record<string, any> = {
     'Dashboard/Contacts': DashboardContacts,
     'Dashboard/Users': DashboardUsers,
     'Services': Services,
+    'Consultation': Consultation,
 };
 
 createInertiaApp({
