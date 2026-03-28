@@ -17,6 +17,11 @@ Route::post('/contact', [ContactController::class, 'store'])
     ->middleware('throttle:5,1')
     ->name('contact.store');
 
+// Free Consultation Landing Page (for Google Ads campaigns)
+Route::get('/consultation', function () {
+    return Inertia::render('Consultation');
+})->name('consultation');
+
 // Services Page (with optional service slug, defaults to 'branding')
 Route::get('/services/{slug?}', function (Illuminate\Http\Request $request, string $slug = 'branding') {
     $validSlugs = ['social-media', 'paid-ads', 'seo', 'pr-social-listening', 'branding', 'software-ai'];
