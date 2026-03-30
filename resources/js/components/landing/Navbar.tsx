@@ -105,7 +105,7 @@ export default function Navbar() {
 
                         <a
                             href="/#contact-us"
-                            className="inline-flex items-center justify-center bg-gradient-to-r from-brand-purple to-brand-red text-white px-4 lg:px-6 py-2 lg:py-2.5 rounded-full text-sm lg:text-base font-medium hover:shadow-lg hover:shadow-brand-red/50 transition-all duration-300 min-w-[140px] lg:min-w-[170px]"
+                            className="inline-flex items-center justify-center bg-gradient-to-r from-brand-purple to-brand-red text-white px-4 lg:px-6 py-2 lg:py-2.5 rounded-full text-xs lg:text-sm font-medium hover:shadow-lg hover:shadow-brand-red/50 transition-all duration-300 min-w-[140px] lg:min-w-[170px] whitespace-nowrap"
                         >
                             <span key={ctaText} className="inline-flex items-center gap-1.5 animate-fade-in-nav">
                                 {!showConsultation && (
