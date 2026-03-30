@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useInView } from '@/hooks/useInView';
 
-const CLIENT_COUNT = 15;
+const CLIENT_COUNT = 14;
 
 export default function ClientsPartners() {
     const { t, i18n } = useTranslation('common');
