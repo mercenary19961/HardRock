@@ -4,6 +4,7 @@ import Navbar from '@/components/landing/Navbar';
 import Hero from '@/components/landing/Hero';
 import WhyHardRock from '@/components/landing/WhyHardRock';
 import Services from '@/components/landing/Services';
+import ClientsPartners from '@/components/landing/ClientsPartners';
 import ContactUs from '@/components/landing/ContactUs';
 import LocationMap from '@/components/landing/LocationMap';
 import Footer from '@/components/landing/Footer';
@@ -98,6 +99,9 @@ export default function Landing() {
                         </div>
                         <div className={isDirectToContact ? '' : 'content-auto'}>
                             <Services />
+                        </div>
+                        <div className={isDirectToContact ? '' : 'content-auto'}>
+                            <ClientsPartners />
                         </div>
                         <div className={isDirectToContact ? '' : 'content-auto'}>
                             <ContactUs skipAnimation={isDirectToContact} />
