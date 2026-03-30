@@ -14,6 +14,12 @@
     "en": "English",
     "ar": "Arabic"
   },
+  "clients": {
+    "title": {
+      "line1": "Our Clients",
+      "line2": "& Partners"
+    }
+  },
   "location": {
     "title": "Find Us",
     "titleMobile": "Find Us Here",

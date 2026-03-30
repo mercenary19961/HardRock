@@ -6,7 +6,7 @@ export default function Footer() {
     const isArabic = i18n.language === 'ar';
 
     return (
-        <footer className="bg-white dark:bg-black py-16 md:py-20">
+        <footer className="bg-white dark:bg-black pt-16 pb-8 md:pt-20 md:pb-10">
             <div className="max-w-7xl mx-auto pl-4 px-0 sm:px-12 lg:px-16 xl:px-20">
                 {/* Mobile: Logo First (Centered), Then 2 Columns */}
                 {/* Desktop: 3 Equal Columns */}
