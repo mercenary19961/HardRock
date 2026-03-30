@@ -65,6 +65,9 @@
         <link href="/fonts/sfpro.css" rel="stylesheet" media="print" onload="this.media='all'">
         <noscript><link rel="stylesheet" href="/fonts/sfpro.css"></noscript>
 
+        <!-- CookieYes Cookie Consent Banner -->
+        <script id="cookieyes" type="text/javascript" src="https://cdn-cookieyes.com/client_data/e39e04831c7ec9d173f6e3abb6ee6478/script.js"></script>
+
         <!-- Google Tag Manager -->
         <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
         new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
