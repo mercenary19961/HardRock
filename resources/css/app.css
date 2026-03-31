@@ -185,6 +185,26 @@
   }
   .animate-fade-in-nav { animation: fadeInNav 0.3s ease-out forwards; }
 
+  /* Marquee belt animations */
+  @keyframes marquee-left {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  @keyframes marquee-right {
+    0% { transform: translateX(-50%); }
+    100% { transform: translateX(0); }
+  }
+  .animate-marquee-left {
+    animation: marquee-left 30s linear infinite;
+  }
+  .animate-marquee-right {
+    animation: marquee-right 30s linear infinite;
+  }
+  .marquee-belt:hover .animate-marquee-left,
+  .marquee-belt:hover .animate-marquee-right {
+    animation-play-state: paused;
+  }
+
   /* Animation delays */
   .animate-delay-100 { animation-delay: 0.1s; }
   .animate-delay-200 { animation-delay: 0.2s; }
