@@ -187,22 +187,20 @@
 
   /* Marquee belt animations */
   @keyframes marquee-left {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
+    0% { transform: translate3d(0, 0, 0); }
+    100% { transform: translate3d(-50%, 0, 0); }
   }
   @keyframes marquee-right {
-    0% { transform: translateX(-50%); }
-    100% { transform: translateX(0); }
+    0% { transform: translate3d(-50%, 0, 0); }
+    100% { transform: translate3d(0, 0, 0); }
   }
   .animate-marquee-left {
     animation: marquee-left 30s linear infinite;
+    will-change: transform;
   }
   .animate-marquee-right {
     animation: marquee-right 30s linear infinite;
-  }
-  .marquee-belt:hover .animate-marquee-left,
-  .marquee-belt:hover .animate-marquee-right {
-    animation-play-state: paused;
+    will-change: transform;
   }
 
   /* Animation delays */
