@@ -11,6 +11,7 @@ const CLIENT_FILES = [
     { file: 'client-11', alt: 'Drivejo' },
     { file: 'client-12', alt: 'Nour Steel' },
     { file: 'client-14', alt: 'Sky Amman' },
+    { file: 'client-15', alt: 'Baladi' },
 ];
 
 const PARTNER_FILES = [
