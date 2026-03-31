@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useInView } from '@/hooks/useInView';
@@ -31,9 +31,10 @@ interface LogoItem {
 
 function MarqueeBelt({ items, folder, direction, label }: { items: LogoItem[]; folder: string; direction: 'left' | 'right'; label: string }) {
     const doubled = [...items, ...items];
+    const [paused, setPaused] = useState(false);
 
     return (
-        <div className="marquee-belt overflow-hidden relative">
+        <div className="overflow-hidden relative">
             {/* Floating label */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 pointer-events-none">
                 <span className="text-5xl md:text-7xl lg:text-8xl font-black text-black/[0.03] dark:text-white/[0.04] uppercase tracking-widest select-none font-sf-pro">
@@ -41,13 +42,18 @@ function MarqueeBelt({ items, folder, direction, label }: { items: LogoItem[]; f
                 </span>
             </div>
 
-            <div className={`flex items-center gap-16 md:gap-20 lg:gap-28 w-max ${
-                direction === 'left' ? 'animate-marquee-left' : 'animate-marquee-right'
-            }`}>
+            <div
+                className={`flex items-center gap-16 md:gap-20 lg:gap-28 w-max ${
+                    direction === 'left' ? 'animate-marquee-left' : 'animate-marquee-right'
+                }`}
+                style={{ animationPlayState: paused ? 'paused' : 'running' }}
+            >
                 {doubled.map((item, index) => (
                     <div
                         key={`${item.file}-${index}`}
                         className="flex items-center justify-center h-20 sm:h-28 md:h-32 lg:h-36 w-40 sm:w-48 md:w-56 lg:w-64 flex-shrink-0"
+                        onMouseEnter={() => setPaused(true)}
+                        onMouseLeave={() => setPaused(false)}
                     >
                         <img
                             src={`/images/clients/${folder}/${item.file}.png`}
