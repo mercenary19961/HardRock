@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useInView } from '@/hooks/useInView';
@@ -52,7 +53,6 @@ function MarqueeBelt({ items, folder, direction, label }: { items: LogoItem[]; f
                             src={`/images/clients/${folder}/${item.file}.png`}
                             alt={item.alt}
                             title={item.alt}
-                            loading="lazy"
                             className="max-h-full max-w-full object-contain opacity-60 hover:opacity-100 transition-opacity duration-300"
                         />
                     </div>
@@ -68,6 +68,17 @@ export default function ClientsPartners() {
     const [sectionRef, sectionInView] = useInView<HTMLDivElement>();
 
     const folder = theme === 'dark' ? 'dark' : 'light';
+
+    // Preload logos after initial page render so they're cached before scrolling
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            [...CLIENT_FILES, ...PARTNER_FILES].forEach((item) => {
+                const img = new Image();
+                img.src = `/images/clients/${folder}/${item.file}.png`;
+            });
+        }, 1000);
+        return () => clearTimeout(timer);
+    }, [folder]);
 
     return (
         <section className="relative py-10 md:py-14 lg:py-20 bg-white dark:bg-black overflow-hidden">
