@@ -29,19 +29,12 @@ interface LogoItem {
     alt: string;
 }
 
-function MarqueeBelt({ items, folder, direction, label }: { items: LogoItem[]; folder: string; direction: 'left' | 'right'; label: string }) {
+function MarqueeBelt({ items, folder, direction }: { items: LogoItem[]; folder: string; direction: 'left' | 'right' }) {
     const doubled = [...items, ...items];
     const [paused, setPaused] = useState(false);
 
     return (
-        <div className="overflow-hidden relative">
-            {/* Floating label */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 pointer-events-none">
-                <span className="text-5xl md:text-7xl lg:text-8xl font-black text-black/[0.03] dark:text-white/[0.04] uppercase tracking-widest select-none font-sf-pro">
-                    {label}
-                </span>
-            </div>
-
+        <div className="overflow-hidden relative" dir="ltr">
             <div
                 className={`flex items-center gap-16 md:gap-20 lg:gap-28 w-max ${
                     direction === 'left' ? 'animate-marquee-left' : 'animate-marquee-right'
@@ -99,7 +92,7 @@ export default function ClientsPartners() {
                     }`}>
                         {t('clients.clients')}
                     </h3>
-                    <MarqueeBelt items={CLIENT_FILES} folder={folder} direction="right" label={t('clients.clients')} />
+                    <MarqueeBelt items={CLIENT_FILES} folder={folder} direction="right" />
                 </div>
 
                 {/* Partners belt - moves right to left */}
@@ -109,7 +102,7 @@ export default function ClientsPartners() {
                     }`}>
                         {t('clients.partners')}
                     </h3>
-                    <MarqueeBelt items={PARTNER_FILES} folder={folder} direction="left" label={t('clients.partners')} />
+                    <MarqueeBelt items={PARTNER_FILES} folder={folder} direction="left" />
                 </div>
             </div>
         </section>
