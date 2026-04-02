@@ -36,7 +36,7 @@ function MarqueeBelt({ items, folder, direction }: { items: LogoItem[]; folder: 
     return (
         <div className="overflow-hidden relative" dir="ltr">
             <div
-                className={`flex items-center gap-16 md:gap-20 lg:gap-28 w-max ${
+                className={`flex items-center w-max ${
                     direction === 'left' ? 'animate-marquee-left' : 'animate-marquee-right'
                 }`}
                 style={{ animationPlayState: paused ? 'paused' : 'running' }}
@@ -44,7 +44,7 @@ function MarqueeBelt({ items, folder, direction }: { items: LogoItem[]; folder: 
                 {doubled.map((item, index) => (
                     <div
                         key={`${item.file}-${index}`}
-                        className="flex items-center justify-center h-20 sm:h-28 md:h-32 lg:h-36 w-40 sm:w-48 md:w-56 lg:w-64 flex-shrink-0"
+                        className="flex items-center justify-center h-20 sm:h-28 md:h-32 lg:h-36 w-40 sm:w-48 md:w-56 lg:w-64 flex-shrink-0 mr-16 md:mr-20 lg:mr-28"
                         onMouseEnter={() => setPaused(true)}
                         onMouseLeave={() => setPaused(false)}
                     >
@@ -52,7 +52,7 @@ function MarqueeBelt({ items, folder, direction }: { items: LogoItem[]; folder: 
                             src={`/images/clients/${folder}/${item.file}.png`}
                             alt={item.alt}
                             title={item.alt}
-                            className="max-h-full max-w-full object-contain opacity-60 hover:opacity-100 transition-opacity duration-300"
+                            className="max-h-full max-w-full object-contain opacity-40 hover:opacity-100 transition-opacity duration-300"
                         />
                     </div>
                 ))}
