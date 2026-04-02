@@ -81,16 +81,20 @@ export default function Hero() {
                             className="animate-on-load fade-in-up"
                             style={{ animationDelay: '0.6s', animationDuration: '0.8s', opacity: 0 }}
                         >
-                            <button
-                                onClick={scrollToContact}
-                                className={`group relative bg-gradient-to-r from-brand-purple to-brand-red rounded-full text-md xs:text-lg sm:text-lg md:text-xl lg:text-2xl font-medium hover:shadow-2xl hover:shadow-brand-red/20 transition-all duration-300 hover:scale-105 tracking-wide overflow-hidden ${
+                            <a
+                                href="/#contact-us"
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    scrollToContact();
+                                }}
+                                className={`inline-block group relative bg-gradient-to-r from-brand-purple to-brand-red rounded-full text-md xs:text-lg sm:text-lg md:text-xl lg:text-2xl font-medium hover:shadow-2xl hover:shadow-brand-red/20 transition-all duration-300 hover:scale-105 tracking-wide overflow-hidden ${
                                     isArabic ? 'font-cairo py-2 md:py-4 px-4 sm:px-8 md:px-12 lg:px-12 xl:px-24' : 'font-sf-pro py-2 md:py-4 px-4 xs:px-16 sm:px-16 md:px-24'
                                 }`}
                             >
                                 <span className="text-white">
                                     {t('cta')}
                                 </span>
-                            </button>
+                            </a>
                         </div>
                     </div>
 
