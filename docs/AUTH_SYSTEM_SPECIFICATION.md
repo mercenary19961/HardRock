@@ -19,6 +19,7 @@ This document provides a complete specification for recreating the Login, Forgot
 8. [API Routes](#api-routes)
 9. [Security Features](#security-features)
 
+
 ---
 
 ## Technology Stack
