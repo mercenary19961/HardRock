@@ -33,6 +33,7 @@ export default function Footer() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="hover:opacity-80 transition-opacity"
+                                aria-label="Follow HardRock on Twitter"
                             >
                                 <img src="/images/social-twitter.png" alt="Twitter" title="Twitter" loading="lazy" className="w-6 h-6" />
                             </a>
@@ -41,6 +42,7 @@ export default function Footer() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="hover:opacity-80 transition-opacity"
+                                aria-label="Follow HardRock on LinkedIn"
                             >
                                 <img src="/images/social-linkedin.png" alt="LinkedIn" title="LinkedIn" loading="lazy" className="w-6 h-6" />
                             </a>
@@ -49,6 +51,7 @@ export default function Footer() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="hover:opacity-80 transition-opacity"
+                                aria-label="Follow HardRock on Snapchat"
                             >
                                 <img src="/images/social-snapchat.png" alt="Snapchat" title="Snapchat" loading="lazy" className="w-6 h-6" />
                             </a>
@@ -57,6 +60,7 @@ export default function Footer() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="hover:opacity-80 transition-opacity"
+                                aria-label="Follow HardRock on Instagram"
                             >
                                 <img src="/images/social-instagram.png" alt="Instagram" title="Instagram" loading="lazy" className="w-6 h-6" />
                             </a>
@@ -65,6 +69,7 @@ export default function Footer() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="hover:opacity-80 transition-opacity"
+                                aria-label="Follow HardRock on Facebook"
                             >
                                 <img src="/images/social-facebook.png" alt="Facebook" title="Facebook" loading="lazy" className="w-6 h-6" />
                             </a>
@@ -230,6 +235,7 @@ export default function Footer() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="hover:opacity-80 transition-opacity"
+                                aria-label="Follow HardRock on Twitter"
                             >
                                 <img src="/images/social-twitter.png" alt="Twitter" title="Twitter" loading="lazy" className="w-6 h-6 md:w-7 md:h-7 lg:w-8 lg:h-8" />
                             </a>
@@ -238,6 +244,7 @@ export default function Footer() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="hover:opacity-80 transition-opacity"
+                                aria-label="Follow HardRock on LinkedIn"
                             >
                                 <img src="/images/social-linkedin.png" alt="LinkedIn" title="LinkedIn" loading="lazy" className="w-6 h-6 md:w-7 md:h-7 lg:w-8 lg:h-8" />
                             </a>
@@ -246,6 +253,7 @@ export default function Footer() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="hover:opacity-80 transition-opacity"
+                                aria-label="Follow HardRock on Snapchat"
                             >
                                 <img src="/images/social-snapchat.png" alt="Snapchat" title="Snapchat" loading="lazy" className="w-6 h-6 md:w-7 md:h-7 lg:w-8 lg:h-8" />
                             </a>
@@ -254,6 +262,7 @@ export default function Footer() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="hover:opacity-80 transition-opacity"
+                                aria-label="Follow HardRock on Instagram"
                             >
                                 <img src="/images/social-instagram.png" alt="Instagram" title="Instagram" loading="lazy" className="w-6 h-6 md:w-7 md:h-7 lg:w-8 lg:h-8" />
                             </a>
@@ -262,6 +271,7 @@ export default function Footer() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="hover:opacity-80 transition-opacity"
+                                aria-label="Follow HardRock on Facebook"
                             >
                                 <img src="/images/social-facebook.png" alt="Facebook" title="Facebook" loading="lazy" className="w-6 h-6 md:w-7 md:h-7 lg:w-8 lg:h-8" />
                             </a>
