@@ -21,10 +21,12 @@ export default defineConfig({
         extensions: ['.tsx', '.ts', '.jsx', '.js', '.mjs', '.mts', '.json'],
     },
     server: {
-        host: 'localhost',
+        host: '0.0.0.0',
         port: 5173,
+        https: false,
         hmr: {
-            host: 'localhost',
+            host: '127.0.0.1',
+            protocol: 'ws',
         },
     },
     build: {
