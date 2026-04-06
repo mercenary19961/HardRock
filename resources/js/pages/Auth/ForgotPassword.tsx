@@ -20,7 +20,9 @@ export default function ForgotPassword({ status }: ForgotPasswordProps) {
 
     return (
         <>
-            <Head title="Forgot Password" />
+            <Head title="Forgot Password">
+                <meta name="robots" content="noindex, nofollow" />
+            </Head>
             <div className="min-h-screen flex items-center justify-center p-8 bg-background">
                 <div className="w-full max-w-[420px]">
                     {/* Logo */}

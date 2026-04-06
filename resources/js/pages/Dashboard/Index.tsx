@@ -72,7 +72,9 @@ export default function DashboardIndex({ stats, auth }: DashboardIndexProps) {
 
     return (
         <DashboardLayout>
-            <Head title="Dashboard" />
+            <Head title="Dashboard">
+                <meta name="robots" content="noindex, nofollow" />
+            </Head>
 
             {/* Welcome Banner */}
             <Banner

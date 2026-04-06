@@ -122,7 +122,7 @@ export default function Services() {
                         className={`lg:hidden w-full mb-8 ${isArabic ? 'text-right' : 'text-left'} animate-on-scroll animate-fade-in-up ${titleInView ? 'in-view' : ''}`}
                         dir={isArabic ? 'rtl' : 'ltr'}
                     >
-                        <h1 className={`text-4xl sm:text-5xl md:text-5xl lg:text-6xl xl:text-7xl font-black ${
+                        <h2 className={`text-4xl sm:text-5xl md:text-5xl lg:text-6xl xl:text-7xl font-black ${
                             isArabic ? 'font-tajawal' : 'font-sf-pro'
                         }`} style={isArabic ? {
                             lineHeight: '2',
@@ -141,7 +141,7 @@ export default function Services() {
                                     <span className="bg-gradient-to-r from-brand-purple to-brand-red bg-clip-text text-transparent">With</span>
                                 </>
                             )}
-                        </h1>
+                        </h2>
                     </div>
 
                     {/* Services List */}
@@ -197,7 +197,7 @@ export default function Services() {
                         >
                             <div className="block group pointer-events-none">
                             {/* Title - Hidden on mobile, shown on desktop */}
-                            <h1 className={`hidden lg:block text-4xl md:text-4xl lg:text-5xl xl:text-5xl 2xl:text-6xl font-black mb-0 lg:mt-0 ${
+                            <h2 className={`hidden lg:block text-4xl md:text-4xl lg:text-5xl xl:text-5xl 2xl:text-6xl font-black mb-0 lg:mt-0 ${
                                 isArabic ? 'font-tajawal' : 'font-sf-pro'
                             }`} style={isArabic ? {
                                 overflow: 'visible'
@@ -214,7 +214,7 @@ export default function Services() {
                                         <span className="bg-gradient-to-r from-brand-purple to-brand-red bg-clip-text text-transparent">With</span>
                                     </>
                                 )}
-                            </h1>
+                            </h2>
 
                             {/* Service Image - Clickable link to service page */}
                             <Link
