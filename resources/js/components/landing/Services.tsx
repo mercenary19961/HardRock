@@ -155,9 +155,10 @@ export default function Services() {
                                 const isSelected = selectedService.id === service.id;
 
                                 return (
-                                    <button
+                                    <a
                                             key={service.id}
-                                            onClick={() => handleServiceClick(service)}
+                                            href={service.link}
+                                            onClick={(e) => { e.preventDefault(); handleServiceClick(service); }}
                                             style={{ order: getMobileOrder(service.id) }}
                                             className={`py-2 flex items-center justify-start ${
                                                 getMobileOrder(service.id) && getMobileOrder(service.id)! % 2 === 0
@@ -181,7 +182,7 @@ export default function Services() {
                                                 <span className="lg:hidden">{service.shortName || service.name}</span>
                                                 <span className="hidden lg:inline">{service.name}</span>
                                             </span>
-                                        </button>
+                                        </a>
                                 );
                             })}
                         </div>
