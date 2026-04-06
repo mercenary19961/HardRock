@@ -189,7 +189,9 @@ export default function Users({ users }: UsersProps) {
 
     return (
         <DashboardLayout header="Team Members">
-            <Head title="Team Members" />
+            <Head title="Team Members">
+                <meta name="robots" content="noindex, nofollow" />
+            </Head>
 
             <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div className="p-6">

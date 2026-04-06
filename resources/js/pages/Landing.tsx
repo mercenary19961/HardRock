@@ -86,7 +86,7 @@ export default function Landing() {
 
     return (
         <>
-            <Head title="Home" />
+            <Head title="Smart Digital Solutions for Growth" />
 
             <SmoothScroll>
                 <div className="min-h-screen bg-background text-foreground font-sans antialiased selection:bg-primary/20 selection:text-primary">

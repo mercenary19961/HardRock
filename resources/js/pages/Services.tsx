@@ -84,6 +84,37 @@ export default function Services({ serviceSlug, fromNav = false }: ServicesProps
                 <meta property="og:image" content="https://www.hardrock-co.com/images/og-image-2.webp" />
                 <meta property="og:site_name" content="HardRock" />
                 <link rel="canonical" href={`https://www.hardrock-co.com/services/${serviceSlug}`} />
+                <script type="application/ld+json">{JSON.stringify({
+                    "@context": "https://schema.org",
+                    "@type": "Service",
+                    "name": serviceData?.hero?.title || 'Digital Marketing Service',
+                    "description": SERVICE_META_DESCRIPTIONS[serviceSlug] || '',
+                    "provider": {
+                        "@type": "ProfessionalService",
+                        "name": "HardRock Marketing & Technology",
+                        "url": "https://www.hardrock-co.com",
+                        "address": {
+                            "@type": "PostalAddress",
+                            "addressLocality": "Amman",
+                            "addressCountry": "JO"
+                        }
+                    },
+                    "areaServed": {
+                        "@type": "GeoCircle",
+                        "geoMidpoint": { "@type": "GeoCoordinates", "latitude": 31.9539, "longitude": 35.9106 },
+                        "geoRadius": "2000"
+                    },
+                    "url": `https://www.hardrock-co.com/services/${serviceSlug}`
+                })}</script>
+                <script type="application/ld+json">{JSON.stringify({
+                    "@context": "https://schema.org",
+                    "@type": "BreadcrumbList",
+                    "itemListElement": [
+                        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.hardrock-co.com/" },
+                        { "@type": "ListItem", "position": 2, "name": "Services", "item": "https://www.hardrock-co.com/services/branding" },
+                        { "@type": "ListItem", "position": 3, "name": serviceData?.hero?.title || 'Service', "item": `https://www.hardrock-co.com/services/${serviceSlug}` }
+                    ]
+                })}</script>
             </Head>
 
             <SmoothScroll>
@@ -470,14 +501,15 @@ function CTASection({ title, description, buttonText, onButtonClick, isArabic, i
                         {description}
                     </p>
 
-                    <button
-                        onClick={onButtonClick}
-                        className={`bg-gradient-to-r from-brand-purple to-brand-red text-white px-8 md:px-12 py-3 md:py-4 rounded-full text-base md:text-lg font-medium hover:shadow-xl hover:shadow-brand-red/30 transition-all duration-300 hover:scale-105 ${
+                    <a
+                        href="/#contact-us"
+                        onClick={(e) => { e.preventDefault(); onButtonClick(); }}
+                        className={`inline-block bg-gradient-to-r from-brand-purple to-brand-red text-white px-8 md:px-12 py-3 md:py-4 rounded-full text-base md:text-lg font-medium hover:shadow-xl hover:shadow-brand-red/30 transition-all duration-300 hover:scale-105 ${
                             isArabic ? 'font-cairo' : 'font-sf-pro'
                         }`}
                     >
                         {buttonText}
-                    </button>
+                    </a>
                 </motion.div>
             </div>
         </section>

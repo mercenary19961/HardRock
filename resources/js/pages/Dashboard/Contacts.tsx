@@ -42,7 +42,9 @@ export default function Contacts({ contacts }: ContactsProps) {
 
     return (
         <DashboardLayout header="Contact Submissions">
-            <Head title="Contacts" />
+            <Head title="Contacts">
+                <meta name="robots" content="noindex, nofollow" />
+            </Head>
 
             <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div className="p-6 text-gray-900 dark:text-gray-100">

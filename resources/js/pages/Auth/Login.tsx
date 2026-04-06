@@ -23,7 +23,9 @@ export default function Login() {
 
     return (
         <>
-            <Head title={auth.user ? "Dashboard" : "Team Login"} />
+            <Head title={auth.user ? "Dashboard" : "Team Login"}>
+                <meta name="robots" content="noindex, nofollow" />
+            </Head>
             <AnimatedCharactersLoginPage
                 onSubmit={handleSubmit}
                 email={data.email}

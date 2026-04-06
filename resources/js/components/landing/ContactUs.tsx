@@ -245,7 +245,7 @@ export default function ContactUs({ skipAnimation = false }: ContactUsProps) {
 
             <div className="relative z-10 w-full px-4 sm:px-8 md:px-12 lg:px-16 xl:px-20">
                 <div className="grid lg:grid-cols-[40%_60%] xl:grid-cols-2 gap-4 lg:gap-6 xl:gap-16 mb-4 lg:mb-6 2xl:mb-16 items-end">
-                    <h1
+                    <h2
                         ref={titleRef}
                         className={`text-4xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-black animate-on-scroll animate-fade-in-up ${titleInView ? 'in-view' : ''} ${
                             isArabic ? 'font-tajawal text-right' : 'font-sf-pro text-left'
@@ -271,7 +271,7 @@ export default function ContactUs({ skipAnimation = false }: ContactUsProps) {
                                 </span>
                             </>
                         )}
-                    </h1>
+                    </h2>
 
                     <div className={`${isArabic ? 'ml-0 md:ml-32 lg:ml-40 xl:ml-48' : 'mr-0 md:mr-32 lg:mr-40 xl:mr-52'}`}>
                         <a
