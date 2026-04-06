@@ -107,6 +107,7 @@ hardrock/
 │       │   │   ├── Hero.tsx
 │       │   │   ├── WhyHardRock.tsx
 │       │   │   ├── Services.tsx
+│       │   │   ├── ClientsPartners.tsx  # Animated marquee belts with client/partner logos
 │       │   │   ├── ContactUs.tsx
 │       │   │   ├── Footer.tsx
 │       │   │   └── WhatsAppButton.tsx
@@ -158,7 +159,10 @@ hardrock/
 └── public/
     └── images/
         ├── logo-white.png
-        └── logo-black.webp
+        ├── logo-black.webp
+        └── clients/
+            ├── dark/               # White logos for dark theme
+            └── light/              # Black logos for light theme
 ```
 
 ---
@@ -504,6 +508,7 @@ php artisan admin:create email@example.com password "Name"
 | Service Selector | resources/js/components/ui/expandable-service-selector.tsx |
 | Contact Form | resources/js/components/landing/ContactUs.tsx |
 | Contact Processing | app/Jobs/ProcessContactSubmission.php |
+| Clients & Partners Section | resources/js/components/landing/ClientsPartners.tsx |
 | Login Page | resources/js/pages/Auth/Login.tsx |
 | Login Animation | resources/js/components/animated-characters-login-page.tsx |
 | Dashboard Layout | resources/js/layouts/DashboardLayout.tsx |
@@ -517,8 +522,11 @@ php artisan admin:create email@example.com password "Name"
 | Facebook Service | app/Services/FacebookMarketingService.php |
 | Scroll Animations Hook | resources/js/hooks/useInView.ts |
 | CSS Animations | resources/css/app.css |
+| Marquee Belt Animations | resources/css/app.css |
 | Service Translations (en) | resources/js/locales/en/serviceDetail.json |
 | Service Translations (ar) | resources/js/locales/ar/serviceDetail.json |
+| Client/Partner Logos (dark) | public/images/clients/dark/ |
+| Client/Partner Logos (light) | public/images/clients/light/ |
 
 ---
 
@@ -569,18 +577,27 @@ SESSION_DRIVER=database
 | Element | Status | Location |
 |---------|--------|----------|
 | Meta title & description | ✅ Done | `resources/views/app.blade.php` |
+| Landing page descriptive title | ✅ Done | `resources/js/pages/Landing.tsx` |
 | LocalBusiness Schema | ✅ Done | `resources/views/partials/structured-data.blade.php` |
 | ProfessionalService Schema | ✅ Done | `resources/views/partials/structured-data.blade.php` |
 | FAQPage Schema | ✅ Done | `resources/views/partials/structured-data.blade.php` |
 | SiteNavigationElement Schema | ✅ Done | `resources/views/partials/structured-data.blade.php` |
 | ItemList Schema | ✅ Done | `resources/views/partials/structured-data.blade.php` |
+| Service Schema (per service page) | ✅ Done | `resources/js/pages/Services.tsx` |
+| BreadcrumbList Schema (service pages) | ✅ Done | `resources/js/pages/Services.tsx` |
 | Open Graph / Twitter cards | ✅ Done | `resources/views/app.blade.php` |
+| Service-specific OG images | ✅ Done | `resources/js/pages/Services.tsx` |
 | Hreflang tags (en/ar) | ✅ Done | `resources/views/app.blade.php` |
 | Sitemap with all pages | ✅ Done | `public/sitemap.xml` |
 | robots.txt | ✅ Done | `public/robots.txt` |
 | Service pages meta descriptions | ✅ Done | `resources/js/pages/Services.tsx` |
 | Geo meta tags | ✅ Done | `resources/views/app.blade.php` |
 | Image alt text | ✅ Done | All components |
+| Heading hierarchy (single h1 per page) | ✅ Done | Hero=h1, Services/ContactUs=h2 |
+| Crawlable navigation links | ✅ Done | Service buttons use `<a href>`, CTAs use `<a href>` |
+| Auth/Dashboard noindex | ✅ Done | All Auth + Dashboard pages |
+| Footer social links aria-labels | ✅ Done | `resources/js/components/landing/Footer.tsx` |
+| Cookie consent (CookieYes) | ✅ Done | `resources/views/app.blade.php` |
 
 ### TODO: When Adding News/Blog Section
 
@@ -628,11 +645,14 @@ Target these keyword themes in blog posts:
 
 | File | Purpose |
 |------|---------|
-| `resources/views/app.blade.php` | Global meta tags, hreflang, OG tags |
-| `resources/views/partials/structured-data.blade.php` | JSON-LD schema markup |
-| `public/sitemap.xml` | XML sitemap (currently static) |
+| `resources/views/app.blade.php` | Global meta tags, hreflang, OG tags, CookieYes |
+| `resources/views/partials/structured-data.blade.php` | JSON-LD schema markup (uses `@@` for Blade escaping of `@`) |
+| `public/sitemap.xml` | XML sitemap (currently static, update `lastmod` dates when content changes) |
 | `public/robots.txt` | Crawler directives |
-| `resources/js/pages/Services.tsx` | Service page meta descriptions + dynamic OG tags |
+| `resources/js/pages/Services.tsx` | Service page meta descriptions, dynamic OG images, Service + Breadcrumb JSON-LD schemas |
+| `resources/js/pages/Landing.tsx` | Landing page title |
+| `resources/js/components/landing/Hero.tsx` | Only h1 on landing page (one per language) |
+| `resources/js/components/landing/Footer.tsx` | Social links with aria-labels |
 
 ---
 
@@ -642,3 +662,7 @@ Target these keyword themes in blog posts:
 - [AUTH_SYSTEM_SPECIFICATION.md](./AUTH_SYSTEM_SPECIFICATION.md) - Detailed auth system docs
 - [META_API_INTEGRATION.md](./META_API_INTEGRATION.md) - Facebook/META integration guide
 - [planning/admin-dashboard-plan.md](./planning/admin-dashboard-plan.md) - Dashboard implementation notes
+
+---
+
+> **Last updated:** 2026-04-06 — based on commit `53b1515` (*SEO improvements: Service/Breadcrumb schemas, heading hierarchy, crawlable links, noindex on auth/dashboard, service-specific OG images, Clients & Partners marquee section*)
