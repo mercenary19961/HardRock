@@ -47,4 +47,8 @@ return [
         'partner_id' => env('LINKEDIN_PARTNER_ID'),
     ],
 
+    'breeze' => [
+        'api_key' => env('BREEZE_API_KEY'),
+    ],
+
 ];
