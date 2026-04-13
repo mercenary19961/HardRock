@@ -102,7 +102,8 @@ export default {
     			float: 'float 6s ease-in-out infinite'
     		},
     		screens: {
-    			xs: '475px'
+    			xs: '475px',
+    			'3xl': '1920px'
     		},
     		fontSize: {
     			xxs: '0.65rem',

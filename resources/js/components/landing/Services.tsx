@@ -16,12 +16,12 @@ interface ServiceItem {
 
 // Per-service title sizing: short names get larger, long names get smaller
 const SERVICE_TITLE_SIZE: Record<string, string> = {
-    'paid-ads': 'text-6xl sm:text-7xl md:text-8xl lg:text-9xl xl:text-[10rem] 2xl:text-[11rem]',
-    'social-media': 'text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl',
-    'seo': 'text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl',
-    'branding': 'text-3xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-8xl',
-    'software-ai': 'text-4xl sm:text-5xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl',
-    'pr-social-listening': 'text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl',
+    'paid-ads': 'text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl 2xl:text-[10rem] 3xl:text-[11rem]',
+    'social-media': 'text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl 3xl:text-[10rem]',
+    'seo': 'text-7xl sm:text-8xl md:text-9xl lg:text-[11rem] xl:text-[13rem] 2xl:text-[14rem] 3xl:text-[16rem]',
+    'branding': 'text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-9xl 3xl:text-[12rem]',
+    'software-ai': 'text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl 2xl:text-8xl 3xl:text-[10rem]',
+    'pr-social-listening': 'text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-[5.5rem] 3xl:text-[8rem]',
 };
 
 const SERVICE_TITLE_SIZE_AR: Record<string, string> = {
@@ -250,7 +250,7 @@ export default function Services() {
                                     return (
                                         <span key={i} className="block whitespace-nowrap">
                                             <span
-                                                className={`${sizeClass} font-black uppercase inline-block ${
+                                                className={`${sizeClass} font-[950] uppercase inline-block ${
                                                     isLightMode ? 'text-gray-900' : 'text-white'
                                                 }`}
                                             >

@@ -25,7 +25,7 @@
       "id": "seo",
       "name": "SEO",
       "sidebarName": "SEO",
-      "displayTitle": ["SEARCH ENGINE", "OPTIMIZATION"],
+      "displayTitle": ["SEO"],
       "description": "Our SEO services use data-driven strategies and optimization to boost visibility, increase organic traffic, and deliver sustainable long-term search performance.",
       "image": "/images/services/seo-2.webp",
       "imageLight": "/images/services/seo-2-light.webp",
@@ -35,7 +35,7 @@
       "id": "branding",
       "name": "Branding",
       "sidebarName": "BRANDING",
-      "displayTitle": ["BRAND IDENTITY"],
+      "displayTitle": ["BRANDING"],
       "description": "We build strong, memorable brand identities through strategy and impactful design including brand strategy, logo design, voice, visuals and messaging for a unified presence across all platforms.",
       "image": "/images/services/branding-2.webp",
       "link": "/services/branding"
@@ -44,7 +44,7 @@
       "id": "software-ai",
       "name": "Software & AI Solutions",
       "sidebarName": "SOFTWARE & AI SOLUTIONS",
-      "displayTitle": ["SOFTWARE &", "AI SOLUTIONS"],
+      "displayTitle": ["SOFTWARE & AI"],
       "description": "Hard Rock delivers advanced AI Agent and Software solutions that enhance performance, streamline operations, and support scalable, efficient growth.",
       "image": "/images/services/ai-2.webp",
       "link": "/services/software-ai"
@@ -53,7 +53,7 @@
       "id": "pr-social-listening",
       "name": "PR & Social Listening",
       "sidebarName": "PR & SOCIAL LISTENING",
-      "displayTitle": ["PR & SOCIAL", "LISTENING"],
+      "displayTitle": ["PUBLIC RELATIONS"],
       "description": "Hard Rock delivers integrated digital PR and advanced social listening solutions to strengthen reputation, increase visibility, and uncover real-time opportunities.",
       "image": "/images/services/pr-2.webp",
       "link": "/services/pr-social-listening"
