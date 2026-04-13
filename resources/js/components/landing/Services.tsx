@@ -1,270 +1,328 @@
 import { Link } from '@inertiajs/react';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useInView } from '@/hooks/useInView';
+import { useTheme } from '@/contexts/ThemeContext';
+
+interface ServiceItem {
+    id: string;
+    name: string;
+    sidebarName: string;
+    displayTitle: string[];
+    description: string;
+    image: string;
+    link: string;
+}
 
 export default function Services() {
     const { t, i18n } = useTranslation('services');
+    const { theme } = useTheme();
     const isArabic = i18n.language === 'ar';
+    const isLightMode = theme === 'light';
 
-    const services = t('items', { returnObjects: true }) as Array<{
-        id: string;
-        name: string;
-        shortName?: string;
-        description: string;
-        image?: string;
-        imageLight?: string;
-        imageDark?: string;
-        link: string;
-    }>;
+    const services = t('items', { returnObjects: true }) as ServiceItem[];
 
-    const [selectedService, setSelectedService] = useState(services[0]);
-    const serviceContentRef = useRef<HTMLDivElement>(null);
-    const [titleRef, titleInView] = useInView<HTMLDivElement>();
-    const [listRef, listInView] = useInView<HTMLDivElement>();
-    const [contentRef, contentInView] = useInView<HTMLDivElement>();
+    const [activeIndex, setActiveIndex] = useState(0);
+    const [isInView, setIsInView] = useState(false);
+    const [autoResetTrigger, setAutoResetTrigger] = useState(0);
+    const sectionRef = useRef<HTMLElement>(null);
+    const stickyRef = useRef<HTMLDivElement>(null);
+    const autoTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const isProgrammaticScroll = useRef(false);
+    const programmaticScrollTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const justEnteredView = useRef(false);
+    const entryGraceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-    // Handle service selection with scroll on mobile screens only
-    const handleServiceClick = (service: typeof services[0]) => {
-        setSelectedService(service);
+    const totalServices = services.length;
 
-        // Scroll to content on mobile screens only (< 768px)
-        if (typeof window !== 'undefined' && window.innerWidth < 768) {
-            setTimeout(() => {
-                if (serviceContentRef.current) {
-                    serviceContentRef.current.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'center'
-                    });
+    // Helper: scroll the page to a specific service index without triggering the scroll handler
+    const scrollToServiceIndex = useCallback((index: number) => {
+        const section = sectionRef.current;
+        if (!section) return;
+
+        isProgrammaticScroll.current = true;
+        if (programmaticScrollTimer.current) clearTimeout(programmaticScrollTimer.current);
+
+        const scrollableHeight = section.offsetHeight - window.innerHeight;
+        const targetProgress = index / totalServices;
+        const sectionTop = section.getBoundingClientRect().top + window.scrollY;
+        const targetScroll = sectionTop + targetProgress * scrollableHeight;
+        window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+
+        // Re-enable scroll handler after smooth scroll finishes (~600ms)
+        programmaticScrollTimer.current = setTimeout(() => {
+            isProgrammaticScroll.current = false;
+        }, 700);
+    }, [totalServices]);
+
+    // Scroll-driven active index
+    useEffect(() => {
+        const section = sectionRef.current;
+        if (!section) return;
+
+        const handleScroll = () => {
+            const rect = section.getBoundingClientRect();
+
+            // Always track visibility
+            const inView = rect.top <= 0 && rect.bottom >= window.innerHeight;
+            setIsInView((wasInView) => {
+                // When section first enters view, set a grace period so the
+                // scroll that brought it into view doesn't count as interaction
+                if (!wasInView && inView) {
+                    justEnteredView.current = true;
+                    if (entryGraceTimer.current) clearTimeout(entryGraceTimer.current);
+                    entryGraceTimer.current = setTimeout(() => {
+                        justEnteredView.current = false;
+                    }, 500);
                 }
-            }, 200);
-        }
-    };
+                return inView;
+            });
 
-    // Reset selected service when language changes
-    useEffect(() => {
-        setSelectedService(services[0]);
-    }, [i18n.language]);
+            // Skip index calculation during programmatic scrolls
+            if (isProgrammaticScroll.current) return;
 
-    // Mobile order mapping for services (grid only, reverts to natural order on lg+ screens)
-    const getMobileOrder = (serviceId: string): number | undefined => {
-        if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
-            return undefined; // No custom order on large screens
-        }
-        const mobileOrderMap: { [key: string]: number } = {
-            'paid-ads': 1,
-            'social-media': 2,
-            'software-ai': 3,
-            'seo': 4,
-            'pr-social-listening': 5,
-            'branding': 6,
+            const sectionTop = -rect.top;
+            const scrollableHeight = section.offsetHeight - window.innerHeight;
+
+            if (sectionTop < 0 || scrollableHeight <= 0) return;
+
+            const progress = Math.min(Math.max(sectionTop / scrollableHeight, 0), 1);
+            const index = Math.min(Math.floor(progress * totalServices), totalServices - 1);
+
+            setActiveIndex(index);
         };
-        return mobileOrderMap[serviceId];
-    };
 
-    const getImageMargin = () => {
-        if (typeof window !== 'undefined') {
-            const width = window.innerWidth;
-            if (width >= 1280) {
-                // xl screens and above
-                return { left: '100px', right: '100px' };
-            } else if (width >= 1024) {
-                // lg screens
-                return { left: '50px', right: '50px' };
-            } else if (width >= 768) {
-                // md screens
-                return { left: '20px', right: '20px' };
-            }
-        }
-        // Default for smaller screens
-        return { left: '0px', right: '0px' };
-    };
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        handleScroll();
 
-    const [imageMargin, setImageMargin] = useState(getImageMargin());
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [totalServices]);
 
-    // Update margin on window resize
+    // Auto-rotate every 5 seconds (resets when autoResetTrigger changes)
     useEffect(() => {
-        if (typeof window !== 'undefined') {
-            const handleResize = () => setImageMargin(getImageMargin());
-            window.addEventListener('resize', handleResize);
-            return () => window.removeEventListener('resize', handleResize);
-        }
+        if (!isInView) return;
+
+        autoTimerRef.current = setInterval(() => {
+            setActiveIndex((prev) => {
+                const next = prev + 1;
+                if (next >= totalServices) return prev;
+                scrollToServiceIndex(next);
+                return next;
+            });
+        }, 5000);
+
+        return () => {
+            if (autoTimerRef.current) clearInterval(autoTimerRef.current);
+        };
+    }, [isInView, autoResetTrigger, totalServices, scrollToServiceIndex]);
+
+    // Handle manual service click
+    const handleServiceClick = useCallback((index: number) => {
+        setActiveIndex(index);
+        scrollToServiceIndex(index);
+        // Reset the 5s auto-rotate timer
+        setAutoResetTrigger((c) => c + 1);
+    }, [scrollToServiceIndex]);
+
+    // Pause auto-rotate on user scroll (only when actively scrolling within the section)
+    useEffect(() => {
+        const handleWheel = () => {
+            // Reset the 5s auto-rotate timer when user scrolls within the section
+            if (isInView && !isProgrammaticScroll.current && !justEnteredView.current) {
+                setAutoResetTrigger((c) => c + 1);
+            }
+        };
+
+        window.addEventListener('wheel', handleWheel, { passive: true });
+        window.addEventListener('touchmove', handleWheel, { passive: true });
+        return () => {
+            window.removeEventListener('wheel', handleWheel);
+            window.removeEventListener('touchmove', handleWheel);
+        };
+    }, [isInView]);
+
+    // Cleanup timers
+    useEffect(() => {
+        return () => {
+            if (autoTimerRef.current) clearInterval(autoTimerRef.current);
+            if (programmaticScrollTimer.current) clearTimeout(programmaticScrollTimer.current);
+            if (entryGraceTimer.current) clearTimeout(entryGraceTimer.current);
+        };
     }, []);
 
-    // Determine which image to use
-    const getServiceImage = (service: typeof selectedService) => {
-        if (service.imageLight && service.imageDark) {
-            return {
-                light: service.imageLight,
-                dark: service.imageDark,
-            };
-        }
-        return {
-            light: service.image,
-            dark: service.image,
-        };
-    };
-
-    const currentImage = getServiceImage(selectedService);
+    const activeService = services[activeIndex];
 
     return (
-        <section id="services" className="relative py-10 md:py-32 overflow-hidden bg-white dark:bg-black">
-            {/* Background Blurs */}
-            <div className="absolute top-20 ltr:left-20 rtl:right-20 w-40 h-40 bg-purple-500/20 dark:bg-purple-500/30 rounded-full blur-3xl" />
-            <div className="absolute bottom-40 ltr:right-20 rtl:left-20 w-48 h-48 bg-pink-500/20 dark:bg-pink-500/30 rounded-full blur-3xl" />
-            <div className="absolute top-1/2 ltr:left-1/3 rtl:right-1/3 w-32 h-32 bg-red-500/15 dark:bg-red-500/25 rounded-full blur-3xl" />
+        <section
+            ref={sectionRef}
+            id="services"
+            className="relative bg-white dark:bg-black"
+            style={{ height: `${(totalServices + 1) * 100}vh` }}
+        >
+            {/* Sticky container */}
+            <div
+                ref={stickyRef}
+                className="sticky top-0 h-screen w-full overflow-hidden flex items-center"
+            >
+                {/* Background Blurs */}
+                <div className="absolute top-20 ltr:left-20 rtl:right-20 w-40 h-40 bg-purple-500/20 dark:bg-purple-500/30 rounded-full blur-3xl pointer-events-none" />
+                <div className="absolute bottom-40 ltr:right-20 rtl:left-20 w-48 h-48 bg-pink-500/20 dark:bg-pink-500/30 rounded-full blur-3xl pointer-events-none" />
+                <div className="absolute top-1/2 ltr:left-1/3 rtl:right-1/3 w-32 h-32 bg-red-500/15 dark:bg-red-500/25 rounded-full blur-3xl pointer-events-none" />
 
-            <div className="relative z-10 w-full  px-6 sm:px-12 lg:px-16 xl:px-20">
-                <div className="flex flex-col lg:grid lg:grid-cols-2 items-start gap-4 lg:gap-8" dir="ltr">
-                    {/* Title - Shows first on mobile, hidden on desktop (shown in Service Content section) */}
-                    <div
-                        ref={titleRef}
-                        className={`lg:hidden w-full mb-8 ${isArabic ? 'text-right' : 'text-left'} animate-on-scroll animate-fade-in-up ${titleInView ? 'in-view' : ''}`}
-                        dir={isArabic ? 'rtl' : 'ltr'}
-                    >
-                        <h2 className={`text-4xl sm:text-5xl md:text-5xl lg:text-6xl xl:text-7xl font-black ${
-                            isArabic ? 'font-tajawal' : 'font-sf-pro'
-                        }`} style={isArabic ? {
-                            lineHeight: '2',
-                            overflow: 'visible',
-                            display: 'block'
-                        } : { lineHeight: '1.2' }}>
-                            {isArabic ? (
-                                <>
-                                    <span className="text-black dark:text-white">مـــــــــاذا </span>
-                                    <span className="text-brand-purple md:bg-gradient-to-r md:from-brand-purple md:to-brand-red md:bg-clip-text md:text-transparent">نقـــــــــــــــدم</span>
-                                    <span className="text-black dark:text-white">؟</span>
-                                </>
-                            ) : (
-                                <>
-                                    <span className="text-black dark:text-white">We Help You </span>
-                                    <span className="bg-gradient-to-r from-brand-purple to-brand-red bg-clip-text text-transparent">With</span>
-                                </>
-                            )}
-                        </h2>
-                    </div>
+                <div className="relative z-10 w-full h-full flex" dir={isArabic ? 'rtl' : 'ltr'}>
+                    {/* Sidebar — vertical service names */}
+                    <div className="hidden lg:flex flex-col justify-center items-center w-16 xl:w-20 flex-shrink-0">
+                        <div className="flex flex-col gap-2">
+                            {services.map((service, index) => (
+                                <button
+                                    key={service.id}
+                                    onClick={() => handleServiceClick(index)}
+                                    className="relative group"
+                                >
+                                    <span
+                                        className={`block text-[11px] xl:text-xs tracking-[0.2em] uppercase whitespace-nowrap transition-all duration-500 ${
+                                            isArabic ? 'font-tajawal' : 'font-poppins'
+                                        } ${
+                                            index === activeIndex
+                                                ? isLightMode ? 'text-gray-900 font-medium' : 'text-white font-medium'
+                                                : isLightMode ? 'text-gray-400 hover:text-gray-600' : 'text-gray-600 hover:text-gray-400'
+                                        }`}
+                                        style={{
+                                            writingMode: 'vertical-lr',
+                                            textOrientation: 'mixed',
+                                            transform: isArabic ? 'rotate(180deg)' : 'none',
+                                        }}
+                                    >
+                                        {service.sidebarName || service.name}
+                                    </span>
 
-                    {/* Services List */}
-                    <div
-                        ref={listRef}
-                        className={`w-full flex justify-center lg:justify-start mb-12 lg:mb-0 ${isArabic ? 'lg:order-2' : 'lg:order-1'} animate-on-scroll animate-fade-in-right ${listInView ? 'in-view' : ''}`}
-                        dir={isArabic ? 'rtl' : 'ltr'}
-                    >
-                        <div className="grid grid-cols-2 gap-4 md:gap-4 pl-0 2xl:pl-20 lg:flex lg:flex-col lg:space-y-6 lg:flex-1 max-w-2xl lg:max-w-none">
-                            {services.map((service) => {
-                                const isSelected = selectedService.id === service.id;
-
-                                return (
-                                    <a
-                                            key={service.id}
-                                            href={service.link}
-                                            onClick={(e) => { e.preventDefault(); handleServiceClick(service); }}
-                                            style={{ order: getMobileOrder(service.id) }}
-                                            className={`py-2 flex items-center justify-start ${
-                                                getMobileOrder(service.id) && getMobileOrder(service.id)! % 2 === 0
-                                                    ? 'pl-4 lg:pl-0'
-                                                    : ''
-                                            }`}
-                                        >
-                                            <span className={`px-2 md:px-6 py-2 md:py-0 rounded-full ${
-                                                isSelected
-                                                    ? 'bg-gradient-to-r from-brand-purple to-brand-red shadow-lg shadow-brand-purple/30'
-                                                    : 'bg-transparent'
-                                            } ${
-                                                isArabic
-                                                    ? isSelected
-                                                        ? 'font-tajawal font-light text-white'
-                                                        : 'font-tajawal font-extralight text-black dark:text-white'
-                                                    : isSelected
-                                                        ? 'font-poppins font-light text-white whitespace-nowrap'
-                                                        : 'font-poppins font-extralight text-black dark:text-white whitespace-nowrap'
-                                            } text-base md:text-lg lg:text-xl xl:text-2xl leading-tight`}>
-                                                <span className="lg:hidden">{service.shortName || service.name}</span>
-                                                <span className="hidden lg:inline">{service.name}</span>
-                                            </span>
-                                        </a>
-                                );
-                            })}
+                                    {/* Bracket corners for active service */}
+                                    {index === activeIndex && (
+                                        <div className="absolute -inset-x-1 -inset-y-1">
+                                            {/* Top-left corner */}
+                                            <span className={`absolute top-0 ${isArabic ? 'right-0' : 'left-0'} w-2 h-2 ${isLightMode ? 'border-gray-900' : 'border-white'} ${isArabic ? 'border-t border-r' : 'border-t border-l'}`} />
+                                            {/* Top-right corner */}
+                                            <span className={`absolute top-0 ${isArabic ? 'left-0' : 'right-0'} w-2 h-2 ${isLightMode ? 'border-gray-900' : 'border-white'} ${isArabic ? 'border-t border-l' : 'border-t border-r'}`} />
+                                            {/* Bottom-left corner */}
+                                            <span className={`absolute bottom-0 ${isArabic ? 'right-0' : 'left-0'} w-2 h-2 ${isLightMode ? 'border-gray-900' : 'border-white'} ${isArabic ? 'border-b border-r' : 'border-b border-l'}`} />
+                                            {/* Bottom-right corner */}
+                                            <span className={`absolute bottom-0 ${isArabic ? 'left-0' : 'right-0'} w-2 h-2 ${isLightMode ? 'border-gray-900' : 'border-white'} ${isArabic ? 'border-b border-l' : 'border-b border-r'}`} />
+                                        </div>
+                                    )}
+                                </button>
+                            ))}
                         </div>
                     </div>
 
-                    {/* Service Content */}
-                    <div ref={serviceContentRef} className={`w-full flex justify-center lg:justify-start ${isArabic ? 'lg:order-1' : 'lg:order-2'}`}>
-                        <div
-                            ref={contentRef}
-                            className={`w-full max-w-2xl lg:max-w-none ${isArabic ? 'text-center lg:text-right' : 'text-center lg:text-left'} animate-on-scroll animate-fade-in-left ${contentInView ? 'in-view' : ''}`}
-                            dir={isArabic ? 'rtl' : 'ltr'}
-                        >
-                            <div className="block group pointer-events-none">
-                            {/* Title - Hidden on mobile, shown on desktop */}
-                            <h2 className={`hidden lg:block text-4xl md:text-4xl lg:text-5xl xl:text-5xl 2xl:text-6xl font-black mb-0 lg:mt-0 ${
-                                isArabic ? 'font-tajawal' : 'font-sf-pro'
-                            }`} style={isArabic ? {
-                                overflow: 'visible'
-                            } : { lineHeight: '1.2' }}>
-                                {isArabic ? (
-                                    <>
-                                        <span className="text-black dark:text-white">مـــــــــاذا </span>
-                                        <span className="bg-gradient-to-r from-brand-purple to-brand-red bg-clip-text text-transparent">نقـــــــــــــــدم</span>
-                                        <span className="text-black dark:text-white">؟</span>
-                                    </>
-                                ) : (
-                                    <>
-                                        <span className="text-black dark:text-white">We Help You </span>
-                                        <span className="bg-gradient-to-r from-brand-purple to-brand-red bg-clip-text text-transparent">With</span>
-                                    </>
-                                )}
+                    {/* Main content area */}
+                    <div className="flex-1 flex flex-col lg:flex-row items-center justify-center px-6 sm:px-12 lg:px-8 xl:px-16 gap-8 lg:gap-12 pt-16 lg:pt-0">
+                        {/* Text content — left side */}
+                        <div className={`flex-1 flex flex-col justify-center ${isArabic ? 'text-right' : 'text-left'}`}>
+                            {/* Display title — large bold text */}
+                            <h2
+                                key={activeService.id}
+                                className={`leading-[0.95] tracking-tight mb-6 lg:mb-8 animate-service-title ${
+                                    isArabic ? 'font-tajawal' : 'font-sf-pro'
+                                }`}
+                            >
+                                {(activeService.displayTitle || [activeService.name]).map((line, i, arr) => (
+                                    <span key={i} className="block">
+                                        <span
+                                            className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl font-black uppercase italic ${
+                                                i === arr.length - 1
+                                                    ? 'bg-gradient-to-r from-brand-purple to-brand-red bg-clip-text text-transparent'
+                                                    : isLightMode ? 'text-gray-900' : 'text-white'
+                                            }`}
+                                        >
+                                            {line}
+                                        </span>
+                                    </span>
+                                ))}
                             </h2>
 
-                            {/* Service Image - Clickable link to service page */}
-                            <Link
-                                href={selectedService.link}
-                                className="relative w-full max-w-sm mb-8 flex items-center justify-center mx-auto lg:mx-0 cursor-pointer pointer-events-auto transition-transform hover:scale-105"
-                                style={{
-                                    height: '280px',
-                                    marginLeft: typeof window !== 'undefined' && window.innerWidth >= 1024 ? imageMargin.left : 'auto',
-                                    marginRight: typeof window !== 'undefined' && window.innerWidth >= 1024 ? imageMargin.right : 'auto'
-                                }}
-                            >
-                                {/* Glow effect */}
-                                <div className="absolute inset-0 bg-gradient-to-br from-brand-purple/20 to-brand-red/20 rounded-full blur-2xl" />
-
-                                {/* Light mode image */}
-                                <img
-                                    src={currentImage.light}
-                                    alt={selectedService.name}
-                                    title={selectedService.name}
-                                    loading="lazy"
-                                    className="relative z-10 w-full h-full object-contain drop-shadow-2xl dark:hidden"
-                                />
-
-                                {/* Dark mode image */}
-                                <img
-                                    src={currentImage.dark}
-                                    alt={selectedService.name}
-                                    title={selectedService.name}
-                                    loading="lazy"
-                                    className="relative z-10 w-full h-full object-contain drop-shadow-2xl hidden dark:block"
-                                />
-                            </Link>
-
-                            {/* Service Description */}
-                            <div style={{ minHeight: '180px' }} className="max-w-2xl mx-auto lg:mx-0">
+                            {/* Description with accent bar */}
+                            <div className={`flex gap-4 items-start max-w-xl ${isArabic ? 'flex-row-reverse' : ''}`}>
+                                <div className="w-1 flex-shrink-0 rounded-full bg-gradient-to-b from-brand-purple to-brand-red self-stretch min-h-[60px]" />
                                 <p
-                                    className={`text-gray-700 dark:text-gray-300 mb-6 ${
+                                    key={`desc-${activeService.id}`}
+                                    className={`animate-service-desc ${
+                                        isLightMode ? 'text-gray-600' : 'text-gray-400'
+                                    } ${
                                         isArabic
-                                            ? 'text-lg md:text-xl lg:text-xl xl:text-2xl 2xl:text-3xl font-tajawal font-normal'
-                                            : 'text-base md:text-lg lg:text-lg xl:text-xl 2xl:text-2xl font-poppins font-normal'
+                                            ? 'text-base sm:text-lg lg:text-xl font-tajawal'
+                                            : 'text-sm sm:text-base lg:text-lg font-poppins'
                                     }`}
                                     style={{ lineHeight: '1.8' }}
                                 >
-                                    {selectedService.description}
+                                    {activeService.description}
                                 </p>
                             </div>
+
+                            {/* Learn more link */}
+                            <div className={`mt-8 ${isArabic ? 'text-right' : 'text-left'}`}>
+                                <Link
+                                    href={activeService.link}
+                                    className={`inline-flex items-center gap-2 text-sm tracking-widest uppercase transition-colors duration-300 ${
+                                        isLightMode
+                                            ? 'text-brand-purple hover:text-brand-red'
+                                            : 'text-gray-400 hover:text-white'
+                                    } ${isArabic ? 'font-tajawal' : 'font-poppins'}`}
+                                >
+                                    {t('learnMore')}
+                                    <svg className={`w-4 h-4 ${isArabic ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                    </svg>
+                                </Link>
+                            </div>
                         </div>
+
+                        {/* Image — right side */}
+                        <div className="flex-1 flex items-center justify-center max-w-sm lg:max-w-md xl:max-w-lg">
+                            <Link
+                                href={activeService.link}
+                                key={`img-${activeService.id}`}
+                                className="relative w-full aspect-square flex items-center justify-center animate-service-image cursor-pointer transition-transform hover:scale-105"
+                            >
+                                {/* Glow effect */}
+                                <div className="absolute inset-0 bg-gradient-to-br from-brand-purple/20 to-brand-red/20 rounded-full blur-3xl" />
+
+                                <img
+                                    src={activeService.image}
+                                    alt={activeService.name}
+                                    title={activeService.name}
+                                    className="relative z-10 w-full h-full object-contain drop-shadow-2xl"
+                                />
+                            </Link>
                         </div>
                     </div>
                 </div>
+
+                {/* Mobile service indicator dots */}
+                <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 lg:hidden z-10">
+                    {services.map((_, index) => (
+                        <button
+                            key={index}
+                            onClick={() => handleServiceClick(index)}
+                            className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                                index === activeIndex
+                                    ? 'bg-gradient-to-r from-brand-purple to-brand-red w-6'
+                                    : isLightMode ? 'bg-gray-300' : 'bg-gray-600'
+                            }`}
+                            aria-label={`View ${services[index].name}`}
+                        />
+                    ))}
+                </div>
+
+                {/* Scroll indicator */}
+                {activeIndex < totalServices - 1 && (
+                    <div className="absolute bottom-8 right-8 hidden lg:flex flex-col items-center gap-2 animate-bounce">
+                        <span className={`text-xs tracking-widest ${isLightMode ? 'text-gray-400' : 'text-gray-600'} ${isArabic ? 'font-tajawal' : 'font-poppins'}`}>
+                            {isArabic ? 'مرر' : 'SCROLL'}
+                        </span>
+                        <svg className={`w-4 h-4 ${isLightMode ? 'text-gray-400' : 'text-gray-600'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7" />
+                        </svg>
+                    </div>
+                )}
             </div>
         </section>
     );
