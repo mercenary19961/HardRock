@@ -8,5 +8,13 @@
     "ourTeam": "Our Team",
     "contactUs": "Contact Us"
   },
+  "serviceLinks": {
+    "paid-ads": "Paid Ads",
+    "social-media": "Social Media",
+    "seo": "SEO",
+    "branding": "Branding",
+    "software-ai": "Software & AI",
+    "pr-social-listening": "Public Relations"
+  },
   "copyright": "© 2026 HardRock. all rights reserved"
 }
