@@ -240,7 +240,7 @@ export default function Services() {
             ref={sectionRef}
             id="services"
             className="relative bg-white dark:bg-black"
-            style={{ height: isDesktop ? `${(totalServices + 1) * 100}vh` : 'auto' }}
+            style={{ height: isDesktop ? `${(totalServices + 1) * 60}vh` : 'auto' }}
         >
             {/* Sticky container (desktop) / Normal container (mobile) */}
             <div
@@ -420,7 +420,7 @@ export default function Services() {
 
                 {/* Scroll indicator */}
                 {activeIndex < totalServices - 1 && (
-                    <div className="absolute bottom-8 right-8 hidden lg:flex flex-col items-center gap-2 animate-bounce">
+                    <div className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden lg:flex flex-col items-center gap-2 animate-bounce">
                         <span className={`text-xs tracking-widest ${isLightMode ? 'text-gray-400' : 'text-gray-600'} ${isArabic ? 'font-tajawal' : 'font-poppins'}`}>
                             {isArabic ? 'مرر' : 'SCROLL'}
                         </span>
