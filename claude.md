@@ -71,9 +71,12 @@ hardrock/
 │   │   │   │   ├── DashboardController.php
 │   │   │   │   ├── ContactController.php
 │   │   │   │   └── UserController.php
+│   │   │   ├── Api/
+│   │   │   │   └── LeadController.php    # Breeze AI agent lead submissions
 │   │   │   └── ContactController.php # Public contact form
 │   │   ├── Middleware/
 │   │   │   ├── AdminMiddleware.php   # Admin-only route protection
+│   │   │   ├── ApiKeyMiddleware.php  # API key auth for external integrations
 │   │   │   └── HandleInertiaRequests.php
 │   │   └── Requests/
 │   │       └── Auth/LoginRequest.php
@@ -81,7 +84,8 @@ hardrock/
 │   │   └── ProcessContactSubmission.php
 │   ├── Models/
 │   │   ├── User.php
-│   │   └── Contact.php
+│   │   ├── Contact.php
+│   │   └── Lead.php
 │   └── Services/
 │       └── FacebookMarketingService.php
 │
@@ -149,6 +153,7 @@ hardrock/
 │
 ├── routes/
 │   ├── web.php                       # Main routes
+│   ├── api.php                       # API routes (Breeze AI)
 │   └── auth.php                      # Auth routes
 │
 ├── database/
@@ -192,6 +197,19 @@ hardrock/
 | email | string | |
 | services | json | Array of selected services |
 | more_details | text | Nullable |
+| created_at | timestamp | |
+| updated_at | timestamp | |
+
+### leads
+| Column | Type | Notes |
+|--------|------|-------|
+| id | bigint | Primary key |
+| first_name | string | |
+| last_name | string | |
+| phone_number | string | |
+| email | string | Nullable |
+| service_interest | string | Nullable |
+| source | string | Default: 'breeze' |
 | created_at | timestamp | |
 | updated_at | timestamp | |
 
@@ -239,6 +257,11 @@ Laravel queue system tables.
 | GET | /dashboard | dashboard.index | Dashboard home |
 | GET | /dashboard/contacts | dashboard.contacts | Contacts list |
 | DELETE | /dashboard/contacts/{id} | dashboard.contacts.destroy | Delete contact |
+
+### API Routes (External)
+| Method | URI | Name | Description |
+|--------|-----|------|-------------|
+| POST | /api/leads | api.leads.store | Breeze AI agent lead submission (API key auth, 30/min rate limit) |
 
 ### Admin-Only Routes
 | Method | URI | Name | Description |
@@ -343,6 +366,13 @@ $validated = $request->validate([
 - **Purpose**: Contact notifications, password reset
 - **Config**: SMTP settings in `.env`
 
+### Breeze AI Agent
+- **Purpose**: Receive leads from AI voice agent via n8n workflow
+- **Endpoint**: `POST /api/leads`
+- **Auth**: API key via `X-API-Key` header or Bearer token
+- **Config**: `BREEZE_API_KEY`
+- **Data**: first_name, last_name, phone_number, email (optional), service_interest
+
 ### Google Analytics
 - **GTM**: GTM-TJTKSH9J
 - **GA4**: G-TFQFC7Q08R
@@ -443,6 +473,7 @@ php artisan admin:create email@example.com password "Name"
 - Session management (database driver)
 - Admin middleware for protected routes
 - Self-protection in user management
+- API key authentication for external integrations
 
 ### Login Rate Limiting
 - 5 attempts per minute
@@ -451,6 +482,9 @@ php artisan admin:create email@example.com password "Name"
 
 ### Contact Form Rate Limiting
 - 5 requests per minute per IP
+
+### API Rate Limiting
+- 30 requests per minute (leads endpoint)
 
 ---
 
@@ -527,6 +561,10 @@ php artisan admin:create email@example.com password "Name"
 | Service Translations (ar) | resources/js/locales/ar/serviceDetail.json |
 | Client/Partner Logos (dark) | public/images/clients/dark/ |
 | Client/Partner Logos (light) | public/images/clients/light/ |
+| Breeze AI Lead Controller | app/Http/Controllers/Api/LeadController.php |
+| API Key Middleware | app/Http/Middleware/ApiKeyMiddleware.php |
+| Lead Model | app/Models/Lead.php |
+| API Routes | routes/api.php |
 
 ---
 
@@ -562,6 +600,9 @@ FACEBOOK_APP_ID=
 FACEBOOK_APP_SECRET=
 FACEBOOK_ACCESS_TOKEN=
 FACEBOOK_AD_ACCOUNT_ID=
+
+# Breeze AI Agent
+BREEZE_API_KEY=
 
 # Queue & Session
 QUEUE_CONNECTION=database
