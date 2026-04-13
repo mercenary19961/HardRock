@@ -8,5 +8,13 @@
     "ourTeam": "فريقنا",
     "contactUs": "تواصل معنا"
   },
+  "serviceLinks": {
+    "paid-ads": "الحملات الإعلانية",
+    "social-media": "التواصل الاجتماعي",
+    "seo": "تحسين محركات البحث",
+    "branding": "العلامة التجارية",
+    "software-ai": "البرمجيات والذكاء الاصطناعي",
+    "pr-social-listening": "العلاقات العامة"
+  },
   "copyright": "© 2026 HardRock. all rights reserved"
 }

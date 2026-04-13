@@ -149,6 +149,20 @@ export default function Footer() {
                                         isArabic ? 'right-0' : 'left-0'
                                     }`}></span>
                                 </a>
+                                {['paid-ads', 'social-media', 'seo', 'branding', 'software-ai', 'pr-social-listening'].map((slug) => (
+                                    <Link
+                                        key={slug}
+                                        href={`/services/${slug}`}
+                                        className={`group block text-gray-500 dark:text-gray-500 transition-all duration-300 text-[10px] relative pb-1 ${
+                                            isArabic ? 'font-tajawal font-bold text-right pr-3' : 'font-poppins font-light text-left pl-3'
+                                        }`}
+                                    >
+                                        {t(`serviceLinks.${slug}`)}
+                                        <span className={`absolute bottom-0 w-0 h-[1px] bg-gradient-to-r from-brand-purple to-brand-red group-hover:w-full transition-all duration-500 ${
+                                            isArabic ? 'right-0' : 'left-0'
+                                        }`}></span>
+                                    </Link>
+                                ))}
                                 <a
                                     href="#contact-us"
                                     className={`group block text-black dark:text-white transition-all duration-300 text-xs relative pb-1 ${
@@ -299,6 +313,18 @@ export default function Footer() {
                                 {t('menu.services')}
                                 <span className="absolute bottom-0 left-0 w-0 h-[1px] md:h-[2px] bg-gradient-to-r from-brand-purple to-brand-red group-hover:w-full transition-all duration-500"></span>
                             </a>
+                            {['paid-ads', 'social-media', 'seo', 'branding', 'software-ai', 'pr-social-listening'].map((slug) => (
+                                <Link
+                                    key={slug}
+                                    href={`/services/${slug}`}
+                                    className={`group block text-gray-500 dark:text-gray-500 transition-all duration-300 text-[10px] md:text-xs lg:text-sm relative pb-1 ${
+                                        isArabic ? 'font-tajawal font-bold text-left pr-3' : 'font-poppins font-light text-left pl-3'
+                                    }`}
+                                >
+                                    {t(`serviceLinks.${slug}`)}
+                                    <span className="absolute bottom-0 left-0 w-0 h-[1px] md:h-[2px] bg-gradient-to-r from-brand-purple to-brand-red group-hover:w-full transition-all duration-500"></span>
+                                </Link>
+                            ))}
                             {/* <a
                                 href="#our-team"
                                 className={`group block text-black dark:text-white transition-all duration-300 text-xs md:text-sm lg:text-base relative pb-1 ${
