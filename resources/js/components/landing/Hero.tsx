@@ -46,7 +46,7 @@ export default function Hero() {
                                 style={{ lineHeight: '1.6', paddingTop: '8px', animationDelay: '0.2s', animationDuration: '0.8s', opacity: 0 }}
                             >
                                 {t('title.line1')}<br />
-                                <span className="text-brand-purple md:bg-gradient-to-r md:from-brand-purple md:to-brand-red md:bg-clip-text md:text-transparent">
+                                <span className="bg-gradient-to-r from-brand-purple to-brand-red bg-clip-text text-transparent pb-[0.15em]">
                                     {t('title.line2')}
                                 </span><br />
                                 {t('title.gradient')}
@@ -60,7 +60,7 @@ export default function Hero() {
                                     {t('title.line1')}<br />
                                     {t('title.line2')}
                                 </span>
-                                <span className="block text-4xl xs:text-5xl sm:text-6xl md:text-6xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold bg-gradient-to-r from-brand-purple to-brand-red bg-clip-text text-transparent mb-4" style={{ lineHeight: '1.5' }}>
+                                <span className="block text-4xl xs:text-5xl sm:text-6xl md:text-6xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold bg-gradient-to-r from-brand-purple to-brand-red bg-clip-text text-transparent pb-[0.15em] mb-4" style={{ lineHeight: '1.5' }}>
                                     {t('title.gradient')}
                                 </span>
                             </h1>
@@ -134,7 +134,7 @@ export default function Hero() {
                                 <>
                                     <span className="text-black dark:text-white">نصل بـــــــك إلى</span>
                                     <br />
-                                    <span className="text-brand-purple md:bg-gradient-to-r md:from-brand-purple md:to-brand-red md:bg-clip-text md:text-transparent">القمـــــــــــــــــــــــــــــــة</span>
+                                    <span className="bg-gradient-to-r from-brand-purple to-brand-red bg-clip-text text-transparent pb-[0.15em]">القمـــــــــــــــــــــــــــــــة</span>
                                 </>
                             ) : (
                                 <>

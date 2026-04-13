@@ -259,14 +259,14 @@ export default function ContactUs({ skipAnimation = false }: ContactUsProps) {
                         {isArabic ? (
                             <>
                                 <span className="text-black dark:text-white">تواصـــــل </span>
-                                <span className="text-brand-purple md:bg-gradient-to-r md:from-brand-purple md:to-brand-red md:bg-clip-text md:text-transparent">
+                                <span className="bg-gradient-to-r from-brand-purple to-brand-red bg-clip-text text-transparent pb-[0.15em] inline-block">
                                     معنا
                                 </span>
                             </>
                         ) : (
                             <>
                                 <span className="text-black dark:text-white">CONTACT </span>
-                                <span className="bg-gradient-to-r from-brand-purple to-brand-red bg-clip-text text-transparent">
+                                <span className="bg-gradient-to-r from-brand-purple to-brand-red bg-clip-text text-transparent pb-[0.15em] inline-block">
                                     US
                                 </span>
                             </>
