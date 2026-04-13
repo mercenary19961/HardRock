@@ -33,6 +33,15 @@ const SERVICE_TITLE_SIZE_AR: Record<string, string> = {
     'pr-social-listening': 'text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl',
 };
 
+// Per-service gradient highlight: [before, gradient, after] per display title line
+const SERVICE_TITLE_HIGHLIGHT: Record<string, [string, string, string][]> = {
+    'paid-ads': [['PAID ', 'ADS', '']],
+    'social-media': [['SOCIAL ', 'MEDIA', '']],
+    'branding': [['BRAND', 'ING', '']],
+    'software-ai': [['SOFTWARE ', '&', ' AI']],
+    'pr-social-listening': [['PUBLIC ', 'RELATIONS', '']],
+};
+
 export default function Services() {
     const { t, i18n } = useTranslation('services');
     const { theme } = useTheme();
@@ -240,22 +249,42 @@ export default function Services() {
                             {/* Display title — large bold text */}
                             <h2
                                 key={activeService.id}
-                                className={`leading-[0.95] tracking-tight mb-6 lg:mb-8 animate-service-title ${
+                                className={`leading-[1.1] tracking-tight mb-6 lg:mb-8 animate-service-title ${
                                     isArabic ? 'font-tajawal' : 'font-sf-pro'
                                 }`}
                             >
                                 {(activeService.displayTitle || [activeService.name]).map((line, i, arr) => {
                                     const sizeMap = isArabic ? SERVICE_TITLE_SIZE_AR : SERVICE_TITLE_SIZE;
                                     const sizeClass = sizeMap[activeService.id] || 'text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl';
+                                    const highlight = !isArabic ? SERVICE_TITLE_HIGHLIGHT[activeService.id]?.[i] : null;
+                                    const isArabicGradientLine = isArabic && arr.length > 1 && i === 1;
+                                    const baseClass = `${sizeClass} font-[950] uppercase`;
+                                    const plainColor = isLightMode ? 'text-gray-900' : 'text-white';
+                                    const gradientStyle = 'bg-gradient-to-r from-brand-purple to-brand-red bg-clip-text text-transparent pb-[0.3em] px-[0.15em] -mx-[0.15em]';
+
+                                    if (highlight) {
+                                        return (
+                                            <span key={i} className="block whitespace-nowrap overflow-visible">
+                                                <span className={`${baseClass} inline-block ${plainColor}`}>{highlight[0].trimEnd()}</span>
+                                                {highlight[0].endsWith(' ') && <span className={`${baseClass} inline-block`}>&nbsp;</span>}
+                                                <span className={`${baseClass} inline-block ${gradientStyle}`}>{highlight[1]}</span>
+                                                {highlight[2]?.startsWith(' ') && <span className={`${baseClass} inline-block`}>&nbsp;</span>}
+                                                {highlight[2] && <span className={`${baseClass} inline-block ${plainColor}`}>{highlight[2].trimStart()}</span>}
+                                            </span>
+                                        );
+                                    }
+
+                                    if (isArabicGradientLine) {
+                                        return (
+                                            <span key={i} className="block whitespace-nowrap overflow-visible">
+                                                <span className={`${baseClass} inline-block ${gradientStyle}`}>{line}</span>
+                                            </span>
+                                        );
+                                    }
+
                                     return (
                                         <span key={i} className="block whitespace-nowrap">
-                                            <span
-                                                className={`${sizeClass} font-[950] uppercase inline-block ${
-                                                    isLightMode ? 'text-gray-900' : 'text-white'
-                                                }`}
-                                            >
-                                                {line}
-                                            </span>
+                                            <span className={`${baseClass} inline-block ${plainColor}`}>{line}</span>
                                         </span>
                                     );
                                 })}
