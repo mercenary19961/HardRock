@@ -73,8 +73,8 @@ export default {
     				DEFAULT: 'hsl(var(--card))',
     				foreground: 'hsl(var(--card-foreground))'
     			},
-    			'brand-purple': '#704399',
-    			'brand-red': '#C93727',
+    			'brand-purple': '#660adb',
+    			'brand-red': '#ff3c2b',
     			chart: {
     				'1': 'hsl(var(--chart-1))',
     				'2': 'hsl(var(--chart-2))',

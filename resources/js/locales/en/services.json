@@ -18,6 +18,7 @@
       "displayTitle": ["SOCIAL MEDIA"],
       "description": "End-to-end social media management delivering high-impact content and continuous growth through strategic, data driven execution",
       "image": "/images/services/social-media-2.webp",
+      "imageLight": "/images/services/social-media-2-light.webp",
       "link": "/services/social-media"
     },
     {
@@ -27,6 +28,7 @@
       "displayTitle": ["SEARCH ENGINE", "OPTIMIZATION"],
       "description": "Our SEO services use data-driven strategies and optimization to boost visibility, increase organic traffic, and deliver sustainable long-term search performance.",
       "image": "/images/services/seo-2.webp",
+      "imageLight": "/images/services/seo-2-light.webp",
       "link": "/services/seo"
     },
     {

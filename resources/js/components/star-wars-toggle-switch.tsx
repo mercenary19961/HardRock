@@ -73,8 +73,8 @@ const StyledWrapper = styled.div`
     --bb8-diameter: 4.375em;
     --radius: 99em;
     --transition: 0.4s;
-    --accent: #704399;
-    --accent-secondary: #C93727;
+    --accent: #660adb;
+    --accent-secondary: #ff3c2b;
     --bb8-bg: #fff;
   }
 

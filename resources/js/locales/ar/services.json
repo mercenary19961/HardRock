@@ -18,6 +18,7 @@
       "displayTitle": ["وسائل التواصل", "الإجتماعــــــــــــــــــــــــي"],
       "description": "إدارة شاملة لوسائل التواصل الاجتماعي تقدم محتوى مؤثرًا ونموًا مستمرًا من خلال تنفيذ استراتيجي قائم على البيانات.",
       "image": "/images/services/social-media-2.webp",
+      "imageLight": "/images/services/social-media-2-light.webp",
       "link": "/services/social-media"
     },
     {
@@ -27,6 +28,7 @@
       "displayTitle": ["تحـــــــــــــــــــــــــسين", "محرك البحـــــــث"],
       "description": "نقدّم خدمات SEO قائمة على البيانات لتعزيز الظهور الرقمي، زيادة الزيارات العضوية عالية الجودة وتحقيق أداء بحث مستدام طويل الأمد.",
       "image": "/images/services/seo-2.webp",
+      "imageLight": "/images/services/seo-2-light.webp",
       "link": "/services/seo"
     },
     {

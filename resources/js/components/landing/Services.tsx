@@ -10,6 +10,7 @@ interface ServiceItem {
     displayTitle: string[];
     description: string;
     image: string;
+    imageLight?: string;
     link: string;
 }
 
@@ -307,7 +308,7 @@ export default function Services() {
                                 <div className="absolute inset-0 bg-gradient-to-br from-brand-purple/20 to-brand-red/20 rounded-full blur-3xl" />
 
                                 <img
-                                    src={activeService.image}
+                                    src={isLightMode && activeService.imageLight ? activeService.imageLight : activeService.image}
                                     alt={activeService.name}
                                     title={activeService.name}
                                     className="relative z-10 w-full h-full object-contain drop-shadow-2xl"

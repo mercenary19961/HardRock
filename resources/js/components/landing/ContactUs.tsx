@@ -320,9 +320,9 @@ export default function ContactUs({ skipAnimation = false }: ContactUsProps) {
                                     style={{
                                         border: 'none',
                                         borderBottom: allErrors.personalName
-                                            ? '2px solid #c93727'
+                                            ? '2px solid #ff3c2b'
                                             : (focusedField === 'personalName' || data.personalName)
-                                                ? '2px solid #704399'
+                                                ? '2px solid #660adb'
                                                 : theme === 'light' ? '2px solid #000000' : '2px solid #ffffff',
                                         outline: 'none',
                                         boxShadow: 'none',
@@ -375,9 +375,9 @@ export default function ContactUs({ skipAnimation = false }: ContactUsProps) {
                                     style={{
                                         border: 'none',
                                         borderBottom: allErrors.companyName
-                                            ? '2px solid #c93727'
+                                            ? '2px solid #ff3c2b'
                                             : (focusedField === 'companyName' || data.companyName)
-                                                ? '2px solid #704399'
+                                                ? '2px solid #660adb'
                                                 : theme === 'light' ? '2px solid #000000' : '2px solid #ffffff',
                                         outline: 'none',
                                         boxShadow: 'none',
@@ -429,9 +429,9 @@ export default function ContactUs({ skipAnimation = false }: ContactUsProps) {
                                     style={{
                                         border: 'none',
                                         borderBottom: allErrors.phoneNumber
-                                            ? '2px solid #c93727'
+                                            ? '2px solid #ff3c2b'
                                             : (focusedField === 'phoneNumber' || data.phoneNumber)
-                                                ? '2px solid #704399'
+                                                ? '2px solid #660adb'
                                                 : theme === 'light' ? '2px solid #000000' : '2px solid #ffffff',
                                         outline: 'none',
                                         boxShadow: 'none',
@@ -483,9 +483,9 @@ export default function ContactUs({ skipAnimation = false }: ContactUsProps) {
                                     style={{
                                         border: 'none',
                                         borderBottom: allErrors.email
-                                            ? '2px solid #c93727'
+                                            ? '2px solid #ff3c2b'
                                             : (focusedField === 'email' || data.email)
-                                                ? '2px solid #704399'
+                                                ? '2px solid #660adb'
                                                 : theme === 'light' ? '2px solid #000000' : '2px solid #ffffff',
                                         outline: 'none',
                                         boxShadow: 'none',

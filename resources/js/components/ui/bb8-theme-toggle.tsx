@@ -62,8 +62,8 @@ const StyledWrapper = styled.div`
     --bb8-diameter: 4.375em;
     --radius: 99em;
     --transition: 0.4s;
-    --accent: #704399; /* brand-purple */
-    --accent-secondary: #C93727; /* brand-red */
+    --accent: #660adb; /* brand-purple */
+    --accent-secondary: #ff3c2b; /* brand-red */
     --bb8-bg: #fff;
   }
 
@@ -528,11 +528,11 @@ const StyledWrapper = styled.div`
   }
 
   .tatto-2 {
-    background: linear-gradient(#704399, #C93727);
+    background: linear-gradient(#660adb, #ff3c2b);
     right: 1.25em;
     top: 2.188em;
-    -webkit-box-shadow: 0 0 0.438em #7043993d, 0 0 0.438em #C937274f;
-    box-shadow: 0 0 0.438em #7043993d, 0 0 0.438em #C937274f;
+    -webkit-box-shadow: 0 0 0.438em #660adb3d, 0 0 0.438em #ff3c2b4f;
+    box-shadow: 0 0 0.438em #660adb3d, 0 0 0.438em #ff3c2b4f;
     -webkit-transition: 0.7s;
     -o-transition: 0.7s;
     transition: 0.7s;
