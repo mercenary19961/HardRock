@@ -6,7 +6,7 @@
       "id": "paid-ads",
       "name": "Paid Ads",
       "sidebarName": "PAID ADS",
-      "displayTitle": ["PAID", "ADS"],
+      "displayTitle": ["PAID ADS"],
       "description": "We run data-driven Meta and Google Ads to maximize visibility, boost conversions, and achieve measurable results across major platforms.",
       "image": "/images/services/paid-ads-2.webp",
       "link": "/services/paid-ads"
@@ -15,7 +15,7 @@
       "id": "social-media",
       "name": "Social Media",
       "sidebarName": "SOCIAL MEDIA",
-      "displayTitle": ["SOCIAL", "MEDIA"],
+      "displayTitle": ["SOCIAL MEDIA"],
       "description": "End-to-end social media management delivering high-impact content and continuous growth through strategic, data driven execution",
       "image": "/images/services/social-media-2.webp",
       "link": "/services/social-media"
@@ -33,7 +33,7 @@
       "id": "branding",
       "name": "Branding",
       "sidebarName": "BRANDING",
-      "displayTitle": ["BRAND", "IDENTITY"],
+      "displayTitle": ["BRAND IDENTITY"],
       "description": "We build strong, memorable brand identities through strategy and impactful design including brand strategy, logo design, voice, visuals and messaging for a unified presence across all platforms.",
       "image": "/images/services/branding-2.webp",
       "link": "/services/branding"
@@ -42,7 +42,7 @@
       "id": "software-ai",
       "name": "Software & AI Solutions",
       "sidebarName": "SOFTWARE & AI SOLUTIONS",
-      "displayTitle": ["SOFTWARE", "AI SOLUTIONS"],
+      "displayTitle": ["SOFTWARE &", "AI SOLUTIONS"],
       "description": "Hard Rock delivers advanced AI Agent and Software solutions that enhance performance, streamline operations, and support scalable, efficient growth.",
       "image": "/images/services/ai-2.webp",
       "link": "/services/software-ai"

@@ -13,6 +13,25 @@ interface ServiceItem {
     link: string;
 }
 
+// Per-service title sizing: short names get larger, long names get smaller
+const SERVICE_TITLE_SIZE: Record<string, string> = {
+    'paid-ads': 'text-6xl sm:text-7xl md:text-8xl lg:text-9xl xl:text-[10rem] 2xl:text-[11rem]',
+    'social-media': 'text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl',
+    'seo': 'text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl',
+    'branding': 'text-3xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-8xl',
+    'software-ai': 'text-4xl sm:text-5xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl',
+    'pr-social-listening': 'text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl',
+};
+
+const SERVICE_TITLE_SIZE_AR: Record<string, string> = {
+    'paid-ads': 'text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl',
+    'social-media': 'text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl',
+    'seo': 'text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl',
+    'branding': 'text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl',
+    'software-ai': 'text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl',
+    'pr-social-listening': 'text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl',
+};
+
 export default function Services() {
     const { t, i18n } = useTranslation('services');
     const { theme } = useTheme();
@@ -214,9 +233,9 @@ export default function Services() {
                     </div>
 
                     {/* Main content area */}
-                    <div className="flex-1 flex flex-col lg:flex-row items-center justify-center px-6 sm:px-12 lg:px-8 xl:px-16 gap-8 lg:gap-12 pt-16 lg:pt-0">
+                    <div className="flex-1 flex flex-col lg:flex-row items-center justify-center px-6 sm:px-12 lg:px-8 xl:px-16 gap-8 lg:gap-4 pt-16 lg:pt-0">
                         {/* Text content — left side */}
-                        <div className={`flex-1 flex flex-col justify-center ${isArabic ? 'text-right' : 'text-left'}`}>
+                        <div className={`flex-[3] min-w-0 flex flex-col justify-center ${isArabic ? 'text-right' : 'text-left'}`}>
                             {/* Display title — large bold text */}
                             <h2
                                 key={activeService.id}
@@ -224,19 +243,21 @@ export default function Services() {
                                     isArabic ? 'font-tajawal' : 'font-sf-pro'
                                 }`}
                             >
-                                {(activeService.displayTitle || [activeService.name]).map((line, i, arr) => (
-                                    <span key={i} className="block">
-                                        <span
-                                            className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl font-black uppercase italic ${
-                                                i === arr.length - 1
-                                                    ? 'bg-gradient-to-r from-brand-purple to-brand-red bg-clip-text text-transparent'
-                                                    : isLightMode ? 'text-gray-900' : 'text-white'
-                                            }`}
-                                        >
-                                            {line}
+                                {(activeService.displayTitle || [activeService.name]).map((line, i, arr) => {
+                                    const sizeMap = isArabic ? SERVICE_TITLE_SIZE_AR : SERVICE_TITLE_SIZE;
+                                    const sizeClass = sizeMap[activeService.id] || 'text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl';
+                                    return (
+                                        <span key={i} className="block whitespace-nowrap">
+                                            <span
+                                                className={`${sizeClass} font-black uppercase inline-block ${
+                                                    isLightMode ? 'text-gray-900' : 'text-white'
+                                                }`}
+                                            >
+                                                {line}
+                                            </span>
                                         </span>
-                                    </span>
-                                ))}
+                                    );
+                                })}
                             </h2>
 
                             {/* Description with accent bar */}
@@ -276,7 +297,7 @@ export default function Services() {
                         </div>
 
                         {/* Image — right side */}
-                        <div className="flex-1 flex items-center justify-center max-w-sm lg:max-w-md xl:max-w-lg">
+                        <div className="flex-[2] flex items-center justify-center max-w-sm lg:max-w-md xl:max-w-lg">
                             <Link
                                 href={activeService.link}
                                 key={`img-${activeService.id}`}
