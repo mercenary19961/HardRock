@@ -53,6 +53,7 @@ export default function Services() {
     const [activeIndex, setActiveIndex] = useState(0);
     const [isInView, setIsInView] = useState(false);
     const [autoResetTrigger, setAutoResetTrigger] = useState(0);
+    const [isDesktop, setIsDesktop] = useState(true);
     const sectionRef = useRef<HTMLElement>(null);
     const stickyRef = useRef<HTMLDivElement>(null);
     const autoTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -62,6 +63,14 @@ export default function Services() {
     const entryGraceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const totalServices = services.length;
+
+    // Track desktop vs mobile
+    useEffect(() => {
+        const check = () => setIsDesktop(window.innerWidth >= 1024);
+        check();
+        window.addEventListener('resize', check);
+        return () => window.removeEventListener('resize', check);
+    }, []);
 
     // Helper: scroll the page to a specific service index without triggering the scroll handler
     const scrollToServiceIndex = useCallback((index: number) => {
@@ -83,8 +92,9 @@ export default function Services() {
         }, 700);
     }, [totalServices]);
 
-    // Scroll-driven active index
+    // Scroll-driven active index (desktop only)
     useEffect(() => {
+        if (!isDesktop) return;
         const section = sectionRef.current;
         if (!section) return;
 
@@ -124,7 +134,21 @@ export default function Services() {
         handleScroll();
 
         return () => window.removeEventListener('scroll', handleScroll);
-    }, [totalServices]);
+    }, [totalServices, isDesktop]);
+
+    // Mobile: use IntersectionObserver to track visibility
+    useEffect(() => {
+        if (isDesktop) return;
+        const section = sectionRef.current;
+        if (!section) return;
+
+        const observer = new IntersectionObserver(
+            ([entry]) => setIsInView(entry.isIntersecting),
+            { threshold: 0.3 }
+        );
+        observer.observe(section);
+        return () => observer.disconnect();
+    }, [isDesktop]);
 
     // Auto-rotate every 5 seconds (resets when autoResetTrigger changes)
     useEffect(() => {
@@ -132,9 +156,8 @@ export default function Services() {
 
         autoTimerRef.current = setInterval(() => {
             setActiveIndex((prev) => {
-                const next = prev + 1;
-                if (next >= totalServices) return prev;
-                scrollToServiceIndex(next);
+                const next = (prev + 1) % totalServices;
+                if (isDesktop) scrollToServiceIndex(next);
                 return next;
             });
         }, 5000);
@@ -142,15 +165,15 @@ export default function Services() {
         return () => {
             if (autoTimerRef.current) clearInterval(autoTimerRef.current);
         };
-    }, [isInView, autoResetTrigger, totalServices, scrollToServiceIndex]);
+    }, [isInView, autoResetTrigger, totalServices, scrollToServiceIndex, isDesktop]);
 
     // Handle manual service click
     const handleServiceClick = useCallback((index: number) => {
         setActiveIndex(index);
-        scrollToServiceIndex(index);
+        if (isDesktop) scrollToServiceIndex(index);
         // Reset the 5s auto-rotate timer
         setAutoResetTrigger((c) => c + 1);
-    }, [scrollToServiceIndex]);
+    }, [scrollToServiceIndex, isDesktop]);
 
     // Pause auto-rotate on user scroll (only when actively scrolling within the section)
     useEffect(() => {
@@ -169,6 +192,38 @@ export default function Services() {
         };
     }, [isInView]);
 
+    // Mobile: swipe left/right to change service
+    const touchStartX = useRef(0);
+    useEffect(() => {
+        if (isDesktop) return;
+        const container = stickyRef.current;
+        if (!container) return;
+
+        const handleTouchStart = (e: TouchEvent) => {
+            touchStartX.current = e.touches[0].clientX;
+        };
+        const handleTouchEnd = (e: TouchEvent) => {
+            const diff = touchStartX.current - e.changedTouches[0].clientX;
+            if (Math.abs(diff) < 50) return; // minimum swipe distance
+            const isRTL = isArabic;
+            if ((diff > 0 && !isRTL) || (diff < 0 && isRTL)) {
+                // Swipe left (next) or swipe right in RTL
+                setActiveIndex((prev) => Math.min(prev + 1, totalServices - 1));
+            } else {
+                // Swipe right (prev) or swipe left in RTL
+                setActiveIndex((prev) => Math.max(prev - 1, 0));
+            }
+            setAutoResetTrigger((c) => c + 1);
+        };
+
+        container.addEventListener('touchstart', handleTouchStart, { passive: true });
+        container.addEventListener('touchend', handleTouchEnd, { passive: true });
+        return () => {
+            container.removeEventListener('touchstart', handleTouchStart);
+            container.removeEventListener('touchend', handleTouchEnd);
+        };
+    }, [isDesktop, isArabic, totalServices]);
+
     // Cleanup timers
     useEffect(() => {
         return () => {
@@ -185,12 +240,12 @@ export default function Services() {
             ref={sectionRef}
             id="services"
             className="relative bg-white dark:bg-black"
-            style={{ height: `${(totalServices + 1) * 100}vh` }}
+            style={{ height: isDesktop ? `${(totalServices + 1) * 100}vh` : 'auto' }}
         >
-            {/* Sticky container */}
+            {/* Sticky container (desktop) / Normal container (mobile) */}
             <div
                 ref={stickyRef}
-                className="sticky top-0 h-screen w-full overflow-hidden flex items-center"
+                className={`w-full overflow-hidden flex items-center ${isDesktop ? 'sticky top-0 h-screen' : 'min-h-screen py-16'}`}
             >
                 {/* Background Blurs */}
                 <div className="absolute top-20 ltr:left-20 rtl:right-20 w-40 h-40 bg-purple-500/20 dark:bg-purple-500/30 rounded-full blur-3xl pointer-events-none" />
@@ -244,8 +299,8 @@ export default function Services() {
 
                     {/* Main content area */}
                     <div className="flex-1 flex flex-col lg:flex-row items-center justify-center px-6 sm:px-12 lg:px-8 xl:px-16 gap-8 lg:gap-4 pt-16 lg:pt-0">
-                        {/* Text content — left side */}
-                        <div className={`flex-[3] min-w-0 flex flex-col justify-center ${isArabic ? 'text-right' : 'text-left'}`}>
+                        {/* Text content — left side (on desktop), below image (on mobile) */}
+                        <div className={`flex-[3] min-w-0 flex flex-col justify-center order-2 lg:order-1 text-center lg:text-left ${isArabic ? 'lg:text-right' : ''}`}>
                             {/* Display title — large bold text */}
                             <h2
                                 key={activeService.id}
@@ -291,7 +346,7 @@ export default function Services() {
                             </h2>
 
                             {/* Description with accent bar */}
-                            <div className={`flex gap-4 items-start max-w-xl ${isArabic ? 'flex-row-reverse' : ''}`}>
+                            <div className={`flex gap-4 items-start max-w-xl mx-auto lg:mx-0 ${isArabic ? 'flex-row-reverse' : ''}`}>
                                 <div className="w-1 flex-shrink-0 rounded-full bg-gradient-to-b from-brand-purple to-brand-red self-stretch min-h-[60px]" />
                                 <p
                                     key={`desc-${activeService.id}`}
@@ -309,7 +364,7 @@ export default function Services() {
                             </div>
 
                             {/* Learn more link */}
-                            <div className={`mt-8 ${isArabic ? 'text-right' : 'text-left'}`}>
+                            <div className={`mt-8 text-center lg:text-left ${isArabic ? 'lg:text-right' : ''}`}>
                                 <Link
                                     href={activeService.link}
                                     className={`inline-flex items-center gap-2 text-sm tracking-widest uppercase transition-colors duration-300 ${
@@ -326,8 +381,8 @@ export default function Services() {
                             </div>
                         </div>
 
-                        {/* Image — right side */}
-                        <div className="flex-[2] flex items-center justify-center max-w-sm lg:max-w-md xl:max-w-lg">
+                        {/* Image — top (on mobile), right side (on desktop) */}
+                        <div className="flex-[2] flex items-center justify-center max-w-[280px] sm:max-w-sm lg:max-w-md xl:max-w-lg order-1 lg:order-2">
                             <Link
                                 href={activeService.link}
                                 key={`img-${activeService.id}`}
