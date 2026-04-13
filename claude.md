@@ -707,4 +707,4 @@ Target these keyword themes in blog posts:
 
 ---
 
-> **Last updated:** 2026-04-06 — based on commit `53b1515` (*SEO improvements: Service/Breadcrumb schemas, heading hierarchy, crawlable links, noindex on auth/dashboard, service-specific OG images, Clients & Partners marquee section*)
+> **Last updated:** 2026-04-13 — based on commit `c7a1f1f` (*Add API endpoint for Breeze AI agent lead submissions*)
