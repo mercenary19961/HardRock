@@ -421,10 +421,10 @@ export default function Services() {
                 {/* Scroll indicator */}
                 {activeIndex < totalServices - 1 && (
                     <div className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden lg:flex flex-col items-center gap-2 animate-bounce">
-                        <span className={`text-xs tracking-widest ${isLightMode ? 'text-gray-400' : 'text-gray-600'} ${isArabic ? 'font-tajawal' : 'font-poppins'}`}>
+                        <span className={`text-xs tracking-widest ${isLightMode ? 'text-gray-500' : 'text-gray-300'} ${isArabic ? 'font-tajawal' : 'font-poppins'}`}>
                             {isArabic ? 'مرر' : 'SCROLL'}
                         </span>
-                        <svg className={`w-4 h-4 ${isLightMode ? 'text-gray-400' : 'text-gray-600'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg className={`w-4 h-4 ${isLightMode ? 'text-gray-500' : 'text-gray-300'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7" />
                         </svg>
                     </div>
