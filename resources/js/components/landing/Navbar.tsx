@@ -39,6 +39,7 @@ const XIcon = ({ className }: { className?: string }) => (
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
+    const [hidden, setHidden] = useState(false);
     const { t } = useTranslation('common');
     const menuRef = useRef<HTMLDivElement>(null);
 
@@ -49,6 +50,43 @@ export default function Navbar() {
             setShowConsultation((prev) => !prev);
         }, 3000);
         return () => clearInterval(interval);
+    }, []);
+
+    // Hide navbar when services section is in view, reveal on top 20% hover
+    useEffect(() => {
+        const servicesEl = () => document.getElementById('services');
+
+        const handleScroll = () => {
+            const section = servicesEl();
+            if (!section) { setHidden(false); return; }
+            const rect = section.getBoundingClientRect();
+            const inSection = rect.top <= 0 && rect.bottom >= window.innerHeight;
+            setHidden(inSection);
+        };
+
+        const handleMouseMove = (e: MouseEvent) => {
+            if (e.clientY < window.innerHeight * 0.2) {
+                setHidden(false);
+            } else {
+                // Re-check if we're in the services section
+                const section = servicesEl();
+                if (section) {
+                    const rect = section.getBoundingClientRect();
+                    if (rect.top <= 0 && rect.bottom >= window.innerHeight) {
+                        setHidden(true);
+                    }
+                }
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        window.addEventListener('mousemove', handleMouseMove, { passive: true });
+        handleScroll();
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+            window.removeEventListener('mousemove', handleMouseMove);
+        };
     }, []);
 
     const ctaText = showConsultation ? t('nav.freeConsultation') : t('nav.contactUs');
@@ -70,7 +108,7 @@ export default function Navbar() {
     }, [isOpen]);
 
     return (
-        <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-black/90 backdrop-blur-md border-b border-white/80 overflow-x-hidden">
+        <nav className={`fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-black/90 backdrop-blur-md border-b border-white/80 overflow-x-hidden transition-transform duration-500 ${hidden ? '-translate-y-full' : 'translate-y-0'}`}>
             <div className="w-full ltr:pl-2 ltr:pr-4 rtl:pr-2 rtl:pl-4 sm:ltr:px-12 sm:rtl:px-12 lg:px-16 xl:px-20">
                 <div className="flex items-center justify-between h-20 gap-2 sm:gap-4">
                     {/* Logo */}

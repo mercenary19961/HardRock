@@ -36,7 +36,7 @@ export default function CinematicSwitch({ className }: CinematicSwitchProps) {
                 className="relative w-10 h-5 rounded-full shadow-inner"
                 initial={false}
                 animate={{
-                    backgroundColor: isOn ? "#704399" : "#e4e4e7", // brand-purple vs zinc-200
+                    backgroundColor: isOn ? "#660adb" : "#e4e4e7", // brand-purple vs zinc-200
                 }}
                 transition={{ duration: 0.3 }}
             >
