@@ -344,6 +344,7 @@ $validated = $request->validate([
 ->withMiddleware(function (Middleware $middleware) {
     $middleware->alias([
         'admin' => \App\Http\Middleware\AdminMiddleware::class,
+        'api.key' => \App\Http\Middleware\ApiKeyMiddleware::class,
     ]);
 })
 ```
