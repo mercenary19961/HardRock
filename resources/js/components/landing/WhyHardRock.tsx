@@ -48,7 +48,7 @@ export default function WhyHardRock() {
                                 {t('title.line1')}
                             </span>
                             <br />
-                            <span className={isArabic ? "text-brand-purple md:bg-gradient-to-r md:from-brand-purple md:to-brand-red md:bg-clip-text md:text-transparent" : "bg-gradient-to-r from-brand-purple to-brand-red bg-clip-text text-transparent"}>
+                            <span className="bg-gradient-to-r from-brand-purple to-brand-red bg-clip-text text-transparent pb-[0.15em] inline-block">
                                 {t('title.line2')}
                             </span>
                         </h2>
