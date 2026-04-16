@@ -1,5 +1,54 @@
+@php
+    $path = request()->path();
+    $baseUrl = ‘https://www.hardrock-co.com’;
+    $currentUrl = $path === ‘/’ ? $baseUrl . ‘/’ : $baseUrl . ‘/’ . $path;
+
+    // Pages that should not be indexed
+    $noIndex = str_starts_with($path, ‘dashboard’) || str_starts_with($path, ‘login’)
+        || str_starts_with($path, ‘forgot-password’) || str_starts_with($path, ‘reset-password’);
+
+    // Service-specific SEO data
+    $serviceSeo = [
+        ‘services/social-media’ => [
+            ‘description’ => ‘Professional social media management services in Jordan. HardRock helps brands in Amman grow their online presence with strategic content and community management.’,
+            ‘ogTitle’ => ‘Social Media Marketing | HardRock’,
+            ‘ogImage’ => $baseUrl . ‘/images/services/social-media-2.webp’,
+        ],
+        ‘services/paid-ads’ => [
+            ‘description’ => ‘Expert paid advertising services in Jordan. HardRock delivers high-ROI Meta and Google Ads campaigns for businesses in Amman and across the MENA region.’,
+            ‘ogTitle’ => ‘Paid Advertising | HardRock’,
+            ‘ogImage’ => $baseUrl . ‘/images/services/paid-ads-2.webp’,
+        ],
+        ‘services/seo’ => [
+            ‘description’ => ‘Top SEO services in Jordan. HardRock helps businesses in Amman rank higher on Google with data-driven search engine optimization strategies.’,
+            ‘ogTitle’ => ‘SEO Services | HardRock’,
+            ‘ogImage’ => $baseUrl . ‘/images/services/seo-2.webp’,
+        ],
+        ‘services/pr-social-listening’ => [
+            ‘description’ => ‘PR and social listening services in Jordan. Monitor your brand reputation and manage public relations with HardRock, Amman\’s leading digital marketing agency.’,
+            ‘ogTitle’ => ‘PR & Social Listening | HardRock’,
+            ‘ogImage’ => $baseUrl . ‘/images/services/pr-2.webp’,
+        ],
+        ‘services/branding’ => [
+            ‘description’ => ‘Professional branding services in Jordan. HardRock creates compelling brand identities for businesses in Amman looking to stand out in the market.’,
+            ‘ogTitle’ => ‘Branding Services | HardRock’,
+            ‘ogImage’ => $baseUrl . ‘/images/services/branding-2.webp’,
+        ],
+        ‘services/software-ai’ => [
+            ‘description’ => ‘AI solutions and software development in Jordan. HardRock builds custom AI-powered tools and software for businesses in Amman and the MENA region.’,
+            ‘ogTitle’ => ‘Software & AI Solutions | HardRock’,
+            ‘ogImage’ => $baseUrl . ‘/images/services/ai-2.webp’,
+        ],
+    ];
+
+    $seo = $serviceSeo[$path] ?? null;
+    $metaDescription = $seo[‘description’] ?? ‘Scale your brand with HardRock, Amman\’s leading digital marketing agency. Expert AI solutions, SEO, Paid Ads, and Branding designed for data-driven growth.’;
+    $ogTitle = $seo[‘ogTitle’] ?? ‘HardRock | Data-Driven Digital Marketing & AI Solutions’;
+    $ogDescription = $seo ? $seo[‘description’] : ‘Transform your brand with Amman\’s leading experts in AI solutions, SEO, and performance marketing. Scale your business with data-backed strategies that deliver ROI.’;
+    $ogImage = $seo[‘ogImage’] ?? $baseUrl . ‘/images/og-image-2.webp’;
+@endphp
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace(‘_’, ‘-’, app()->getLocale()) }}">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,39 +56,39 @@
         <title inertia>HardRock | Digital Marketing Agency & AI Solutions in Jordan</title>
 
         <!-- SEO Meta Tags -->
-        <meta name="description" content="Scale your brand with HardRock, Amman's leading digital marketing agency. Expert AI solutions, SEO, Paid Ads, and Branding designed for data-driven growth.">
+        <meta name="description" content="{{ $metaDescription }}">
         <meta name="keywords" content="digital marketing agency jordan, paid ads meta google, social media management amman, SEO services jordan, branding agency, AI solutions, software development jordan, PR agency, digital transformation, performance marketing, growth marketing, marketing automation, jordan tech company">
         <meta name="author" content="HardRock">
-        <meta name="robots" content="index, follow">
+        <meta name="robots" content="{{ $noIndex ? ‘noindex, nofollow’ : ‘index, follow’ }}">
         <meta name="language" content="English, Arabic">
         <meta name="geo.region" content="JO-AM">
         <meta name="geo.placename" content="Amman, Jordan">
 
         <!-- Open Graph / Facebook -->
         <meta property="og:type" content="website">
-        <meta property="og:url" content="https://www.hardrock-co.com/">
-        <meta property="og:title" content="HardRock | Data-Driven Digital Marketing & AI Solutions">
-        <meta property="og:description" content="Transform your brand with Amman's leading experts in AI solutions, SEO, and performance marketing. Scale your business with data-backed strategies that deliver ROI.">
-        <meta property="og:image" content="https://www.hardrock-co.com/images/og-image-2.webp">
+        <meta property="og:url" content="{{ $currentUrl }}">
+        <meta property="og:title" content="{{ $ogTitle }}">
+        <meta property="og:description" content="{{ $ogDescription }}">
+        <meta property="og:image" content="{{ $ogImage }}">
         <meta property="og:site_name" content="HardRock">
         <meta property="og:locale" content="en_US">
         <meta property="og:locale:alternate" content="ar_AR">
 
         <!-- Twitter -->
         <meta property="twitter:card" content="summary_large_image">
-        <meta property="twitter:url" content="https://www.hardrock-co.com/">
-        <meta property="twitter:title" content="HardRock | Amman’s Leading AI & Digital Marketing Agency">
-        <meta property="twitter:description" content="Scale your business with HardRock. From AI-driven SEO to high-performance Paid Ads, we deliver data-backed growth for brands in Amman and beyond. ROI starts here.">
-        <meta property="twitter:image" content="https://www.hardrock-co.com/images/og-image-2.webp">
+        <meta property="twitter:url" content="{{ $currentUrl }}">
+        <meta property="twitter:title" content="{{ $ogTitle }}">
+        <meta property="twitter:description" content="{{ $ogDescription }}">
+        <meta property="twitter:image" content="{{ $ogImage }}">
 
         <!-- Additional SEO -->
-        <link rel="canonical" href="https://www.hardrock-co.com/">
+        <link rel="canonical" href="{{ $currentUrl }}">
         <meta name="theme-color" content="#8B5CF6">
 
         <!-- hreflang - bilingual support (same URL serves both languages via client-side toggle) -->
-        <link rel="alternate" hreflang="en" href="https://www.hardrock-co.com/">
-        <link rel="alternate" hreflang="ar" href="https://www.hardrock-co.com/">
-        <link rel="alternate" hreflang="x-default" href="https://www.hardrock-co.com/">
+        <link rel="alternate" hreflang="en" href="{{ $currentUrl }}">
+        <link rel="alternate" hreflang="ar" href="{{ $currentUrl }}">
+        <link rel="alternate" hreflang="x-default" href="{{ $currentUrl }}">
 
         <!-- Favicon (all sizes for maximum compatibility) -->
         <link rel="icon" href="/images/favicon-16x16.png" sizes="16x16" type="image/png">
