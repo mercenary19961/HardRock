@@ -1,54 +1,54 @@
 @php
     $path = request()->path();
-    $baseUrl = ‘https://www.hardrock-co.com’;
-    $currentUrl = $path === ‘/’ ? $baseUrl . ‘/’ : $baseUrl . ‘/’ . $path;
+    $baseUrl = 'https://www.hardrock-co.com';
+    $currentUrl = $path === '/' ? $baseUrl . '/' : $baseUrl . '/' . $path;
 
     // Pages that should not be indexed
-    $noIndex = str_starts_with($path, ‘dashboard’) || str_starts_with($path, ‘login’)
-        || str_starts_with($path, ‘forgot-password’) || str_starts_with($path, ‘reset-password’);
+    $noIndex = str_starts_with($path, 'dashboard') || str_starts_with($path, 'login')
+        || str_starts_with($path, 'forgot-password') || str_starts_with($path, 'reset-password');
 
     // Service-specific SEO data
     $serviceSeo = [
-        ‘services/social-media’ => [
-            ‘description’ => ‘Professional social media management services in Jordan. HardRock helps brands in Amman grow their online presence with strategic content and community management.’,
-            ‘ogTitle’ => ‘Social Media Marketing | HardRock’,
-            ‘ogImage’ => $baseUrl . ‘/images/services/social-media-2.webp’,
+        'services/social-media' => [
+            'description' => 'Professional social media management services in Jordan. HardRock helps brands in Amman grow their online presence with strategic content and community management.',
+            'ogTitle' => 'Social Media Marketing | HardRock',
+            'ogImage' => $baseUrl . '/images/services/social-media-2.webp',
         ],
-        ‘services/paid-ads’ => [
-            ‘description’ => ‘Expert paid advertising services in Jordan. HardRock delivers high-ROI Meta and Google Ads campaigns for businesses in Amman and across the MENA region.’,
-            ‘ogTitle’ => ‘Paid Advertising | HardRock’,
-            ‘ogImage’ => $baseUrl . ‘/images/services/paid-ads-2.webp’,
+        'services/paid-ads' => [
+            'description' => 'Expert paid advertising services in Jordan. HardRock delivers high-ROI Meta and Google Ads campaigns for businesses in Amman and across the MENA region.',
+            'ogTitle' => 'Paid Advertising | HardRock',
+            'ogImage' => $baseUrl . '/images/services/paid-ads-2.webp',
         ],
-        ‘services/seo’ => [
-            ‘description’ => ‘Top SEO services in Jordan. HardRock helps businesses in Amman rank higher on Google with data-driven search engine optimization strategies.’,
-            ‘ogTitle’ => ‘SEO Services | HardRock’,
-            ‘ogImage’ => $baseUrl . ‘/images/services/seo-2.webp’,
+        'services/seo' => [
+            'description' => 'Top SEO services in Jordan. HardRock helps businesses in Amman rank higher on Google with data-driven search engine optimization strategies.',
+            'ogTitle' => 'SEO Services | HardRock',
+            'ogImage' => $baseUrl . '/images/services/seo-2.webp',
         ],
-        ‘services/pr-social-listening’ => [
-            ‘description’ => ‘PR and social listening services in Jordan. Monitor your brand reputation and manage public relations with HardRock, Amman\’s leading digital marketing agency.’,
-            ‘ogTitle’ => ‘PR & Social Listening | HardRock’,
-            ‘ogImage’ => $baseUrl . ‘/images/services/pr-2.webp’,
+        'services/pr-social-listening' => [
+            'description' => 'PR and social listening services in Jordan. Monitor your brand reputation and manage public relations with HardRock, Amman\'s leading digital marketing agency.',
+            'ogTitle' => 'PR & Social Listening | HardRock',
+            'ogImage' => $baseUrl . '/images/services/pr-2.webp',
         ],
-        ‘services/branding’ => [
-            ‘description’ => ‘Professional branding services in Jordan. HardRock creates compelling brand identities for businesses in Amman looking to stand out in the market.’,
-            ‘ogTitle’ => ‘Branding Services | HardRock’,
-            ‘ogImage’ => $baseUrl . ‘/images/services/branding-2.webp’,
+        'services/branding' => [
+            'description' => 'Professional branding services in Jordan. HardRock creates compelling brand identities for businesses in Amman looking to stand out in the market.',
+            'ogTitle' => 'Branding Services | HardRock',
+            'ogImage' => $baseUrl . '/images/services/branding-2.webp',
         ],
-        ‘services/software-ai’ => [
-            ‘description’ => ‘AI solutions and software development in Jordan. HardRock builds custom AI-powered tools and software for businesses in Amman and the MENA region.’,
-            ‘ogTitle’ => ‘Software & AI Solutions | HardRock’,
-            ‘ogImage’ => $baseUrl . ‘/images/services/ai-2.webp’,
+        'services/software-ai' => [
+            'description' => 'AI solutions and software development in Jordan. HardRock builds custom AI-powered tools and software for businesses in Amman and the MENA region.',
+            'ogTitle' => 'Software & AI Solutions | HardRock',
+            'ogImage' => $baseUrl . '/images/services/ai-2.webp',
         ],
     ];
 
     $seo = $serviceSeo[$path] ?? null;
-    $metaDescription = $seo[‘description’] ?? ‘Scale your brand with HardRock, Amman\’s leading digital marketing agency. Expert AI solutions, SEO, Paid Ads, and Branding designed for data-driven growth.’;
-    $ogTitle = $seo[‘ogTitle’] ?? ‘HardRock | Data-Driven Digital Marketing & AI Solutions’;
-    $ogDescription = $seo ? $seo[‘description’] : ‘Transform your brand with Amman\’s leading experts in AI solutions, SEO, and performance marketing. Scale your business with data-backed strategies that deliver ROI.’;
-    $ogImage = $seo[‘ogImage’] ?? $baseUrl . ‘/images/og-image-2.webp’;
+    $metaDescription = $seo['description'] ?? 'Scale your brand with HardRock, Amman\'s leading digital marketing agency. Expert AI solutions, SEO, Paid Ads, and Branding designed for data-driven growth.';
+    $ogTitle = $seo['ogTitle'] ?? 'HardRock | Data-Driven Digital Marketing & AI Solutions';
+    $ogDescription = $seo ? $seo['description'] : 'Transform your brand with Amman\'s leading experts in AI solutions, SEO, and performance marketing. Scale your business with data-backed strategies that deliver ROI.';
+    $ogImage = $seo['ogImage'] ?? $baseUrl . '/images/og-image-2.webp';
 @endphp
 <!DOCTYPE html>
-<html lang="{{ str_replace(‘_’, ‘-’, app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -59,7 +59,7 @@
         <meta name="description" content="{{ $metaDescription }}">
         <meta name="keywords" content="digital marketing agency jordan, paid ads meta google, social media management amman, SEO services jordan, branding agency, AI solutions, software development jordan, PR agency, digital transformation, performance marketing, growth marketing, marketing automation, jordan tech company">
         <meta name="author" content="HardRock">
-        <meta name="robots" content="{{ $noIndex ? ‘noindex, nofollow’ : ‘index, follow’ }}">
+        <meta name="robots" content="{{ $noIndex ? 'noindex, nofollow' : 'index, follow' }}">
         <meta name="language" content="English, Arabic">
         <meta name="geo.region" content="JO-AM">
         <meta name="geo.placename" content="Amman, Jordan">
