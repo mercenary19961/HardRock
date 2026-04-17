@@ -1,9 +1,44 @@
 import { Link } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
+import { useState, useRef } from 'react';
+
+const serviceSlugs = ['paid-ads', 'social-media', 'seo', 'branding', 'software-ai', 'pr-social-listening'] as const;
 
 export default function Footer() {
     const { t, i18n } = useTranslation('footer');
     const isArabic = i18n.language === 'ar';
+
+    const [activeService, setActiveService] = useState<string | null>(null);
+    const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+    const indexRef = useRef(0);
+    const hoveringServiceRef = useRef(false);
+
+    const startCycling = () => {
+        if (intervalRef.current) clearInterval(intervalRef.current);
+        indexRef.current = 0;
+        setActiveService(serviceSlugs[0]);
+        intervalRef.current = setInterval(() => {
+            if (!hoveringServiceRef.current) {
+                indexRef.current = (indexRef.current + 1) % serviceSlugs.length;
+                setActiveService(serviceSlugs[indexRef.current]);
+            }
+        }, 2000);
+    };
+
+    const stopCycling = () => {
+        if (intervalRef.current) {
+            clearInterval(intervalRef.current);
+            intervalRef.current = null;
+        }
+    };
+
+    const pauseCycling = () => {
+        hoveringServiceRef.current = true;
+    };
+
+    const resumeCycling = () => {
+        hoveringServiceRef.current = false;
+    };
 
     return (
         <footer className="bg-white dark:bg-black pt-16 pb-8 md:pt-20 md:pb-10">
@@ -138,31 +173,31 @@ export default function Footer() {
                                         isArabic ? 'right-0' : 'left-0'
                                     }`}></span>
                                 </a>
-                                <a
-                                    href="#services"
-                                    className={`group block text-black dark:text-white transition-all duration-300 text-xs relative pb-1 ${
-                                        isArabic ? 'font-tajawal font-bold text-right' : 'font-poppins font-light text-left'
-                                    }`}
-                                >
-                                    {t('menu.services')}
-                                    <span className={`absolute bottom-0 w-0 h-[1px] bg-gradient-to-r from-brand-purple to-brand-red group-hover:w-full transition-all duration-500 ${
-                                        isArabic ? 'right-0' : 'left-0'
-                                    }`}></span>
-                                </a>
-                                {['paid-ads', 'social-media', 'seo', 'branding', 'software-ai', 'pr-social-listening'].map((slug) => (
-                                    <Link
-                                        key={slug}
-                                        href={`/services/${slug}`}
-                                        className={`group block text-gray-500 dark:text-gray-500 transition-all duration-300 text-[10px] relative pb-1 ${
-                                            isArabic ? 'font-tajawal font-bold text-right pr-3' : 'font-poppins font-light text-left pl-3'
+                                <div onMouseEnter={startCycling} onMouseLeave={stopCycling}>
+                                    <a
+                                        href="#services"
+                                        className={`group block text-black dark:text-white transition-all duration-300 text-xs relative pb-1 ${
+                                            isArabic ? 'font-tajawal font-bold text-right' : 'font-poppins font-light text-left'
                                         }`}
                                     >
-                                        {t(`serviceLinks.${slug}`)}
+                                        {t('menu.services')}
                                         <span className={`absolute bottom-0 w-0 h-[1px] bg-gradient-to-r from-brand-purple to-brand-red group-hover:w-full transition-all duration-500 ${
                                             isArabic ? 'right-0' : 'left-0'
                                         }`}></span>
-                                    </Link>
-                                ))}
+                                    </a>
+                                    {activeService && (
+                                        <Link
+                                            href={`/services/${activeService}`}
+                                            onMouseEnter={pauseCycling}
+                                            onMouseLeave={resumeCycling}
+                                            className={`block text-gray-500 dark:text-gray-500 text-[10px] relative pb-1 mt-1 ${
+                                                isArabic ? 'font-tajawal font-bold text-right pr-3' : 'font-poppins font-light text-left pl-3'
+                                            }`}
+                                        >
+                                            {t(`serviceLinks.${activeService}`)}
+                                        </Link>
+                                    )}
+                                </div>
                                 <a
                                     href="#contact-us"
                                     className={`group block text-black dark:text-white transition-all duration-300 text-xs relative pb-1 ${
@@ -304,27 +339,30 @@ export default function Footer() {
                                 {t('menu.whyHardRock')}
                                 <span className="absolute bottom-0 left-0 w-0 h-[1px] md:h-[2px] bg-gradient-to-r from-brand-purple to-brand-red group-hover:w-full transition-all duration-500"></span>
                             </a>
-                            <a
-                                href="#services"
-                                className={`group block text-black dark:text-white transition-all duration-300 text-xs md:text-sm lg:text-base relative pb-1 ${
-                                    isArabic ? 'font-tajawal font-bold text-left' : 'font-poppins font-light text-left'
-                                }`}
-                            >
-                                {t('menu.services')}
-                                <span className="absolute bottom-0 left-0 w-0 h-[1px] md:h-[2px] bg-gradient-to-r from-brand-purple to-brand-red group-hover:w-full transition-all duration-500"></span>
-                            </a>
-                            {['paid-ads', 'social-media', 'seo', 'branding', 'software-ai', 'pr-social-listening'].map((slug) => (
-                                <Link
-                                    key={slug}
-                                    href={`/services/${slug}`}
-                                    className={`group block text-gray-500 dark:text-gray-500 transition-all duration-300 text-[10px] md:text-xs lg:text-sm relative pb-1 ${
-                                        isArabic ? 'font-tajawal font-bold text-left pr-3' : 'font-poppins font-light text-left pl-3'
+                            <div onMouseEnter={startCycling} onMouseLeave={stopCycling}>
+                                <a
+                                    href="#services"
+                                    className={`group block text-black dark:text-white transition-all duration-300 text-xs md:text-sm lg:text-base relative pb-1 ${
+                                        isArabic ? 'font-tajawal font-bold text-left' : 'font-poppins font-light text-left'
                                     }`}
                                 >
-                                    {t(`serviceLinks.${slug}`)}
+                                    {t('menu.services')}
                                     <span className="absolute bottom-0 left-0 w-0 h-[1px] md:h-[2px] bg-gradient-to-r from-brand-purple to-brand-red group-hover:w-full transition-all duration-500"></span>
-                                </Link>
-                            ))}
+                                </a>
+                                {activeService && (
+                                    <Link
+                                        key={activeService}
+                                        href={`/services/${activeService}`}
+                                        onMouseEnter={pauseCycling}
+                                        onMouseLeave={resumeCycling}
+                                        className={`block text-gray-500 dark:text-gray-500 text-[10px] md:text-xs lg:text-sm relative pb-1 mt-1 animate-fade-in-nav ${
+                                            isArabic ? 'font-tajawal font-bold text-left pr-3' : 'font-poppins font-light text-left pl-3'
+                                        }`}
+                                    >
+                                        {t(`serviceLinks.${activeService}`)}
+                                    </Link>
+                                )}
+                            </div>
                             {/* <a
                                 href="#our-team"
                                 className={`group block text-black dark:text-white transition-all duration-300 text-xs md:text-sm lg:text-base relative pb-1 ${
