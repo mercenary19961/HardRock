@@ -2,6 +2,12 @@
   "address": "خلدا - عمـــان، الأردن",
   "phone": "+962 79 170 0034",
   "email": "sales@hardrock-co.com",
+  "columns": {
+    "services001": "خدمـــاتنا 001",
+    "services002": "خدمـــاتنا 002",
+    "pages": "الصفحات",
+    "contact": "تواصل معنا"
+  },
   "menu": {
     "whyHardRock": "لمــــاذا هارد روك",
     "services": "مـــاذا نقدم",
