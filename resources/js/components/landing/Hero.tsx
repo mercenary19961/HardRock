@@ -16,7 +16,7 @@ export default function Hero() {
     };
 
     return (
-        <section className="relative min-h-screen flex items-center overflow-hidden bg-white dark:bg-black">
+        <section className="relative min-h-screen flex items-center overflow-hidden bg-[#06060f]">
             {/* Purple Glow Background - Dark Mode */}
             <div className="absolute inset-0 overflow-hidden dark:block hidden">
                 <div className="absolute top-1/3 ltr:left-0 rtl:right-0 w-1/2 h-1/2 ltr:bg-gradient-to-r rtl:bg-gradient-to-l from-purple-600/30 to-transparent blur-[100px]" />

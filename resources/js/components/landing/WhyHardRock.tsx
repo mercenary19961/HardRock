@@ -4,75 +4,225 @@ import { useInView } from '@/hooks/useInView';
 export default function WhyHardRock() {
     const { t, i18n } = useTranslation('whyHardRock');
     const isArabic = i18n.language === 'ar';
-    const [imageRef, imageInView] = useInView<HTMLDivElement>();
-    const [textRef, textInView] = useInView<HTMLDivElement>();
+    const [heroRef, heroInView] = useInView<HTMLDivElement>({ threshold: 0.15 });
+    const [cardsRef, cardsInView] = useInView<HTMLDivElement>({ threshold: 0.1 });
+    const cards = t('cards', { returnObjects: true }) as Array<{
+        num: string;
+        titleBefore: string;
+        titleGrad: string;
+        body: string;
+    }>;
 
     return (
-        <section id="why-hardrock" className="relative pt-15 pb-10 md:pb-20 md:pt-20 lg:pb-64 overflow-hidden bg-white dark:bg-black">
-            {/* Background Blurs - Small Circles */}
-            <div className="hidden lg:block absolute top-10 ltr:right-20 rtl:left-20 w-32 h-32 bg-purple-500/30 dark:bg-purple-500/40 rounded-full blur-3xl" />
-            <div className="hidden lg:block absolute top-40 ltr:right-60 rtl:left-60 w-24 h-24 bg-pink-500/25 dark:bg-pink-500/35 rounded-full blur-2xl" />
-            <div className="hidden lg:block absolute bottom-20 ltr:left-10 rtl:right-10 w-40 h-40 bg-pink-500/30 dark:bg-pink-500/40 rounded-full blur-3xl" />
-            <div className="hidden lg:block absolute bottom-60 ltr:left-40 rtl:right-40 w-28 h-28 bg-purple-500/25 dark:bg-purple-500/35 rounded-full blur-2xl" />
-            <div className="hidden lg:block absolute top-1/2 ltr:right-32 rtl:left-32 w-36 h-36 bg-red-500/20 dark:bg-red-500/30 rounded-full blur-3xl" />
+        <section id="why-hardrock" className="relative overflow-hidden bg-[#06060f]">
 
-            <div className="relative z-10 w-full px-8 sm:px-12 lg:px-16 xl:px-20">
-                <div className="grid lg:grid-cols-2 gap-6 lg:gap-8 items-center">
-                    {/* Image Column */}
-                    <div
-                        ref={imageRef}
-                        className={`relative ${isArabic ? 'lg:order-1' : 'lg:order-1'} animate-on-scroll animate-scale-in ${imageInView ? 'in-view' : ''}`}
-                    >
-                        <div className="relative w-full max-w-md mx-auto">
-                            {/* Gradient Circle Background */}
-                            <div className="hidden lg:block absolute inset-0 bg-gradient-to-br from-brand-purple to-brand-red rounded-full blur-2xl opacity-30" />
+            {/* ─── INNER ─── */}
+            <div className="relative z-10 w-full px-6 sm:px-12 lg:px-8 xl:px-16 pt-24">
 
-                            {/* AI Head Image */}
-                            <img
-                                src="/images/why-hardrock.webp"
-                                alt="Why HardRock"
-                                title="Why HardRock"
-                                loading="lazy"
-                                className="relative z-10 w-full h-auto drop-shadow-2xl"
+                {/* HERO ROW */}
+                <div
+                    ref={heroRef}
+                    className={`grid lg:grid-cols-2 gap-10 items-center mb-20 transition-all duration-700 ${heroInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+                >
+                    {/* Text */}
+                    <div className={isArabic ? 'lg:order-2' : 'lg:order-1'}>
+                        {/* Eyebrow */}
+                        <div className={`flex items-center gap-3.5 text-[10.5px] font-bold tracking-[0.38em] uppercase text-[#a78bfa] mb-7 ${isArabic ? 'flex-row-reverse justify-end' : ''}`}>
+                            <div
+                                className="h-px w-9 flex-shrink-0"
+                                style={{ background: 'linear-gradient(90deg, #8B5CF6, #D946EF)', boxShadow: '0 0 8px rgba(139,92,246,0.6)' }}
                             />
+                            <span className={isArabic ? 'font-tajawal' : ''}>{t('eyebrow')}</span>
                         </div>
-                    </div>
 
-                    {/* Text Column */}
-                    <div
-                        ref={textRef}
-                        className={`${isArabic ? 'lg:order-2 text-right' : 'lg:order-2 text-left'} animate-on-scroll ${isArabic ? 'animate-fade-in-right' : 'animate-fade-in-left'} ${textInView ? 'in-view' : ''}`}
-                    >
-                        <h2 className={`text-4xl xs:text-5xl sm:text-5xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-black mb-8 ${isArabic ? 'font-tajawal' : 'font-sf-pro'}`} style={isArabic ? { lineHeight: '1.6', paddingTop: '8px' } : {}}>
-                            <span className="text-black dark:text-white">
-                                {t('title.line1')}
+                        {/* Headline */}
+                        <h2
+                            className={`font-black leading-[1] tracking-[-0.03em] mb-9 pb-3 ${isArabic ? 'font-tajawal text-right' : ''}`}
+                            style={{ fontSize: 'clamp(60px, 8vw, 130px)' }}
+                        >
+                            <span
+                                className="block text-[#f0f0ff]"
+                                style={{ textShadow: '0 0 60px rgba(139,92,246,0.25)' }}
+                            >
+                                {t('headline.line1')}
                             </span>
-                            <br />
-                            <span className="bg-gradient-to-r from-brand-purple to-brand-red bg-clip-text text-transparent pb-[0.15em] inline-block">
-                                {t('title.line2')}
+                            <span
+                                className="block"
+                                style={{
+                                    background: 'linear-gradient(100deg, #8B5CF6 0%, #D946EF 50%, #F43F5E 100%)',
+                                    WebkitBackgroundClip: 'text',
+                                    WebkitTextFillColor: 'transparent',
+                                    backgroundClip: 'text',
+                                    filter: 'drop-shadow(0 0 24px rgba(139,92,246,0.55))',
+                                    paddingBottom: '0.2em',
+                                }}
+                            >
+                                {t('headline.line2')}
+                            </span>
+                            <span
+                                className="block headline-hover-gradient"
+                                style={{
+                                    fontSize: 'clamp(68px, 9vw, 145px)',
+                                    paddingBottom: '0.2em',
+                                }}
+                            >
+                                {t('headline.line3')}
                             </span>
                         </h2>
 
-                        <div className={`space-y-6 text-gray-700 dark:text-gray-300 max-w-2xl ${
-                            isArabic
-                                ? 'text-lg md:text-lg lg:text-xl xl:text-2xl 2xl:text-3xl leading-relaxed font-tajawal font-normal'
-                                : 'text-lg md:text-xl lg:text-2xl leading-relaxed font-poppins font-normal'
-                        }`}>
-                            <p>
-                                {t('paragraph1')}
-                            </p>
+                        {/* Description */}
+                        <p
+                            className={`relative text-[15px] font-light leading-[1.85] text-[#8888b0] max-w-[480px] ${
+                                isArabic ? 'pr-6 text-right font-tajawal' : 'pl-6'
+                            }`}
+                        >
+                            <span
+                                className={`absolute top-0 bottom-0 w-0.5 ${isArabic ? 'right-0' : 'left-0'}`}
+                                style={{ background: 'linear-gradient(180deg, #8B5CF6, #D946EF, transparent)', boxShadow: '0 0 8px rgba(139,92,246,0.5)' }}
+                            />
+                            {t('heroDesc.part1')}
+                            <strong className="text-[#c4b5fd] font-medium">{t('heroDesc.bold1')}</strong>
+                            {t('heroDesc.part2')}
+                            <br /><br />
+                            {t('heroDesc.part3')}
+                            <strong className="font-medium text-[#c4b5fd]">
+                                {t('heroDesc.bold2Before')}
+                                <span className="animate-gradient-text font-bold">{t('heroDesc.bold2You')}</span>
+                                {t('heroDesc.bold2After')}
+                            </strong>
+                            {t('heroDesc.part4')}
+                        </p>
+                    </div>
 
-                            <p>
-                                {t('paragraph2.part1')}
-                                <span className="font-black">
-                                    {t('paragraph2.bold')}
+                    {/* Image */}
+                    <div className={`relative flex items-center justify-center h-[820px] ${isArabic ? 'lg:order-1' : 'lg:order-2'}`}>
+                        <img
+                            src="/images/why-hardrock.webp"
+                            alt="Why HardRock"
+                            loading="lazy"
+                            className="absolute z-[2] object-contain"
+                            style={{ width: '90%', height: 'auto' }}
+                        />
+                    </div>
+
+                </div>
+
+                {/* Glow divider */}
+                <div
+                    className="h-px mb-[72px]"
+                    style={{
+                        background: 'linear-gradient(90deg, transparent 0%, rgba(139,92,246,0.5) 25%, rgba(217,70,239,0.5) 60%, rgba(244,63,94,0.3) 80%, transparent 100%)',
+                        boxShadow: '0 0 12px rgba(139,92,246,0.25)',
+                    }}
+                />
+
+                {/* CARDS */}
+                <div
+                    ref={cardsRef}
+                    className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-white/[0.04] mb-px transition-all duration-700 delay-100 ${cardsInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+                >
+                    {cards.map((card, i) => (
+                        <div
+                            key={i}
+                            className="group relative bg-[#06060f] p-9 overflow-hidden hover:bg-[#0a0a18] transition-all duration-300"
+                            style={{
+                                border: '1px solid transparent',
+                                transition: 'background 0.3s, box-shadow 0.3s, border-color 0.3s',
+                            }}
+                            onMouseEnter={e => {
+                                (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(139,92,246,0.5)';
+                                (e.currentTarget as HTMLDivElement).style.boxShadow = '0 0 18px rgba(139,92,246,0.25), 0 0 40px rgba(139,92,246,0.1), inset 0 0 20px rgba(139,92,246,0.05)';
+                            }}
+                            onMouseLeave={e => {
+                                (e.currentTarget as HTMLDivElement).style.borderColor = 'transparent';
+                                (e.currentTarget as HTMLDivElement).style.boxShadow = 'none';
+                            }}
+                        >
+                            {/* Top gradient bar */}
+                            <div
+                                className="absolute top-0 left-0 right-0 h-0.5"
+                                style={{
+                                    background: 'linear-gradient(90deg, #8B5CF6, #D946EF, #F43F5E)',
+                                    boxShadow: '0 0 10px rgba(139,92,246,0.6), 0 0 20px rgba(139,92,246,0.3)',
+                                }}
+                            />
+                            {/* Hover radial */}
+                            <div
+                                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                                style={{ background: 'radial-gradient(ellipse at top left, rgba(139,92,246,0.08) 0%, transparent 60%)' }}
+                            />
+
+                            <div
+                                className="relative text-[10px] font-bold tracking-[0.25em] mb-5"
+                                style={{ background: 'linear-gradient(90deg, #8B5CF6, #D946EF)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
+                            >
+                                {card.num}
+                            </div>
+
+                            <div className={`relative text-[17px] font-bold leading-[1.3] mb-3.5 tracking-[-0.01em] text-[#f0f0ff] ${isArabic ? 'font-tajawal text-right' : ''}`}>
+                                {card.titleBefore}
+                                <br />
+                                <span style={{ background: 'linear-gradient(90deg, #a78bfa, #e879f9)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+                                    {card.titleGrad}
                                 </span>
-                                {t('paragraph2.part2')}
+                            </div>
+
+                            <p className={`relative text-[12.5px] font-light leading-[1.85] text-[rgba(160,160,200,0.75)] ${isArabic ? 'font-tajawal text-right' : ''}`}>
+                                {card.body}
                             </p>
+                        </div>
+                    ))}
+                </div>
+
+                {/* STATEMENT BAR */}
+                <div
+                    className={`relative overflow-hidden border border-[rgba(139,92,246,0.2)] border-t-0 p-[56px] flex flex-col sm:flex-row items-center gap-10 sm:gap-14 ${isArabic ? 'sm:flex-row-reverse' : ''}`}
+                    style={{ background: 'linear-gradient(135deg, rgba(139,92,246,0.1) 0%, rgba(217,70,239,0.06) 50%, rgba(244,63,94,0.04) 100%)' }}
+                >
+                    <div
+                        className="absolute w-[500px] h-[300px] rounded-full pointer-events-none -top-24 -left-24"
+                        style={{ background: 'radial-gradient(ellipse, rgba(139,92,246,0.12) 0%, transparent 65%)' }}
+                    />
+
+                    <p
+                        className={`relative font-extrabold leading-[1.2] tracking-[-0.02em] text-[#f0f0ff] ${isArabic ? 'font-tajawal text-right' : ''}`}
+                        style={{ fontSize: 'clamp(24px, 2.8vw, 38px)' }}
+                    >
+                        {t('statement.before')}
+                        <br />
+                        {t('statement.weAre')}
+                        <span style={{
+                            background: 'linear-gradient(90deg, #8B5CF6, #D946EF, #F43F5E)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            backgroundClip: 'text',
+                            filter: 'drop-shadow(0 0 16px rgba(139,92,246,0.4))',
+                        }}>
+                            {t('statement.grad')}
+                        </span>
+                    </p>
+
+                    {/* Spinning badge */}
+                    <div className="flex-shrink-0 relative w-[120px] h-[120px]">
+                        <div
+                            className="absolute inset-0 rounded-full animate-orbit-slow"
+                            style={{
+                                background: 'conic-gradient(#8B5CF6, #D946EF, #F43F5E, #8B5CF6)',
+                                WebkitMask: 'radial-gradient(circle, transparent 53px, black 54px)',
+                                mask: 'radial-gradient(circle, transparent 53px, black 54px)',
+                                boxShadow: '0 0 20px rgba(139,92,246,0.4)',
+                            }}
+                        />
+                        <div
+                            className="absolute inset-0 flex items-center justify-center text-[8px] font-bold tracking-[0.12em] uppercase text-center leading-[1.7]"
+                            style={{ background: 'linear-gradient(135deg, #a78bfa, #e879f9)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
+                        >
+                            Digital<br />AI · SEO<br />Growth<br />Marketing
                         </div>
                     </div>
                 </div>
             </div>
+
         </section>
     );
 }

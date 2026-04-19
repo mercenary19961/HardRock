@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 240 43% 4%;
     --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 3.9%;
@@ -32,7 +32,7 @@
   }
 
   .dark {
-    --background: 0 0% 3.9%;
+    --background: 240 43% 4%;
     --foreground: 0 0% 98%;
     --card: 0 0% 3.9%;
     --card-foreground: 0 0% 98%;
@@ -305,6 +305,54 @@
   .content-auto {
     content-visibility: auto;
     contain-intrinsic-size: auto 600px;
+  }
+
+  @keyframes orbit {
+    to { transform: rotate(360deg); }
+  }
+  .animate-orbit { animation: orbit 8s linear infinite; }
+  .animate-orbit-slow { animation: orbit 10s linear infinite; }
+
+  @keyframes gradient-flow {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  .animate-gradient-text {
+    background: linear-gradient(90deg, #7C3AED, #C026D3, #EF4444, #C026D3, #7C3AED);
+    background-size: 300% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradient-flow 2s linear infinite;
+  }
+
+  @keyframes shimmer-sweep {
+    0%   { background-position: 115% center; }
+    70%  { background-position: -15% center; }
+    100% { background-position: -15% center; }
+  }
+
+  .headline-hover-gradient {
+    -webkit-text-fill-color: transparent;
+    -webkit-text-stroke: 1.5px rgba(139, 92, 246, 0.35);
+    background: linear-gradient(
+      105deg,
+      transparent 0%,
+      transparent 28%,
+      rgba(139, 92, 246, 0) 32%,
+      #8B5CF6 38%,
+      #D946EF 50%,
+      #F43F5E 62%,
+      rgba(244, 63, 94, 0) 68%,
+      transparent 72%,
+      transparent 100%
+    );
+    background-size: 250% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    filter: drop-shadow(0 0 18px rgba(139, 92, 246, 0.45));
+    animation: shimmer-sweep 9s linear infinite;
   }
 }
 

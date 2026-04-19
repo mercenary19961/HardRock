@@ -1,12 +1,54 @@
 {
-  "title": {
-    "line1": "Why",
-    "line2": "HardRock?"
+  "eyebrow": "Who we are",
+  "headline": {
+    "line1": "We don't",
+    "line2": "just deliver.",
+    "line3": "We stay."
   },
-  "paragraph1": "Hard Rock empowers digital transformation through strategic expertise, advanced technology, and creative thinking delivering integrated solutions across Software, AI, SEO, and Digital Marketing for measurable growth.",
-  "paragraph2": {
-    "part1": "We don't just deliver services, ",
-    "bold": "we stay with you",
-    "part2": ". Our expert team provides continuous consulting, follow-up, and after-sales support to ensure sustainable performance and long-term success."
-  }
+  "heroDesc": {
+    "part1": "Hard Rock empowers digital transformation through strategic expertise, advanced technology, and creative thinking — delivering integrated solutions across ",
+    "bold1": "Software, AI, SEO, and Digital Marketing",
+    "part2": " for measurable growth.",
+    "part3": "We don't just deliver services. ",
+    "bold2Before": "We stay with ",
+    "bold2You": "you",
+    "bold2After": ".",
+    "part4": " Continuous consulting, follow-up, and after-sales support for long-term success."
+  },
+  "cards": [
+    {
+      "num": "01",
+      "titleBefore": "Integrated",
+      "titleGrad": "digital power.",
+      "body": "Solutions across Software, AI, SEO & Digital Marketing for measurable, sustainable growth."
+    },
+    {
+      "num": "02",
+      "titleBefore": "We stay with you",
+      "titleGrad": "after the win.",
+      "body": "Continuous consulting, follow-up, and after-sales support to ensure long-term success."
+    },
+    {
+      "num": "03",
+      "titleBefore": "Data-backed,",
+      "titleGrad": "results-obsessed.",
+      "body": "Every strategy is grounded in data. We track, optimize, and iterate — because real growth is engineered."
+    },
+    {
+      "num": "04",
+      "titleBefore": "Amman-rooted,",
+      "titleGrad": "globally minded.",
+      "body": "Local market intelligence meets global best practices — your edge in regional and international arenas."
+    }
+  ],
+  "statement": {
+    "before": "HardRock isn't a vendor —",
+    "weAre": "we're your ",
+    "grad": "long-term growth partner."
+  },
+  "stats": [
+    { "num": "150+", "label": "Brands scaled" },
+    { "num": "6+", "label": "Years in market" },
+    { "num": "5×", "label": "Avg. ROI delivered" }
+  ]
 }
