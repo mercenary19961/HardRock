@@ -10,31 +10,43 @@
     // Service-specific SEO data
     $serviceSeo = [
         'services/social-media' => [
+            'title' => 'Social Media Management | HardRock - Digital Marketing Agency Jordan',
+            'h1' => 'Social Media Management',
             'description' => 'Professional social media management services in Jordan. HardRock helps brands in Amman grow their online presence with strategic content and community management.',
             'ogTitle' => 'Social Media Marketing | HardRock',
             'ogImage' => $baseUrl . '/images/services/social-media-2.webp',
         ],
         'services/paid-ads' => [
+            'title' => 'Meta & Google Ads Management | HardRock - Digital Marketing Agency Jordan',
+            'h1' => 'Meta & Google Ads Management',
             'description' => 'Expert paid advertising services in Jordan. HardRock delivers high-ROI Meta and Google Ads campaigns for businesses in Amman and across the MENA region.',
             'ogTitle' => 'Paid Advertising | HardRock',
             'ogImage' => $baseUrl . '/images/services/paid-ads-2.webp',
         ],
         'services/seo' => [
+            'title' => 'SEO Services in Jordan | HardRock - Digital Marketing Agency',
+            'h1' => 'SEO (Search Engine Optimization)',
             'description' => 'Top SEO services in Jordan. HardRock helps businesses in Amman rank higher on Google with data-driven search engine optimization strategies.',
             'ogTitle' => 'SEO Services | HardRock',
             'ogImage' => $baseUrl . '/images/services/seo-2.webp',
         ],
         'services/pr-social-listening' => [
+            'title' => 'PR & Social Listening | HardRock - Digital Marketing Agency Jordan',
+            'h1' => 'PR & Social Listening',
             'description' => 'PR and social listening services in Jordan. Monitor your brand reputation and manage public relations with HardRock, Amman\'s leading digital marketing agency.',
             'ogTitle' => 'PR & Social Listening | HardRock',
             'ogImage' => $baseUrl . '/images/services/pr-2.webp',
         ],
         'services/branding' => [
+            'title' => 'Branding Services in Jordan | HardRock - Digital Marketing Agency',
+            'h1' => 'Branding',
             'description' => 'Professional branding services in Jordan. HardRock creates compelling brand identities for businesses in Amman looking to stand out in the market.',
             'ogTitle' => 'Branding Services | HardRock',
             'ogImage' => $baseUrl . '/images/services/branding-2.webp',
         ],
         'services/software-ai' => [
+            'title' => 'Software & AI Solutions in Jordan | HardRock - Digital Marketing Agency',
+            'h1' => 'Software & AI Solutions',
             'description' => 'AI solutions and software development in Jordan. HardRock builds custom AI-powered tools and software for businesses in Amman and the MENA region.',
             'ogTitle' => 'Software & AI Solutions | HardRock',
             'ogImage' => $baseUrl . '/images/services/ai-2.webp',
@@ -42,6 +54,7 @@
     ];
 
     $seo = $serviceSeo[$path] ?? null;
+    $pageTitle = $seo['title'] ?? 'HardRock | Digital Marketing Agency & AI Solutions in Jordan';
     $metaDescription = $seo['description'] ?? 'Scale your brand with HardRock, Amman\'s leading digital marketing agency. Expert AI solutions, SEO, Paid Ads, and Branding designed for data-driven growth.';
     $ogTitle = $seo['ogTitle'] ?? 'HardRock | Data-Driven Digital Marketing & AI Solutions';
     $ogDescription = $seo ? $seo['description'] : 'Transform your brand with Amman\'s leading experts in AI solutions, SEO, and performance marketing. Scale your business with data-backed strategies that deliver ROI.';
@@ -53,7 +66,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title inertia>HardRock | Digital Marketing Agency & AI Solutions in Jordan</title>
+        <title inertia>{{ $pageTitle }}</title>
 
         <!-- SEO Meta Tags -->
         <meta name="description" content="{{ $metaDescription }}">
@@ -167,6 +180,13 @@
         <!-- Google Tag Manager (noscript) -->
         <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TJTKSH9J"
         height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+        @if($seo)
+        <noscript>
+            <h1>{{ $seo['h1'] }}</h1>
+            <p>{{ $seo['description'] }}</p>
+        </noscript>
+        @endif
 
         @inertia
     </body>
