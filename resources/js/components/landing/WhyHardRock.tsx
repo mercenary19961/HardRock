@@ -161,12 +161,28 @@ export default function WhyHardRock() {
 
                 {/* STATEMENT BAR */}
                 <div
-                    className={`relative overflow-hidden border border-[rgba(139,92,246,0.2)] border-t-0 p-[56px] flex flex-col sm:flex-row items-center gap-10 sm:gap-14 ${isArabic ? 'sm:flex-row-reverse' : ''}`}
-                    style={{ background: 'linear-gradient(135deg, rgba(139,92,246,0.1) 0%, rgba(217,70,239,0.06) 50%, rgba(244,63,94,0.04) 100%)' }}
+                    className={`group relative overflow-hidden border border-[rgba(139,92,246,0.18)] border-t-0 px-[56px] py-[48px] flex flex-col sm:flex-row items-center sm:justify-between ${isArabic ? 'sm:flex-row-reverse' : ''}`}
+                    style={{ background: '#06060f' }}
+                    onMouseMove={e => {
+                        const rect = (e.currentTarget as HTMLDivElement).getBoundingClientRect();
+                        const x = e.clientX - rect.left;
+                        const y = e.clientY - rect.top;
+                        const glow = (e.currentTarget as HTMLDivElement).querySelector<HTMLDivElement>('.statement-glow');
+                        if (glow) {
+                            glow.style.left = `${x}px`;
+                            glow.style.top = `${y}px`;
+                            glow.style.opacity = '1';
+                        }
+                    }}
+                    onMouseLeave={e => {
+                        const glow = (e.currentTarget as HTMLDivElement).querySelector<HTMLDivElement>('.statement-glow');
+                        if (glow) glow.style.opacity = '0';
+                    }}
                 >
+                    {/* Mouse-following glow */}
                     <div
-                        className="absolute w-[500px] h-[300px] rounded-full pointer-events-none -top-24 -left-24"
-                        style={{ background: 'radial-gradient(ellipse, rgba(139,92,246,0.12) 0%, transparent 65%)' }}
+                        className="statement-glow absolute pointer-events-none -translate-x-1/2 -translate-y-1/2 w-[420px] h-[280px] rounded-full opacity-0 transition-opacity duration-500"
+                        style={{ background: 'radial-gradient(ellipse, rgba(139,92,246,0.2) 0%, rgba(217,70,239,0.07) 45%, transparent 70%)' }}
                     />
 
                     <p
@@ -187,15 +203,15 @@ export default function WhyHardRock() {
                         </span>
                     </p>
 
-                    {/* Spinning badge */}
-                    <div className="flex-shrink-0 relative w-[120px] h-[120px]">
+                    {/* Spinning badge — pushed to far right */}
+                    <div className="flex-shrink-0 relative w-[130px] h-[130px]">
                         <div
                             className="absolute inset-0 rounded-full animate-orbit-slow"
                             style={{
                                 background: 'conic-gradient(#8B5CF6, #D946EF, #F43F5E, #8B5CF6)',
-                                WebkitMask: 'radial-gradient(circle, transparent 53px, black 54px)',
-                                mask: 'radial-gradient(circle, transparent 53px, black 54px)',
-                                boxShadow: '0 0 20px rgba(139,92,246,0.4)',
+                                WebkitMask: 'radial-gradient(circle, transparent 61px, black 62px)',
+                                mask: 'radial-gradient(circle, transparent 61px, black 62px)',
+                                boxShadow: '0 0 24px rgba(139,92,246,0.5)',
                             }}
                         />
                         <div
