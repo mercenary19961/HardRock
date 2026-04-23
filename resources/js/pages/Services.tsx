@@ -42,16 +42,6 @@ const SERVICE_SLUGS = [
     'software-ai',
 ] as const;
 
-// OG images per service page
-const SERVICE_OG_IMAGES: Record<string, string> = {
-    'social-media': 'https://www.hardrock-co.com/images/services/social-media-2.webp',
-    'paid-ads': 'https://www.hardrock-co.com/images/services/paid-ads-2.webp',
-    'seo': 'https://www.hardrock-co.com/images/services/seo-2.webp',
-    'pr-social-listening': 'https://www.hardrock-co.com/images/services/pr-2.webp',
-    'branding': 'https://www.hardrock-co.com/images/services/branding-2.webp',
-    'software-ai': 'https://www.hardrock-co.com/images/services/ai-2.webp',
-};
-
 // SEO meta descriptions for each service (for local SEO targeting "marketing agency jordan")
 const SERVICE_META_DESCRIPTIONS: Record<string, string> = {
     'social-media': 'Professional social media management services in Jordan. HardRock helps brands in Amman grow their online presence with strategic content and community management.',
@@ -86,14 +76,6 @@ export default function Services({ serviceSlug, fromNav = false }: ServicesProps
     return (
         <>
             <Head title={`${serviceData?.hero?.title || 'Services'} | HardRock - Digital Marketing Agency Jordan`}>
-                <meta name="description" content={SERVICE_META_DESCRIPTIONS[serviceSlug] || 'Professional digital marketing services in Jordan. HardRock helps businesses in Amman grow with data-driven marketing strategies.'} />
-                <meta property="og:type" content="website" />
-                <meta property="og:url" content={`https://www.hardrock-co.com/services/${serviceSlug}`} />
-                <meta property="og:title" content={`${serviceData?.hero?.title || 'Services'} | HardRock`} />
-                <meta property="og:description" content={SERVICE_META_DESCRIPTIONS[serviceSlug] || 'Professional digital marketing services in Jordan.'} />
-                <meta property="og:image" content={SERVICE_OG_IMAGES[serviceSlug] || 'https://www.hardrock-co.com/images/og-image-2.webp'} />
-                <meta property="og:site_name" content="HardRock" />
-                <link rel="canonical" href={`https://www.hardrock-co.com/services/${serviceSlug}`} />
                 <script type="application/ld+json">{JSON.stringify({
                     "@context": "https://schema.org",
                     "@type": "Service",
