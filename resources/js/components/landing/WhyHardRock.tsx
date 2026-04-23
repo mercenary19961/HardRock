@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { useInView } from '@/hooks/useInView';
+import { MagicCardGrid, MagicCard } from '@/components/ui/MagicCard';
 
 export default function WhyHardRock() {
     const { t, i18n } = useTranslation('whyHardRock');
@@ -119,59 +120,47 @@ export default function WhyHardRock() {
                 {/* CARDS */}
                 <div
                     ref={cardsRef}
-                    className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-white/[0.04] mb-px transition-all duration-700 delay-100 ${cardsInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+                    className={`transition-all duration-700 delay-100 ${cardsInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
                 >
-                    {cards.map((card, i) => (
-                        <div
-                            key={i}
-                            className="group relative bg-[#06060f] p-9 overflow-hidden hover:bg-[#0a0a18] transition-all duration-300"
-                            style={{
-                                border: '1px solid transparent',
-                                transition: 'background 0.3s, box-shadow 0.3s, border-color 0.3s',
-                            }}
-                            onMouseEnter={e => {
-                                (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(139,92,246,0.5)';
-                                (e.currentTarget as HTMLDivElement).style.boxShadow = '0 0 18px rgba(139,92,246,0.25), 0 0 40px rgba(139,92,246,0.1), inset 0 0 20px rgba(139,92,246,0.05)';
-                            }}
-                            onMouseLeave={e => {
-                                (e.currentTarget as HTMLDivElement).style.borderColor = 'transparent';
-                                (e.currentTarget as HTMLDivElement).style.boxShadow = 'none';
-                            }}
-                        >
-                            {/* Top gradient bar */}
-                            <div
-                                className="absolute top-0 left-0 right-0 h-0.5"
-                                style={{
-                                    background: 'linear-gradient(90deg, #8B5CF6, #D946EF, #F43F5E)',
-                                    boxShadow: '0 0 10px rgba(139,92,246,0.6), 0 0 20px rgba(139,92,246,0.3)',
-                                }}
-                            />
-                            {/* Hover radial */}
-                            <div
-                                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
-                                style={{ background: 'radial-gradient(ellipse at top left, rgba(139,92,246,0.08) 0%, transparent 60%)' }}
-                            />
-
-                            <div
-                                className="relative text-[10px] font-bold tracking-[0.25em] mb-5"
-                                style={{ background: 'linear-gradient(90deg, #8B5CF6, #D946EF)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
+                    <MagicCardGrid
+                        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-white/[0.04] mb-px"
+                        spotlightRadius={450}
+                    >
+                        {cards.map((card, i) => (
+                            <MagicCard
+                                key={i}
+                                className="group relative bg-[#06060f] p-9 overflow-hidden hover:bg-[#0a0a18] transition-colors duration-300"
                             >
-                                {card.num}
-                            </div>
+                                {/* Top gradient bar */}
+                                <div
+                                    className="absolute top-0 left-0 right-0 h-0.5"
+                                    style={{
+                                        background: 'linear-gradient(90deg, #8B5CF6, #D946EF, #F43F5E)',
+                                        boxShadow: '0 0 10px rgba(139,92,246,0.6), 0 0 20px rgba(139,92,246,0.3)',
+                                    }}
+                                />
 
-                            <div className={`relative text-[17px] font-bold leading-[1.3] mb-3.5 tracking-[-0.01em] text-[#f0f0ff] ${isArabic ? 'font-tajawal text-right' : ''}`}>
-                                {card.titleBefore}
-                                <br />
-                                <span style={{ background: 'linear-gradient(90deg, #a78bfa, #e879f9)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-                                    {card.titleGrad}
-                                </span>
-                            </div>
+                                <div
+                                    className="relative text-[10px] font-bold tracking-[0.25em] mb-5"
+                                    style={{ background: 'linear-gradient(90deg, #8B5CF6, #D946EF)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
+                                >
+                                    {card.num}
+                                </div>
 
-                            <p className={`relative text-[12.5px] font-light leading-[1.85] text-[rgba(160,160,200,0.75)] ${isArabic ? 'font-tajawal text-right' : ''}`}>
-                                {card.body}
-                            </p>
-                        </div>
-                    ))}
+                                <div className={`relative text-[17px] font-bold leading-[1.3] mb-3.5 tracking-[-0.01em] text-[#f0f0ff] ${isArabic ? 'font-tajawal text-right' : ''}`}>
+                                    {card.titleBefore}
+                                    <br />
+                                    <span style={{ background: 'linear-gradient(90deg, #a78bfa, #e879f9)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+                                        {card.titleGrad}
+                                    </span>
+                                </div>
+
+                                <p className={`relative text-[12.5px] font-light leading-[1.85] text-[rgba(160,160,200,0.75)] ${isArabic ? 'font-tajawal text-right' : ''}`}>
+                                    {card.body}
+                                </p>
+                            </MagicCard>
+                        ))}
+                    </MagicCardGrid>
                 </div>
 
                 {/* STATEMENT BAR */}
