@@ -6,14 +6,14 @@
     "line3": "We stay."
   },
   "heroDesc": {
-    "part1": "Hard Rock empowers digital transformation through strategic expertise, advanced technology, and creative thinking — delivering integrated solutions across ",
+    "part1": "Hard Rock empowers digital transformation through strategic expertise, advanced technology, and creative thinking, delivering integrated solutions across ",
     "bold1": "Software, AI, SEO, and Digital Marketing",
     "part2": " for measurable growth.",
     "part3": "We don't just deliver services. ",
     "bold2Before": "We stay with ",
     "bold2You": "you",
     "bold2After": ".",
-    "part4": " Continuous consulting, follow-up, and after-sales support for long-term success."
+    "part4": " Continuous consulting, follow up, and after sales support for long term success."
   },
   "cards": [
     {
@@ -26,25 +26,25 @@
       "num": "02",
       "titleBefore": "We stay with you",
       "titleGrad": "after the win.",
-      "body": "Continuous consulting, follow-up, and after-sales support to ensure long-term success."
+      "body": "Continuous consulting, follow up, and after sales support to ensure long term success."
     },
     {
       "num": "03",
-      "titleBefore": "Data-backed,",
-      "titleGrad": "results-obsessed.",
-      "body": "Every strategy is grounded in data. We track, optimize, and iterate — because real growth is engineered."
+      "titleBefore": "Data backed,",
+      "titleGrad": "results obsessed.",
+      "body": "Every strategy is grounded in data. We track, optimize, and iterate, because real growth is engineered."
     },
     {
       "num": "04",
-      "titleBefore": "Amman-rooted,",
+      "titleBefore": "Amman rooted,",
       "titleGrad": "globally minded.",
-      "body": "Local market intelligence meets global best practices — your edge in regional and international arenas."
+      "body": "Local market intelligence meets global best practices, your edge in regional and international arenas."
     }
   ],
   "statement": {
-    "before": "HardRock isn't a vendor —",
+    "before": "HardRock isn't a vendor,",
     "weAre": "we're your ",
-    "grad": "long-term growth partner."
+    "grad": "long term growth partner."
   },
   "stats": [
     { "num": "150+", "label": "Brands scaled" },

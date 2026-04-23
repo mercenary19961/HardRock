@@ -17,7 +17,8 @@ export default function WhyHardRock() {
     return (
         <section id="why-hardrock" className="relative overflow-hidden bg-[#06060f]">
 
-            {/* ─── INNER ─── */}
+
+{/* ─── INNER ─── */}
             <div className="relative z-10 w-full px-6 sm:px-12 lg:px-8 xl:px-16 pt-24">
 
                 {/* HERO ROW */}
