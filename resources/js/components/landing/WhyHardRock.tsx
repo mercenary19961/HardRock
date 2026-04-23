@@ -122,6 +122,11 @@ export default function WhyHardRock() {
                     ref={cardsRef}
                     className={`transition-all duration-700 delay-100 ${cardsInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
                 >
+                    {/* Single animated bar spanning all four cards */}
+                    <div className="relative h-0.5 overflow-hidden">
+                        <div className="card-top-bar-inner" />
+                    </div>
+
                     <MagicCardGrid
                         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-white/[0.04] mb-px"
                         spotlightRadius={450}
@@ -129,17 +134,8 @@ export default function WhyHardRock() {
                         {cards.map((card, i) => (
                             <MagicCard
                                 key={i}
-                                className="group relative bg-[#06060f] p-9 overflow-hidden hover:bg-[#0a0a18] transition-colors duration-300"
+                                className="group relative bg-[#06060f] p-9 overflow-hidden"
                             >
-                                {/* Top gradient bar */}
-                                <div
-                                    className="absolute top-0 left-0 right-0 h-0.5"
-                                    style={{
-                                        background: 'linear-gradient(90deg, #8B5CF6, #D946EF, #F43F5E)',
-                                        boxShadow: '0 0 10px rgba(139,92,246,0.6), 0 0 20px rgba(139,92,246,0.3)',
-                                    }}
-                                />
-
                                 <div
                                     className="relative text-[10px] font-bold tracking-[0.25em] mb-5"
                                     style={{ background: 'linear-gradient(90deg, #8B5CF6, #D946EF)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}

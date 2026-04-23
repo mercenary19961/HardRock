@@ -12,9 +12,9 @@
   content: '';
   position: absolute;
   inset: 0;
-  padding: 2px;
+  padding: 1px;
   background: radial-gradient(
-    320px circle at var(--glow-x) var(--glow-y),
+    140px circle at var(--glow-x) var(--glow-y),
     rgba(var(--glow-color-1), calc(var(--glow-intensity) * 0.95)) 0%,
     rgba(var(--glow-color-2), calc(var(--glow-intensity) * 0.6)) 40%,
     transparent 70%
@@ -39,9 +39,8 @@
   inset: 0;
   border-radius: inherit;
   background: radial-gradient(
-    380px circle at var(--glow-x) var(--glow-y),
-    rgba(var(--glow-color-1), calc(var(--glow-intensity) * 0.07)) 0%,
-    rgba(var(--glow-color-2), calc(var(--glow-intensity) * 0.03)) 50%,
+    180px circle at var(--glow-x) var(--glow-y),
+    rgba(var(--glow-color-1), calc(var(--glow-intensity) * 0.05)) 0%,
     transparent 70%
   );
   pointer-events: none;

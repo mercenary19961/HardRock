@@ -354,6 +354,26 @@
     filter: drop-shadow(0 0 18px rgba(139, 92, 246, 0.45));
     animation: shimmer-sweep 9s linear infinite;
   }
+
+  @keyframes card-bar-sweep {
+    from { background-position: 0 0; }
+    to   { background-position: 800px 0; }
+  }
+
+  .card-top-bar-inner {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      90deg,
+      #8B5CF6  0px,
+      #D946EF  200px,
+      #F43F5E  400px,
+      #D946EF  600px,
+      #8B5CF6  800px
+    );
+    animation: card-bar-sweep 5s linear infinite;
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.6), 0 0 20px rgba(139, 92, 246, 0.3);
+  }
 }
 
 @layer components {
