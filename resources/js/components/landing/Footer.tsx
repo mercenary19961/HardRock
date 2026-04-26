@@ -25,7 +25,7 @@ export default function Footer() {
     );
 
     return (
-        <footer className="bg-white dark:bg-black pt-16 pb-8 md:pt-20 md:pb-10">
+        <footer className="bg-[#06060f] pt-16 pb-8 md:pt-20 md:pb-10">
             <div className="max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 xl:px-20">
 
                 {/* Mobile Layout */}

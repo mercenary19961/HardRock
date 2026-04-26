@@ -219,7 +219,7 @@ export default function ContactUs({ skipAnimation = false }: ContactUsProps) {
     return (
         <section
             id="contact-us"
-            className="relative py-10 md:py-32 overflow-hidden bg-white dark:bg-black"
+            className="relative py-10 md:py-32 overflow-hidden bg-[#06060f]"
         >
             <div
                 className="hidden lg:block absolute inset-y-0 pointer-events-none overflow-visible"

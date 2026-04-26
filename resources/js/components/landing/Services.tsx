@@ -239,7 +239,7 @@ export default function Services() {
         <section
             ref={sectionRef}
             id="services"
-            className="relative bg-white dark:bg-black"
+            className="relative bg-[#06060f]"
             style={{ height: isDesktop ? `${(totalServices + 1) * 60}vh` : 'auto' }}
         >
             {/* Sticky container (desktop) / Normal container (mobile) */}
