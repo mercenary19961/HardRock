@@ -29,7 +29,7 @@ export default function WhyHardRock() {
                     {/* Text */}
                     <div className={isArabic ? 'lg:order-2' : 'lg:order-1'}>
                         {/* Eyebrow */}
-                        <div className={`flex items-center gap-3.5 text-[10.5px] font-bold tracking-[0.38em] uppercase text-[#a78bfa] mb-7 ${isArabic ? 'flex-row-reverse justify-end' : ''}`}>
+                        <div className={`flex items-center gap-3.5 text-[10.5px] font-bold tracking-[0.38em] uppercase text-[#8c16af] mb-7 ${isArabic ? 'flex-row-reverse justify-end' : ''}`}>
                             <div
                                 className="h-px w-9 flex-shrink-0"
                                 style={{ background: 'linear-gradient(90deg, #8B5CF6, #D946EF)', boxShadow: '0 0 8px rgba(139,92,246,0.6)' }}
@@ -39,7 +39,7 @@ export default function WhyHardRock() {
 
                         {/* Headline */}
                         <h2
-                            className={`font-black leading-[1] tracking-[-0.03em] mb-9 pb-3 ${isArabic ? 'font-tajawal text-right' : ''}`}
+                            className={`font-bold leading-[1] tracking-[-0.03em] mb-9 pb-3 ${isArabic ? 'font-tajawal text-right' : 'font-sf-pro'}`}
                             style={{ fontSize: 'clamp(60px, 8vw, 130px)' }}
                         >
                             <span
@@ -51,30 +51,44 @@ export default function WhyHardRock() {
                             <span
                                 className="block"
                                 style={{
-                                    background: 'linear-gradient(100deg, #8B5CF6 0%, #D946EF 50%, #F43F5E 100%)',
+                                    paddingBottom: '0.2em',
+                                    filter: 'drop-shadow(0 0 8px rgba(102,10,219,0.25)) drop-shadow(0 0 16px rgba(255,60,43,0.12))',
+                                }}
+                            >
+                                <span style={{
+                                    background: 'linear-gradient(100deg, #660adb 0%, #ff3c2b 100%)',
                                     WebkitBackgroundClip: 'text',
                                     WebkitTextFillColor: 'transparent',
                                     backgroundClip: 'text',
-                                    filter: 'drop-shadow(0 0 24px rgba(139,92,246,0.55))',
-                                    paddingBottom: '0.2em',
-                                }}
-                            >
-                                {t('headline.line2')}
+                                }}>
+                                    {t('headline.line2')}
+                                </span>
                             </span>
                             <span
-                                className="block headline-hover-gradient"
-                                style={{
-                                    fontSize: 'clamp(68px, 9vw, 145px)',
-                                    paddingBottom: '0.2em',
-                                }}
+                                className="block relative"
+                                style={{ fontSize: 'clamp(68px, 9vw, 145px)', paddingBottom: '0.2em' }}
                             >
-                                {t('headline.line3')}
+                                {/* White outline — visible in empty areas */}
+                                <span
+                                    aria-hidden="true"
+                                    className="absolute inset-0"
+                                    style={{
+                                        WebkitTextStroke: '1.5px rgba(203,213,225,0.75)',
+                                        WebkitTextFillColor: 'transparent',
+                                    }}
+                                >
+                                    {t('headline.line3')}
+                                </span>
+                                {/* Gradient sweep — covers white when filled */}
+                                <span className="headline-hover-gradient">
+                                    {t('headline.line3')}
+                                </span>
                             </span>
                         </h2>
 
                         {/* Description */}
                         <p
-                            className={`relative text-[15px] font-light leading-[1.85] text-[#8888b0] max-w-[480px] ${
+                            className={`relative text-[15px] font-light leading-[1.85] text-white max-w-[480px] ${
                                 isArabic ? 'pr-6 text-right font-tajawal' : 'pl-6'
                             }`}
                         >
@@ -83,11 +97,11 @@ export default function WhyHardRock() {
                                 style={{ background: 'linear-gradient(180deg, #8B5CF6, #D946EF, transparent)', boxShadow: '0 0 8px rgba(139,92,246,0.5)' }}
                             />
                             {t('heroDesc.part1')}
-                            <strong className="text-[#c4b5fd] font-medium">{t('heroDesc.bold1')}</strong>
+                            <strong className="text-[#660adb] font-medium">{t('heroDesc.bold1')}</strong>
                             {t('heroDesc.part2')}
                             <br /><br />
                             {t('heroDesc.part3')}
-                            <strong className="font-medium text-[#c4b5fd]">
+                            <strong className="font-medium text-[#660adb]">
                                 {t('heroDesc.bold2Before')}
                                 <span className="animate-gradient-text font-bold">{t('heroDesc.bold2You')}</span>
                                 {t('heroDesc.bold2After')}
@@ -147,12 +161,12 @@ export default function WhyHardRock() {
                                 <div className={`relative text-[17px] font-bold leading-[1.3] mb-3.5 tracking-[-0.01em] text-[#f0f0ff] ${isArabic ? 'font-tajawal text-right' : ''}`}>
                                     {card.titleBefore}
                                     <br />
-                                    <span style={{ background: 'linear-gradient(90deg, #a78bfa, #e879f9)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+                                    <span style={{ color: '#660adb' }}>
                                         {card.titleGrad}
                                     </span>
                                 </div>
 
-                                <p className={`relative text-[12.5px] font-light leading-[1.85] text-[rgba(160,160,200,0.75)] ${isArabic ? 'font-tajawal text-right' : ''}`}>
+                                <p className={`relative text-[12.5px] font-light leading-[1.85] text-white ${isArabic ? 'font-tajawal text-right' : ''}`}>
                                     {card.body}
                                 </p>
                             </MagicCard>
@@ -162,7 +176,7 @@ export default function WhyHardRock() {
 
                 {/* STATEMENT BAR */}
                 <div
-                    className={`group relative overflow-hidden border border-[rgba(139,92,246,0.18)] border-t-0 px-[56px] py-[48px] flex flex-col sm:flex-row items-center sm:justify-between ${isArabic ? 'sm:flex-row-reverse' : ''}`}
+                    className={`group relative overflow-hidden  px-[40px] py-[28px] flex flex-col sm:flex-row items-center sm:justify-between ${isArabic ? 'sm:flex-row-reverse' : ''}`}
                     style={{ background: '#06060f' }}
                     onMouseMove={e => {
                         const rect = (e.currentTarget as HTMLDivElement).getBoundingClientRect();
@@ -187,11 +201,10 @@ export default function WhyHardRock() {
                     />
 
                     <p
-                        className={`relative font-extrabold leading-[1.2] tracking-[-0.02em] text-[#f0f0ff] ${isArabic ? 'font-tajawal text-right' : ''}`}
-                        style={{ fontSize: 'clamp(24px, 2.8vw, 38px)' }}
+                        className={`relative font-extrabold leading-[1.2] tracking-[-0.02em] text-[#f0f0ff] whitespace-nowrap ${isArabic ? 'font-tajawal text-right' : ''}`}
+                        style={{ fontSize: 'clamp(16px, 1.8vw, 26px)' }}
                     >
-                        {t('statement.before')}
-                        <br />
+                        {t('statement.before')}{' '}
                         {t('statement.weAre')}
                         <span style={{
                             background: 'linear-gradient(90deg, #8B5CF6, #D946EF, #F43F5E)',
@@ -204,24 +217,6 @@ export default function WhyHardRock() {
                         </span>
                     </p>
 
-                    {/* Spinning badge — pushed to far right */}
-                    <div className="flex-shrink-0 relative w-[130px] h-[130px]">
-                        <div
-                            className="absolute inset-0 rounded-full animate-orbit-slow"
-                            style={{
-                                background: 'conic-gradient(#8B5CF6, #D946EF, #F43F5E, #8B5CF6)',
-                                WebkitMask: 'radial-gradient(circle, transparent 61px, black 62px)',
-                                mask: 'radial-gradient(circle, transparent 61px, black 62px)',
-                                boxShadow: '0 0 24px rgba(139,92,246,0.5)',
-                            }}
-                        />
-                        <div
-                            className="absolute inset-0 flex items-center justify-center text-[8px] font-bold tracking-[0.12em] uppercase text-center leading-[1.7]"
-                            style={{ background: 'linear-gradient(135deg, #a78bfa, #e879f9)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
-                        >
-                            Digital<br />AI · SEO<br />Growth<br />Marketing
-                        </div>
-                    </div>
                 </div>
             </div>
 
