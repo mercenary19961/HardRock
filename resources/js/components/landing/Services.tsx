@@ -346,7 +346,7 @@ export default function Services() {
                             </h2>
 
                             {/* Description with accent bar */}
-                            <div className={`flex gap-4 items-start max-w-xl mx-auto lg:mx-0 ${isArabic ? 'flex-row-reverse' : ''}`}>
+                            <div className="flex gap-4 items-start max-w-xl mx-auto lg:mx-0">
                                 <div className="w-1 flex-shrink-0 rounded-full bg-gradient-to-b from-brand-purple to-brand-red self-stretch min-h-[60px]" />
                                 <p
                                     key={`desc-${activeService.id}`}

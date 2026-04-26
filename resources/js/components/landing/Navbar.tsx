@@ -55,26 +55,39 @@ export default function Navbar() {
     // Hide navbar when services section is in view, reveal on top 20% hover
     useEffect(() => {
         const servicesEl = () => document.getElementById('services');
+        let hideTimer: ReturnType<typeof setTimeout> | null = null;
+
+        const clearHideTimer = () => {
+            if (hideTimer) {
+                clearTimeout(hideTimer);
+                hideTimer = null;
+            }
+        };
+
+        const isInServicesSection = () => {
+            const section = servicesEl();
+            if (!section) return false;
+            const rect = section.getBoundingClientRect();
+            return rect.top <= 0 && rect.bottom >= window.innerHeight;
+        };
 
         const handleScroll = () => {
             const section = servicesEl();
-            if (!section) { setHidden(false); return; }
-            const rect = section.getBoundingClientRect();
-            const inSection = rect.top <= 0 && rect.bottom >= window.innerHeight;
-            setHidden(inSection);
+            if (!section) { clearHideTimer(); setHidden(false); return; }
+            clearHideTimer();
+            setHidden(isInServicesSection());
         };
 
         const handleMouseMove = (e: MouseEvent) => {
             if (e.clientY < window.innerHeight * 0.2) {
+                clearHideTimer();
                 setHidden(false);
-            } else {
-                // Re-check if we're in the services section
-                const section = servicesEl();
-                if (section) {
-                    const rect = section.getBoundingClientRect();
-                    if (rect.top <= 0 && rect.bottom >= window.innerHeight) {
-                        setHidden(true);
-                    }
+            } else if (isInServicesSection()) {
+                if (!hideTimer) {
+                    hideTimer = setTimeout(() => {
+                        if (isInServicesSection()) setHidden(true);
+                        hideTimer = null;
+                    }, 500);
                 }
             }
         };
@@ -84,6 +97,7 @@ export default function Navbar() {
         handleScroll();
 
         return () => {
+            clearHideTimer();
             window.removeEventListener('scroll', handleScroll);
             window.removeEventListener('mousemove', handleMouseMove);
         };
