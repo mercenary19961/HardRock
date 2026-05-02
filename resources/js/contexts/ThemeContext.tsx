@@ -10,23 +10,25 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>(() => {
-    // Check localStorage first
-    const stored = localStorage.getItem('hardrock_theme');
-    if (stored === 'light' || stored === 'dark') {
-      return stored;
-    }
-    // Default to dark theme
-    return 'dark';
-  });
+interface ThemeProviderProps {
+  children: ReactNode;
+  initialTheme?: Theme;
+}
+
+function writeThemeCookie(theme: Theme) {
+  if (typeof document === 'undefined') return;
+  const oneYear = 60 * 60 * 24 * 365;
+  document.cookie = `theme=${theme}; path=/; max-age=${oneYear}; SameSite=Lax`;
+}
+
+export function ThemeProvider({ children, initialTheme = 'dark' }: ThemeProviderProps) {
+  const [theme, setThemeState] = useState<Theme>(initialTheme);
 
   useEffect(() => {
-    // Update HTML class and localStorage
     const root = document.documentElement;
     root.classList.remove('light', 'dark');
     root.classList.add(theme);
-    localStorage.setItem('hardrock_theme', theme);
+    writeThemeCookie(theme);
   }, [theme]);
 
   const toggleTheme = () => {

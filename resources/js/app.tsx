@@ -1,17 +1,15 @@
 import '../css/app.css';
 import './bootstrap';
-import './i18n';
 
 import { createInertiaApp } from '@inertiajs/react';
 import { createRoot } from 'react-dom/client';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { PageLoader, SuspenseLoader } from '@/components/ui/page-loader';
 import { lazy, Suspense } from 'react';
+import { initI18n, type AppLanguage } from './i18n';
 
-// Only eagerly import the landing page (most common entry point)
 import Landing from '@/pages/Landing';
 
-// Lazy-load all other pages — they won't add to initial bundle
 const Login = lazy(() => import('@/pages/Auth/Login'));
 const ForgotPassword = lazy(() => import('@/pages/Auth/ForgotPassword'));
 const ResetPassword = lazy(() => import('@/pages/Auth/ResetPassword'));
@@ -23,7 +21,6 @@ const Consultation = lazy(() => import('@/pages/Consultation'));
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
-// Map of page names to components
 const pages: Record<string, any> = {
     'Landing': Landing,
     'Auth/Login': Login,
@@ -35,6 +32,19 @@ const pages: Record<string, any> = {
     'Services': Services,
     'Consultation': Consultation,
 };
+
+interface Appearance {
+    theme: 'light' | 'dark';
+    language: AppLanguage;
+}
+
+function readAppearance(setupProps: any): Appearance {
+    const shared = setupProps?.initialPage?.props?.appearance;
+    return {
+        theme: shared?.theme === 'light' ? 'light' : 'dark',
+        language: shared?.language === 'ar' ? 'ar' : 'en',
+    };
+}
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
@@ -48,10 +58,13 @@ createInertiaApp({
         return page;
     },
     setup({ el, App, props }) {
+        const appearance = readAppearance(props);
+        initI18n(appearance.language);
+
         const root = createRoot(el);
 
         root.render(
-            <ThemeProvider>
+            <ThemeProvider initialTheme={appearance.theme}>
                 <PageLoader />
                 <Suspense fallback={<SuspenseLoader />}>
                     <App {...props} />

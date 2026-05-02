@@ -1,8 +1,6 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
 
-// Import translations
 import enCommon from './locales/en/common.json';
 import enHero from './locales/en/hero.json';
 import enWhyHardRock from './locales/en/whyHardRock.json';
@@ -20,61 +18,56 @@ import arFooter from './locales/ar/footer.json';
 import arServiceDetail from './locales/ar/serviceDetail.json';
 import arConsultation from './locales/ar/consultation.json';
 
-i18n
-  .use(LanguageDetector) // Detect user language
-  .use(initReactI18next) // Pass i18n to react-i18next
-  .init({
-    resources: {
-      en: {
-        common: enCommon,
-        hero: enHero,
-        whyHardRock: enWhyHardRock,
-        services: enServices,
-        contactUs: enContactUs,
-        footer: enFooter,
-        serviceDetail: enServiceDetail,
-        consultation: enConsultation,
+export type AppLanguage = 'en' | 'ar';
+
+const resources = {
+  en: {
+    common: enCommon,
+    hero: enHero,
+    whyHardRock: enWhyHardRock,
+    services: enServices,
+    contactUs: enContactUs,
+    footer: enFooter,
+    serviceDetail: enServiceDetail,
+    consultation: enConsultation,
+  },
+  ar: {
+    common: arCommon,
+    hero: arHero,
+    whyHardRock: arWhyHardRock,
+    services: arServices,
+    contactUs: arContactUs,
+    footer: arFooter,
+    serviceDetail: arServiceDetail,
+    consultation: arConsultation,
+  },
+};
+
+export function initI18n(language: AppLanguage) {
+  i18n
+    .use(initReactI18next)
+    .init({
+      resources,
+      lng: language,
+      fallbackLng: 'en',
+      defaultNS: 'common',
+      interpolation: {
+        escapeValue: false,
       },
-      ar: {
-        common: arCommon,
-        hero: arHero,
-        whyHardRock: arWhyHardRock,
-        services: arServices,
-        contactUs: arContactUs,
-        footer: arFooter,
-        serviceDetail: arServiceDetail,
-        consultation: arConsultation,
+      react: {
+        useSuspense: false,
       },
-    },
-    fallbackLng: 'en', // Default language
-    defaultNS: 'common',
+    });
 
-    // Language detection configuration
-    detection: {
-      // Order of detection
-      order: ['localStorage', 'navigator'],
+  return i18n;
+}
 
-      // Cache user's choice
-      caches: ['localStorage'],
-
-      // localStorage key
-      lookupLocalStorage: 'hardrock_language',
-    },
-
-    interpolation: {
-      escapeValue: false, // React already escapes
-    },
-  });
-
-// Update HTML attributes when language changes
-i18n.on('languageChanged', (lng) => {
-  document.documentElement.lang = lng;
-  document.documentElement.dir = lng === 'ar' ? 'rtl' : 'ltr';
-});
-
-// Set initial direction on page load
-const initialLang = i18n.language || 'en';
-document.documentElement.lang = initialLang;
-document.documentElement.dir = initialLang === 'ar' ? 'rtl' : 'ltr';
+export function setLanguageCookie(language: AppLanguage) {
+  if (typeof document === 'undefined') return;
+  const oneYear = 60 * 60 * 24 * 365;
+  document.cookie = `language=${language}; path=/; max-age=${oneYear}; SameSite=Lax`;
+  document.documentElement.lang = language;
+  document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
+}
 
 export default i18n;
