@@ -28,32 +28,47 @@ This document provides comprehensive context about the HardRock codebase to help
 | Frontend Framework | React | 18 |
 | Type System | TypeScript | 5 |
 | Routing/SPA | Inertia.js | 2.0 |
+| SSR | Inertia SSR + ReactDOMServer (Node renderer) | - |
+| Node Runtime (SSR) | Node | 20+ |
 | Styling | Tailwind CSS | 3 |
 | Animations | CSS Keyframes (landing) + Framer Motion (Services page) | - |
 | Build Tool | Vite | 7 |
+| Package Manager | pnpm | 10 |
 | Database | MySQL | 8.0 |
 | Queue Driver | Database | - |
 | Session Driver | Database | - |
+| Production Host | Railway (Railpack + FrankenPHP) | - |
 
 ---
 
 ## Architecture Overview
 
-### Monolithic SPA with Inertia.js
+### Monolithic SPA with Inertia.js + SSR
 
-The application uses Inertia.js to bridge Laravel backend with React frontend:
+The application uses Inertia.js to bridge Laravel backend with React frontend, with Server-Side Rendering enabled in production for SEO:
 
 1. **Server-side routing** - Laravel handles all routes
-2. **Client-side rendering** - React renders all UI
-3. **No API needed** - Inertia passes data as props to React components
-4. **Form handling** - Inertia's `useForm` hook for form submissions
+2. **SSR rendering** - Production: Laravel POSTs page data to a Node SSR sidecar which renders the React tree to HTML; Googlebot sees full content + crawlable links on first paint
+3. **Client-side hydration** - Browser receives SSR HTML and React hydrates on top
+4. **No API needed** - Inertia passes data as props to React components
+5. **Form handling** - Inertia's `useForm` hook for form submissions
 
-### Request Flow
+### Request Flow (production with SSR)
 ```
 Browser Request → Laravel Router → Controller → Inertia::render()
                                        ↓
-                              React Component (receives props)
+                              [Inertia middleware POSTs page payload to
+                               http://hardrock-ssr.railway.internal:13714]
+                                       ↓
+                              Node SSR renders React → HTML string
+                                       ↓
+                              Laravel injects HTML into Blade template → Response
+                                       ↓
+                              Browser receives populated HTML, React hydrates
 ```
+
+### Local dev (no SSR)
+Local `composer dev` runs Vite + PHP only. SSR is opt-in locally via `INERTIA_SSR_ENABLED=true` + `php artisan inertia:start-ssr` in another terminal. Day-to-day frontend iteration does not need SSR.
 
 ---
 
@@ -93,9 +108,10 @@ hardrock/
 │   ├── css/
 │   │   └── app.css                   # Tailwind + custom CSS
 │   └── js/
-│       ├── app.tsx                   # Inertia entry point
-│       ├── bootstrap.ts              # Axios setup
-│       ├── i18n.ts                   # i18next configuration
+│       ├── app.tsx                   # Client entry point (hydrateRoot when SSR HTML present)
+│       ├── ssr.tsx                   # SSR entry point (Node, eager imports, ReactDOMServer)
+│       ├── bootstrap.ts              # Axios setup (window-guarded for SSR safety)
+│       ├── i18n.ts                   # i18next setup — initI18n(language) + setLanguageCookie()
 │       │
 │       ├── components/
 │       │   ├── ui/                   # Reusable UI components
@@ -296,8 +312,11 @@ const handleSubmit = (e: FormEvent) => {
 ```tsx
 import { useTheme } from '@/contexts/ThemeContext';
 
-const { isDarkMode, toggleTheme } = useTheme();
+const { theme, toggleTheme, setTheme } = useTheme();
+const isLightMode = theme === 'light';
 ```
+
+Theme is initialized from a `theme` cookie (read server-side in `HandleInertiaRequests`, passed as the `appearance.theme` Inertia prop, fed into `<ThemeProvider initialTheme={...}>` in `app.tsx`). Toggling writes the cookie via `document.cookie` so the next request renders the correct `<html class>` server-side. Do **not** introduce a localStorage path — it would reintroduce hydration mismatches.
 
 #### Internationalization
 ```tsx
@@ -306,6 +325,8 @@ import { useTranslation } from 'react-i18next';
 const { t, i18n } = useTranslation();
 const isRTL = i18n.language === 'ar';
 ```
+
+i18n is initialized in `app.tsx` and `ssr.tsx` via `initI18n(appearance.language)` using the language read from the `language` cookie. Switching language is done via `LanguageSwitcher` which calls `i18n.changeLanguage(...)` then `setLanguageCookie(...)` — the latter both writes the cookie and updates `<html lang>` and `<html dir>` for RTL/LTR. Browser language auto-detection is intentionally disabled (deterministic SSR per URL).
 
 #### Page Props Type
 ```tsx
@@ -329,6 +350,15 @@ return Inertia::render('Dashboard/Index', [
     'recentContacts' => $recentContacts,
 ]);
 ```
+
+#### Shared props (HandleInertiaRequests)
+Every Inertia response automatically includes:
+- `auth.user` — current authenticated user or null
+- `appearance.theme` — `'light'` or `'dark'` from the `theme` cookie (defaults `'dark'`)
+- `appearance.language` — `'en'` or `'ar'` from the `language` cookie (defaults `'en'`); also sets Laravel's locale via `app()->setLocale()`
+- `ziggy` — Ziggy route table + current location (needed so `route('name')` resolves during SSR render)
+
+Read these via the page props in any component. Don't bypass them by reading cookies directly in React.
 
 #### Form Validation
 ```php
@@ -439,23 +469,38 @@ $validated = $request->validate([
 ### Setup
 ```bash
 composer install
-npm install
+pnpm install
 cp .env.example .env
 php artisan key:generate
 php artisan migrate
 ```
 
-### Development
+### Development (no SSR — fast iteration)
 ```bash
-php artisan serve          # Laravel server
-npm run dev                # Vite dev server
-php artisan queue:work     # Queue worker
+composer dev               # runs php artisan serve + queue:listen + vite concurrently
+# OR run them separately:
+php artisan serve
+pnpm dev
+php artisan queue:work
+```
+SSR is **off** by default locally. The site works fully — only Googlebot would see an empty body. Phase out via the SSR test workflow below if you need to verify SSR-specific behavior.
+
+### Local SSR test workflow
+```bash
+# Terminal 1
+INERTIA_SSR_ENABLED=true php artisan serve
+
+# Terminal 2
+php artisan inertia:start-ssr
+
+# After any code change in resources/js/
+pnpm build                 # rebuilds both client + ssr bundles
 ```
 
-### Production
+### Production build
 ```bash
-npm run build
-php artisan optimize
+pnpm build                 # = vite build && vite build --ssr
+                           # → public/build/ (client) + bootstrap/ssr/ssr.js (SSR)
 ```
 
 ### Admin User
@@ -518,7 +563,7 @@ php artisan admin:create email@example.com password "Name"
 ### Common Issues
 
 **Vite not loading assets**
-- Ensure both `php artisan serve` and `npm run dev` are running
+- Ensure both `php artisan serve` and `pnpm dev` are running
 
 **Queue jobs not processing**
 - Run `php artisan queue:work`
@@ -528,9 +573,31 @@ php artisan admin:create email@example.com password "Name"
 - Verify user has `is_admin = true`
 - Clear route cache: `php artisan route:clear`
 
-**Dark mode not persisting**
-- Check localStorage for 'theme' key
-- Ensure ThemeProvider wraps the app
+**Dark mode / language not persisting**
+- Check the `theme` and `language` cookies in DevTools → Application → Cookies (NOT localStorage; we migrated)
+- Ensure `<html class>`, `<html lang>`, `<html dir>` are correct on first paint (server-rendered from cookies in `app.blade.php`)
+- If first paint is wrong: `HandleInertiaRequests::share()` is the source of truth — verify cookie names match
+
+### SSR-specific Issues
+
+**Production body is ~32–42 KB instead of ~80–100 KB**
+- HardRock can't reach hardrock-ssr. Check:
+  1. `INERTIA_SSR_ENABLED=true` and `INERTIA_SSR_URL=http://hardrock-ssr.railway.internal:13714` are set on the HardRock service
+  2. hardrock-ssr service is **Online** in the Railway canvas
+  3. hardrock-ssr deploy logs show `Inertia SSR server started.` (not crashing)
+- Inertia falls back to client-only rendering when SSR is unreachable, which is what produces the smaller body.
+
+**hardrock-ssr crashes with `ERR_MODULE_NOT_FOUND`**
+- A package needed at SSR runtime is in `devDependencies` and got pruned by `pnpm prune --prod`. Move it to `dependencies` in `package.json`, regenerate `pnpm-lock.yaml` (`pnpm install --lockfile-only`), commit, redeploy.
+- React, react-dom, @inertiajs/react, axios MUST stay in `dependencies` for this reason.
+
+**Hydration mismatches in browser console**
+- Usually means SSR rendered something different than the client expects on first render. Common causes:
+  - Reading `window`/`document`/`localStorage` during render (must be in `useEffect`)
+  - Theme/language state diverging — `<ThemeProvider initialTheme>` and `initI18n(language)` must use the same values the server rendered (i.e. from `appearance` Inertia prop)
+
+**`route('name')` errors in SSR-rendered components**
+- Ziggy data is shared via the `ziggy` Inertia prop and rebound to `globalThis.route` inside `ssr.tsx`. If you're seeing route errors, confirm `HandleInertiaRequests::share()` includes the `ziggy` key.
 
 ---
 
@@ -549,7 +616,13 @@ php artisan admin:create email@example.com password "Name"
 | Dashboard Layout | resources/js/layouts/DashboardLayout.tsx |
 | Theme Toggle | resources/js/components/ThemeToggle.tsx |
 | Language Switcher | resources/js/components/LanguageSwitcher.tsx |
+| Theme Context | resources/js/contexts/ThemeContext.tsx |
 | i18n Config | resources/js/i18n.ts |
+| Client Entry (hydrate) | resources/js/app.tsx |
+| SSR Entry (Node) | resources/js/ssr.tsx |
+| SSR Build Output | bootstrap/ssr/ssr.js (gitignored, built by `pnpm build`) |
+| Inertia SSR Config | config/inertia.php |
+| Inertia Shared Props | app/Http/Middleware/HandleInertiaRequests.php |
 | Tailwind Config | tailwind.config.js |
 | Vite Config | vite.config.js |
 | Routes | routes/web.php, routes/auth.php |
@@ -608,6 +681,55 @@ BREEZE_API_KEY=
 # Queue & Session
 QUEUE_CONNECTION=database
 SESSION_DRIVER=database
+
+# Inertia SSR (production only — set on the HardRock service in Railway)
+INERTIA_SSR_ENABLED=true
+INERTIA_SSR_URL=http://hardrock-ssr.railway.internal:13714
+```
+
+---
+
+## Production Deployment (Railway)
+
+The site runs on **Railway** with the **Railpack** builder producing a **FrankenPHP** image. There is no Nixpacks config — Railway auto-detects the project as Laravel via Railpack and runs the build/start steps for you. Do not add a `nixpacks.toml` expecting it to be honored; Railpack uses its own auto-detection.
+
+### Services in the Railway project
+| Service | Role | Start command |
+|---------|------|---------------|
+| `HardRock` | Main web service (FrankenPHP serving www.hardrock-co.com) | Auto (Railpack default) |
+| `hardrock-ssr` | Inertia SSR Node renderer | `node bootstrap/ssr/ssr.js` (custom) |
+| `hardrock-worker` | Queue worker | `php artisan queue:work` |
+| `MySQL` | Database | (managed by Railway) |
+
+### How SSR is wired
+- `hardrock-ssr` exposes only a **private** domain: `hardrock-ssr.railway.internal` on port `13714` (Inertia's default port, hardcoded in `resources/js/ssr.tsx`)
+- HardRock has env vars `INERTIA_SSR_ENABLED=true` and `INERTIA_SSR_URL=http://hardrock-ssr.railway.internal:13714`
+- Each request to HardRock: PHP renders the page payload, POSTs it to the SSR service, gets back HTML, injects it into the Blade template, returns to the browser
+- If hardrock-ssr is down or unreachable, Inertia falls back to client-only rendering (degraded SEO but service stays up)
+
+### Build phase (both web services)
+Both HardRock and hardrock-ssr run identical builds (same repo, same Railpack auto-detection):
+1. `composer install --no-dev --optimize-autoloader`
+2. `pnpm install --frozen-lockfile`
+3. `pnpm build` → produces `public/build/` (client) AND `bootstrap/ssr/ssr.js` (SSR bundle)
+4. `php artisan config:cache && route:cache && view:cache`
+5. `pnpm prune --prod --ignore-scripts` → strips devDependencies
+
+This is why React/react-dom/@inertiajs/react/axios MUST be in `dependencies` — they're externalized in the SSR bundle and need to survive prune.
+
+### Deploy / config flow
+- Code change: push to `main` → both HardRock and hardrock-ssr auto-redeploy in parallel
+- Variable change on HardRock: HardRock auto-redeploys
+- Variable change on hardrock-ssr: hardrock-ssr auto-redeploys
+- Manual redeploy: Service → Deployments → three-dot menu → Redeploy
+
+### Verifying SSR in production
+```bash
+curl -s -A "Googlebot" --compressed https://www.hardrock-co.com/services/seo | wc -c
+# Expected: ~80,000–100,000  (was ~908 pre-SSR)
+
+curl -s -A "Googlebot" --compressed https://www.hardrock-co.com/ | grep -oE 'href="/services/[^"]+"' | sort -u | wc -l
+# Expected: 6
 ```
 
 ---
@@ -640,6 +762,8 @@ SESSION_DRIVER=database
 | Auth/Dashboard noindex | ✅ Done | All Auth + Dashboard pages |
 | Footer social links aria-labels | ✅ Done | `resources/js/components/landing/Footer.tsx` |
 | Cookie consent (CookieYes) | ✅ Done | `resources/views/app.blade.php` |
+| **SSR for full-body crawl** | ✅ Done (2026-05-02) | `resources/js/ssr.tsx` + `hardrock-ssr` Railway service. Body went from ~908 B to 70–100 KB; all 6 service hrefs visible to Googlebot on every page |
+| Server-rendered `<html lang dir class>` | ✅ Done | `resources/views/app.blade.php` reads `theme` + `language` cookies |
 
 ### TODO: When Adding News/Blog Section
 
@@ -707,4 +831,4 @@ Target these keyword themes in blog posts:
 
 ---
 
-> **Last updated:** 2026-04-13 — based on commit `c7a1f1f` (*Add API endpoint for Breeze AI agent lead submissions*)
+> **Last updated:** 2026-05-02 — based on commit `82ea43a` (*Inertia SSR rollout: separate Railway service, cookie-based appearance, full server-rendered body for crawlers*)
