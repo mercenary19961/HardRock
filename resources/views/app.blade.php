@@ -3,6 +3,15 @@
     $baseUrl = 'https://www.hardrock-co.com';
     $currentUrl = $path === '/' ? $baseUrl . '/' : $baseUrl . '/' . $path;
 
+    // Server-aware appearance (read from cookies; defaults match React initial state)
+    $language = in_array(request()->cookie('language'), ['en', 'ar'], true)
+        ? request()->cookie('language')
+        : 'en';
+    $theme = in_array(request()->cookie('theme'), ['light', 'dark'], true)
+        ? request()->cookie('theme')
+        : 'dark';
+    $dir = $language === 'ar' ? 'rtl' : 'ltr';
+
     // Pages that should not be indexed
     $noIndex = str_starts_with($path, 'dashboard') || str_starts_with($path, 'login')
         || str_starts_with($path, 'forgot-password') || str_starts_with($path, 'reset-password');
@@ -61,7 +70,7 @@
     $ogImage = $seo['ogImage'] ?? $baseUrl . '/images/og-image-2.webp';
 @endphp
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ $language }}" dir="{{ $dir }}" class="{{ $theme }}">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -84,8 +93,8 @@
         <meta property="og:description" content="{{ $ogDescription }}">
         <meta property="og:image" content="{{ $ogImage }}">
         <meta property="og:site_name" content="HardRock">
-        <meta property="og:locale" content="en_US">
-        <meta property="og:locale:alternate" content="ar_AR">
+        <meta property="og:locale" content="{{ $language === 'ar' ? 'ar_AR' : 'en_US' }}">
+        <meta property="og:locale:alternate" content="{{ $language === 'ar' ? 'en_US' : 'ar_AR' }}">
 
         <!-- Twitter -->
         <meta property="twitter:card" content="summary_large_image">

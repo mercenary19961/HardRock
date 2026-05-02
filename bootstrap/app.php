@@ -17,6 +17,12 @@ return Application::configure(basePath: dirname(__DIR__))
             \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
         ]);
 
+        // Read/written by both PHP (server-render) and JS (toggle handlers)
+        $middleware->encryptCookies(except: [
+            'theme',
+            'language',
+        ]);
+
         $middleware->alias([
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
             'api.key' => \App\Http\Middleware\ApiKeyMiddleware::class,

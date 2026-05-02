@@ -10,13 +10,19 @@ export default defineConfig({
     plugins: [
         laravel({
             input: 'resources/js/app.tsx',
+            ssr: 'resources/js/ssr.tsx',
             refresh: true,
         }),
         react(),
     ],
+    ssr: {
+        // Bundle these into the SSR output instead of expecting them at runtime
+        noExternal: ['ziggy-js', 'react-i18next', 'i18next', '@inertiajs/react', 'framer-motion'],
+    },
     resolve: {
         alias: {
             '@': path.resolve(__dirname, './resources/js'),
+            'ziggy-js': path.resolve(__dirname, './vendor/tightenco/ziggy/dist/index.esm.js'),
         },
         extensions: ['.tsx', '.ts', '.jsx', '.js', '.mjs', '.mts', '.json'],
     },

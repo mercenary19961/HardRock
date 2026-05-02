@@ -1,5 +1,5 @@
 import { Head } from '@inertiajs/react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Navbar from '@/components/landing/Navbar';
 import Hero from '@/components/landing/Hero';
 import WhyHardRock from '@/components/landing/WhyHardRock';
@@ -12,21 +12,19 @@ import WhatsAppButton from '@/components/landing/WhatsAppButton';
 import SmoothScroll from '@/components/SmoothScroll';
 
 export default function Landing() {
-    // Check if navigated directly to contact section (e.g., from services page CTA)
-    const isDirectToContact = typeof window !== 'undefined' && window.location.hash === '#contact-us';
+    // Server and first client render both default to false to keep markup identical;
+    // after mount we read the hash and trigger the scroll-to-contact behavior.
+    const [isDirectToContact, setIsDirectToContact] = useState(false);
 
-    // Programmatically scroll to #contact-us after DOM is fully laid out.
-    // Native hash-anchor scrolling is unreliable because content-visibility: auto
-    // gives sections placeholder heights, and Lenis overrides native scroll behavior.
     useEffect(() => {
-        if (!isDirectToContact) return;
+        if (window.location.hash !== '#contact-us') return;
+        setIsDirectToContact(true);
 
         const timer = setTimeout(() => {
             const el = document.getElementById('contact-us');
             if (el) {
                 el.scrollIntoView({ behavior: 'instant', block: 'start' });
             }
-            // Clean up the hash so refreshing doesn't re-trigger the scroll
             history.replaceState(null, '', window.location.pathname);
         }, 150);
 

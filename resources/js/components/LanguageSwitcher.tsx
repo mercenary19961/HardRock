@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { setLanguageCookie, type AppLanguage } from '@/i18n';
 
 const GlobeIcon = ({ className }: { className?: string }) => (
   <svg
@@ -21,10 +22,10 @@ export default function LanguageSwitcher() {
   const { i18n } = useTranslation();
 
   const toggleLanguage = () => {
-    // Get current language and normalize it (handles 'en-US' -> 'en')
-    const currentLang = i18n.language?.startsWith('ar') ? 'ar' : 'en';
-    const newLang = currentLang === 'en' ? 'ar' : 'en';
+    const currentLang: AppLanguage = i18n.language?.startsWith('ar') ? 'ar' : 'en';
+    const newLang: AppLanguage = currentLang === 'en' ? 'ar' : 'en';
     i18n.changeLanguage(newLang);
+    setLanguageCookie(newLang);
   };
 
   // Get current language for display (normalized)
