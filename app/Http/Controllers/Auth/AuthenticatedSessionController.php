@@ -19,7 +19,7 @@ class AuthenticatedSessionController extends Controller
     public function create(): RedirectResponse|Response
     {
         if (Auth::check()) {
-            return redirect()->intended(route('admin.index', absolute: false));
+            return redirect()->route('admin.index');
         }
 
         return Inertia::render('Auth/Login', [
