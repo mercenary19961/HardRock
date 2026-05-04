@@ -10,12 +10,12 @@ This document provides comprehensive context about the HardRock codebase to help
 
 ### Key URLs
 - Production: https://hardrock-co.com
-- Admin Dashboard: https://hardrock-co.com/dashboard
+- Admin Panel: https://hardrock-co.com/admin
 
 ### Business Purpose
 - Showcase digital marketing services
 - Generate leads via contact form
-- Manage contact submissions and team members via admin dashboard
+- Manage contact submissions and team members via admin panel
 
 ---
 
@@ -267,12 +267,12 @@ Laravel queue system tables.
 |--------|-----|------|-------------|
 | POST | /logout | logout | Logout user |
 
-### Dashboard Routes (Authenticated)
+### Admin Routes (Authenticated)
 | Method | URI | Name | Description |
 |--------|-----|------|-------------|
-| GET | /dashboard | dashboard.index | Dashboard home |
-| GET | /dashboard/contacts | dashboard.contacts | Contacts list |
-| DELETE | /dashboard/contacts/{id} | dashboard.contacts.destroy | Delete contact |
+| GET | /admin | admin.index | Admin panel home |
+| GET | /admin/contacts | admin.contacts.index | Contacts list |
+| DELETE | /admin/contacts/{id} | admin.contacts.destroy | Delete contact |
 
 ### API Routes (External)
 | Method | URI | Name | Description |
@@ -282,10 +282,10 @@ Laravel queue system tables.
 ### Admin-Only Routes
 | Method | URI | Name | Description |
 |--------|-----|------|-------------|
-| GET | /dashboard/users | dashboard.users | Team members list |
-| POST | /dashboard/users | dashboard.users.store | Create team member |
-| PUT | /dashboard/users/{id} | dashboard.users.update | Update team member |
-| DELETE | /dashboard/users/{id} | dashboard.users.destroy | Delete team member |
+| GET | /admin/users | admin.users.index | Team members list |
+| POST | /admin/users | admin.users.store | Create team member |
+| PUT | /admin/users/{id} | admin.users.update | Update team member |
+| DELETE | /admin/users/{id} | admin.users.destroy | Delete team member |
 
 ---
 
@@ -541,7 +541,7 @@ php artisan admin:create email@example.com password "Name"
 1. Create controller method returning Inertia::render()
 2. Add route in routes/web.php
 3. Create React page component in resources/js/pages/
-4. If dashboard page, wrap with DashboardLayout
+4. If admin page, wrap with DashboardLayout
 
 ### Adding Translations
 
@@ -549,7 +549,9 @@ php artisan admin:create email@example.com password "Name"
 2. Add Arabic translations to resources/js/locales/ar/*.json
 3. Use `t('namespace.key')` in components
 
-### Adding Dashboard Feature
+### Adding Admin Feature
+
+> Note: URLs live under `/admin/...` with route names `admin.*`, but internal folder/class names (`Dashboard/`, `DashboardController`, `DashboardLayout`) were intentionally kept to avoid an unnecessary autoload/imports refactor.
 
 1. Add controller in app/Http/Controllers/Dashboard/
 2. Add routes (with appropriate middleware)
@@ -759,7 +761,7 @@ curl -s -A "Googlebot" --compressed https://www.hardrock-co.com/ | grep -oE 'hre
 | Image alt text | ✅ Done | All components |
 | Heading hierarchy (single h1 per page) | ✅ Done | Hero=h1, Services/ContactUs=h2 |
 | Crawlable navigation links | ✅ Done | Service buttons use `<a href>`, CTAs use `<a href>` |
-| Auth/Dashboard noindex | ✅ Done | All Auth + Dashboard pages |
+| Auth/Admin noindex | ✅ Done | `app.blade.php` checks paths starting with `admin` or `login` |
 | Footer social links aria-labels | ✅ Done | `resources/js/components/landing/Footer.tsx` |
 | Cookie consent (CookieYes) | ✅ Done | `resources/views/app.blade.php` |
 | **SSR for full-body crawl** | ✅ Done (2026-05-02) | `resources/js/ssr.tsx` + `hardrock-ssr` Railway service. Body went from ~908 B to 70–100 KB; all 6 service hrefs visible to Googlebot on every page |
@@ -831,4 +833,4 @@ Target these keyword themes in blog posts:
 
 ---
 
-> **Last updated:** 2026-05-02 — based on commit `82ea43a` (*Inertia SSR rollout: separate Railway service, cookie-based appearance, full server-rendered body for crawlers*)
+> **Last updated:** 2026-05-04 — based on commit `47197b9` (*rename /dashboard routes and route names to /admin; URL prefix and route names changed, internal folder/class names kept*)

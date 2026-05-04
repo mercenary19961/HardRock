@@ -107,7 +107,7 @@ export default function DashboardIndex({ stats, auth }: DashboardIndexProps) {
                     </div>
                     <div className="mt-4">
                         <Link
-                            href={route('dashboard.contacts.index')}
+                            href={route('admin.contacts.index')}
                             className="text-sm text-brand-purple hover:underline inline-flex items-center gap-1"
                         >
                             View all contacts
@@ -156,14 +156,14 @@ export default function DashboardIndex({ stats, auth }: DashboardIndexProps) {
                     </div>
                     <div className="space-y-2">
                         <Link
-                            href={route('dashboard.contacts.index')}
+                            href={route('admin.contacts.index')}
                             className="block w-full text-left px-3 py-2 text-sm rounded-lg bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                         >
                             View Contact Submissions
                         </Link>
                         {auth?.user.is_admin && (
                             <Link
-                                href={route('dashboard.users.index')}
+                                href={route('admin.users.index')}
                                 className="block w-full text-left px-3 py-2 text-sm rounded-lg bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                             >
                                 Manage Team Members
@@ -181,7 +181,7 @@ export default function DashboardIndex({ stats, auth }: DashboardIndexProps) {
                             Recent Contact Submissions
                         </h3>
                         <Link
-                            href={route('dashboard.contacts.index')}
+                            href={route('admin.contacts.index')}
                             className="text-sm text-brand-purple hover:underline"
                         >
                             View all
