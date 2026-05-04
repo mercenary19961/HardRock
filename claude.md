@@ -10,7 +10,7 @@ This document provides comprehensive context about the HardRock codebase to help
 
 ### Key URLs
 - Production: https://hardrock-co.com
-- Admin Dashboard: https://hardrock-co.com/dashboard
+- Admin Panel: https://hardrock-co.com/admin
 
 ### Business Purpose
 - Showcase digital marketing services
@@ -267,12 +267,12 @@ Laravel queue system tables.
 |--------|-----|------|-------------|
 | POST | /logout | logout | Logout user |
 
-### Dashboard Routes (Authenticated)
+### Admin Routes (Authenticated)
 | Method | URI | Name | Description |
 |--------|-----|------|-------------|
-| GET | /dashboard | dashboard.index | Dashboard home |
-| GET | /dashboard/contacts | dashboard.contacts | Contacts list |
-| DELETE | /dashboard/contacts/{id} | dashboard.contacts.destroy | Delete contact |
+| GET | /admin | admin.index | Admin panel home |
+| GET | /admin/contacts | admin.contacts.index | Contacts list |
+| DELETE | /admin/contacts/{id} | admin.contacts.destroy | Delete contact |
 
 ### API Routes (External)
 | Method | URI | Name | Description |
@@ -282,10 +282,10 @@ Laravel queue system tables.
 ### Admin-Only Routes
 | Method | URI | Name | Description |
 |--------|-----|------|-------------|
-| GET | /dashboard/users | dashboard.users | Team members list |
-| POST | /dashboard/users | dashboard.users.store | Create team member |
-| PUT | /dashboard/users/{id} | dashboard.users.update | Update team member |
-| DELETE | /dashboard/users/{id} | dashboard.users.destroy | Delete team member |
+| GET | /admin/users | admin.users.index | Team members list |
+| POST | /admin/users | admin.users.store | Create team member |
+| PUT | /admin/users/{id} | admin.users.update | Update team member |
+| DELETE | /admin/users/{id} | admin.users.destroy | Delete team member |
 
 ---
 

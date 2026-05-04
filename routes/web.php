@@ -36,8 +36,8 @@ Route::get('/services/{slug?}', function (Illuminate\Http\Request $request, stri
     ]);
 })->name('services');
 
-// Dashboard (Protected - accessible by all authenticated team members)
-Route::middleware(['auth'])->prefix('dashboard')->name('dashboard.')->group(function () {
+// Admin Panel (Protected - accessible by all authenticated team members)
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     // Dashboard Home
     Route::get('/', [DashboardController::class, 'index'])->name('index');
 

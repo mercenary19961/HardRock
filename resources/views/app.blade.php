@@ -13,7 +13,7 @@
     $dir = $language === 'ar' ? 'rtl' : 'ltr';
 
     // Pages that should not be indexed
-    $noIndex = str_starts_with($path, 'dashboard') || str_starts_with($path, 'login')
+    $noIndex = str_starts_with($path, 'admin') || str_starts_with($path, 'login')
         || str_starts_with($path, 'forgot-password') || str_starts_with($path, 'reset-password');
 
     // Service-specific SEO data

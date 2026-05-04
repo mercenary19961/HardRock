@@ -6,7 +6,6 @@ Allow: /
 
 # Disallow admin and sensitive areas
 Disallow: /admin/
-Disallow: /dashboard/
 Disallow: /api/
 Disallow: /*.json$
 

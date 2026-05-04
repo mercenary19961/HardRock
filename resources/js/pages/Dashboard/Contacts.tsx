@@ -24,7 +24,7 @@ export default function Contacts({ contacts }: ContactsProps) {
     const handleDelete = (contactId: number) => {
         if (confirm('Are you sure you want to delete this contact?')) {
             setDeletingId(contactId);
-            router.delete(route('dashboard.contacts.destroy', contactId), {
+            router.delete(route('admin.contacts.destroy', contactId), {
                 onFinish: () => setDeletingId(null),
             });
         }

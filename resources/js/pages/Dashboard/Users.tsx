@@ -148,7 +148,7 @@ export default function Users({ users }: UsersProps) {
         setErrors({});
 
         if (editingUser) {
-            router.put(route('dashboard.users.update', editingUser.id), formData, {
+            router.put(route('admin.users.update', editingUser.id), formData, {
                 onSuccess: () => {
                     closeModal();
                 },
@@ -158,7 +158,7 @@ export default function Users({ users }: UsersProps) {
                 onFinish: () => setProcessing(false),
             });
         } else {
-            router.post(route('dashboard.users.store'), formData, {
+            router.post(route('admin.users.store'), formData, {
                 onSuccess: () => {
                     closeModal();
                 },
@@ -173,7 +173,7 @@ export default function Users({ users }: UsersProps) {
     const handleDelete = (user: TeamUser) => {
         if (confirm(`Are you sure you want to remove ${user.name} from the team?`)) {
             setDeletingId(user.id);
-            router.delete(route('dashboard.users.destroy', user.id), {
+            router.delete(route('admin.users.destroy', user.id), {
                 onFinish: () => setDeletingId(null),
             });
         }
