@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef, FormEvent } from "react";
-import { router } from "@inertiajs/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -192,8 +191,6 @@ interface AnimatedCharactersLoginPageProps {
   setRemember: (remember: boolean) => void;
   processing: boolean;
   errors: { email?: string; password?: string };
-  isAuthenticated?: boolean;
-  userName?: string;
 }
 
 export function AnimatedCharactersLoginPage({
@@ -206,8 +203,6 @@ export function AnimatedCharactersLoginPage({
   setRemember,
   processing,
   errors,
-  isAuthenticated = false,
-  userName,
 }: AnimatedCharactersLoginPageProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [mouseX, setMouseX] = useState<number>(0);
@@ -548,35 +543,14 @@ export function AnimatedCharactersLoginPage({
           {/* Header */}
           <div className="text-center mb-10">
             <h1 className="text-3xl font-bold tracking-tight mb-2">
-              {isAuthenticated ? `Welcome, ${userName}!` : 'Welcome back!'}
+              Welcome back!
             </h1>
             <p className="text-muted-foreground text-sm">
-              {isAuthenticated ? 'You are already logged in' : 'Please enter your details'}
+              Please enter your details
             </p>
           </div>
 
-          {isAuthenticated ? (
-            /* Authenticated User View */
-            <div className="space-y-5">
-              <a
-                href="/admin"
-                className="flex items-center justify-center w-full h-12 text-base font-medium bg-brand-purple hover:bg-brand-purple/90 text-white rounded-md transition-colors"
-              >
-                Go to Dashboard
-              </a>
-              <div className="text-center">
-                <button
-                  type="button"
-                  onClick={() => router.post('/logout')}
-                  className="text-sm text-brand-purple hover:underline font-medium"
-                >
-                  Sign out and use a different account
-                </button>
-              </div>
-            </div>
-          ) : (
-            /* Login Form */
-            <form onSubmit={onSubmit} className="space-y-5">
+          <form onSubmit={onSubmit} className="space-y-5">
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-sm font-medium">Email</Label>
                 <Input
@@ -657,7 +631,6 @@ export function AnimatedCharactersLoginPage({
                 {processing ? "Signing in..." : "Log in"}
               </Button>
             </form>
-          )}
 
           {/* Sign Up Link */}
           <div className="text-center text-sm text-muted-foreground mt-8">
