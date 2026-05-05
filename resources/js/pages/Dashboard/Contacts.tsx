@@ -4,6 +4,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { TableSkeleton } from '@/components/ui/table-skeleton';
+import { useIsNavigating } from '@/hooks/useIsNavigating';
 
 interface Contact {
     id: number;
@@ -65,6 +67,7 @@ const StatusBadge = ({ status }: { status: string }) => (
 export default function Contacts({ contacts, filters, statuses }: ContactsProps) {
     const { auth } = usePage().props as { auth: { user: { is_admin: boolean } } };
     const isAdmin = auth.user.is_admin;
+    const navigating = useIsNavigating();
 
     const [search, setSearch] = useState(filters.search);
     const [statusFilter, setStatusFilter] = useState(filters.status);
@@ -266,7 +269,7 @@ export default function Contacts({ contacts, filters, statuses }: ContactsProps)
             {/* Table */}
             <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div className="p-6 text-gray-900 dark:text-gray-100">
-                    {contacts.data.length === 0 ? (
+                    {contacts.data.length === 0 && !navigating ? (
                         <div className="text-center py-12">
                             <p className="text-gray-500 dark:text-gray-400">
                                 {filters.archived ? 'No archived contacts.' : 'No contacts match your filters.'}
@@ -287,7 +290,9 @@ export default function Contacts({ contacts, filters, statuses }: ContactsProps)
                                     </tr>
                                 </thead>
                                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                                    {contacts.data.map((contact) => (
+                                    {navigating ? (
+                                        <TableSkeleton rows={6} cols={7} />
+                                    ) : contacts.data.map((contact) => (
                                         <tr
                                             key={contact.id}
                                             className="hover:bg-gray-50 dark:hover:bg-gray-700/40 cursor-pointer"

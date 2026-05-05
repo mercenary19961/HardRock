@@ -3,6 +3,8 @@ import DashboardLayout from '@/layouts/DashboardLayout';
 import { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { TableSkeleton } from '@/components/ui/table-skeleton';
+import { useIsNavigating } from '@/hooks/useIsNavigating';
 
 interface Lead {
     id: number;
@@ -46,6 +48,7 @@ interface LeadsProps {
 }
 
 export default function Leads({ leads, filters, sources }: LeadsProps) {
+    const navigating = useIsNavigating();
     const [search, setSearch] = useState(filters.search);
     const [sourceFilter, setSourceFilter] = useState(filters.source);
     const [from, setFrom] = useState(filters.from);
@@ -182,7 +185,7 @@ export default function Leads({ leads, filters, sources }: LeadsProps) {
             {/* Table */}
             <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div className="p-6 text-gray-900 dark:text-gray-100">
-                    {leads.data.length === 0 ? (
+                    {leads.data.length === 0 && !navigating ? (
                         <div className="text-center py-12">
                             <p className="text-gray-500 dark:text-gray-400">No leads match your filters.</p>
                         </div>
@@ -200,7 +203,9 @@ export default function Leads({ leads, filters, sources }: LeadsProps) {
                                     </tr>
                                 </thead>
                                 <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                                    {leads.data.map((lead) => (
+                                    {navigating ? (
+                                        <TableSkeleton rows={6} cols={6} />
+                                    ) : leads.data.map((lead) => (
                                         <tr key={lead.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/40">
                                             <td className="px-4 py-3 whitespace-nowrap text-sm font-medium">
                                                 {lead.first_name} {lead.last_name}

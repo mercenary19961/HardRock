@@ -6,23 +6,28 @@ export function PageLoader() {
     const [progress, setProgress] = useState(0);
 
     useEffect(() => {
-        const startHandler = () => {
+        let interval: ReturnType<typeof setInterval> | undefined;
+
+        const startHandler = (event: any) => {
+            // Skip the full-screen loader for in-page navigations (filters, pagination, tabs).
+            // Those are sub-second and use scoped skeletons instead.
+            if (event?.detail?.visit?.preserveState) return;
+
             setIsLoading(true);
             setProgress(0);
-            // Animate progress
-            const interval = setInterval(() => {
+            interval = setInterval(() => {
                 setProgress((prev) => {
                     if (prev >= 90) {
-                        clearInterval(interval);
+                        if (interval) clearInterval(interval);
                         return 90;
                     }
                     return prev + Math.random() * 15;
                 });
             }, 100);
-            return () => clearInterval(interval);
         };
 
         const finishHandler = () => {
+            if (interval) clearInterval(interval);
             setProgress(100);
             setTimeout(() => {
                 setIsLoading(false);
@@ -30,12 +35,13 @@ export function PageLoader() {
             }, 200);
         };
 
-        router.on('start', startHandler);
-        router.on('finish', finishHandler);
+        const offStart = router.on('start', startHandler);
+        const offFinish = router.on('finish', finishHandler);
 
         return () => {
-            router.on('start', startHandler);
-            router.on('finish', finishHandler);
+            offStart();
+            offFinish();
+            if (interval) clearInterval(interval);
         };
     }, []);
 
