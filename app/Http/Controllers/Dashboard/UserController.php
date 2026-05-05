@@ -93,6 +93,7 @@ class UserController extends Controller
             return back()->withErrors(['delete' => 'You cannot delete your own account.']);
         }
 
+        /** @var \Illuminate\Database\Eloquent\Model $user */
         $user->delete();
 
         return back()->with('success', 'Team member removed successfully.');
