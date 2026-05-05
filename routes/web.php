@@ -41,11 +41,16 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     // Dashboard Home
     Route::get('/', [DashboardController::class, 'index'])->name('index');
 
-    // Contacts - viewable by all team members
+    // Contacts - viewable + editable (status/notes) by all team members
     Route::get('/contacts', [DashboardContactController::class, 'index'])->name('contacts.index');
+    Route::get('/contacts/export', [DashboardContactController::class, 'export'])->name('contacts.export');
+    Route::put('/contacts/{contact}', [DashboardContactController::class, 'update'])->name('contacts.update');
 
-    // Admin-only actions (delete is protected in controller)
+    // Admin-only contact actions (archive + restore are protected in controller)
     Route::delete('/contacts/{contact}', [DashboardContactController::class, 'destroy'])->name('contacts.destroy');
+    Route::post('/contacts/{id}/restore', [DashboardContactController::class, 'restore'])
+        ->whereNumber('id')
+        ->name('contacts.restore');
 
     // Admin-only routes
     Route::middleware(['admin'])->group(function () {
