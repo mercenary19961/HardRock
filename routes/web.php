@@ -3,6 +3,7 @@
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\Dashboard\ContactController as DashboardContactController;
 use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\Dashboard\LeadController as DashboardLeadController;
 use App\Http\Controllers\Dashboard\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -51,6 +52,10 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::post('/contacts/{id}/restore', [DashboardContactController::class, 'restore'])
         ->whereNumber('id')
         ->name('contacts.restore');
+
+    // Leads (from Breeze AI agent) - viewable by all team members
+    Route::get('/leads', [DashboardLeadController::class, 'index'])->name('leads.index');
+    Route::get('/leads/export', [DashboardLeadController::class, 'export'])->name('leads.export');
 
     // Admin-only routes
     Route::middleware(['admin'])->group(function () {
