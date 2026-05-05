@@ -3,6 +3,7 @@
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\Dashboard\ContactController as DashboardContactController;
 use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\Dashboard\LeadController as DashboardLeadController;
 use App\Http\Controllers\Dashboard\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -41,11 +42,20 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     // Dashboard Home
     Route::get('/', [DashboardController::class, 'index'])->name('index');
 
-    // Contacts - viewable by all team members
+    // Contacts - viewable + editable (status/notes) by all team members
     Route::get('/contacts', [DashboardContactController::class, 'index'])->name('contacts.index');
+    Route::get('/contacts/export', [DashboardContactController::class, 'export'])->name('contacts.export');
+    Route::put('/contacts/{contact}', [DashboardContactController::class, 'update'])->name('contacts.update');
 
-    // Admin-only actions (delete is protected in controller)
+    // Admin-only contact actions (archive + restore are protected in controller)
     Route::delete('/contacts/{contact}', [DashboardContactController::class, 'destroy'])->name('contacts.destroy');
+    Route::post('/contacts/{id}/restore', [DashboardContactController::class, 'restore'])
+        ->whereNumber('id')
+        ->name('contacts.restore');
+
+    // Leads (from Breeze AI agent) - viewable by all team members
+    Route::get('/leads', [DashboardLeadController::class, 'index'])->name('leads.index');
+    Route::get('/leads/export', [DashboardLeadController::class, 'export'])->name('leads.export');
 
     // Admin-only routes
     Route::middleware(['admin'])->group(function () {
