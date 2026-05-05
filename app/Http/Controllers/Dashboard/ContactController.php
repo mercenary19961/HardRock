@@ -27,6 +27,7 @@ class ContactController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
+        /** @var \Illuminate\Database\Eloquent\Model $contact */
         $contact->delete();
 
         return back()->with('success', 'Contact deleted successfully');
