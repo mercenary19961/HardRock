@@ -25,6 +25,16 @@ return [
 
         'url' => env('INERTIA_SSR_URL', 'http://127.0.0.1:13714'),
 
+        // Max seconds to wait for a response from the SSR sidecar before giving
+        // up and falling back to client-side rendering. Kept well under
+        // Railway's ~15s proxy timeout so a hung sidecar can't 502 the site.
+        'timeout' => (float) env('INERTIA_SSR_TIMEOUT', 3),
+
+        // Max seconds to wait while establishing the TCP connection to the
+        // sidecar (e.g. when SSR is down/restarting and the connection is
+        // refused or unroutable).
+        'connect_timeout' => (float) env('INERTIA_SSR_CONNECT_TIMEOUT', 2),
+
         'ensure_bundle_exists' => (bool) env('INERTIA_SSR_ENSURE_BUNDLE_EXISTS', true),
 
         // 'bundle' => base_path('bootstrap/ssr/ssr.mjs'),
