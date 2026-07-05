@@ -52,6 +52,18 @@ const SERVICE_META_DESCRIPTIONS: Record<string, string> = {
     'software-ai': 'AI solutions and software development in Jordan. HardRock builds custom AI-powered tools and software for businesses in Amman and the MENA region.',
 };
 
+// MUST mirror $serviceSeo titles in resources/views/app.blade.php exactly.
+// Blade and SSR each emit a <title> tag; if these diverge, crawlers see two
+// different titles on the same page.
+const SERVICE_TITLES: Record<string, string> = {
+    'social-media': 'Social Media Management | HardRock - Digital Marketing Agency Jordan',
+    'paid-ads': 'Meta & Google Ads Management | HardRock - Digital Marketing Agency Jordan',
+    'seo': 'SEO Services in Jordan | HardRock - Digital Marketing Agency',
+    'pr-social-listening': 'PR & Social Listening | HardRock - Digital Marketing Agency Jordan',
+    'branding': 'Branding Services in Jordan | HardRock - Digital Marketing Agency',
+    'software-ai': 'Software & AI Solutions in Jordan | HardRock - Digital Marketing Agency',
+};
+
 export default function Services({ serviceSlug, fromNav = false }: ServicesProps) {
     const { t, i18n } = useTranslation('serviceDetail');
     const { theme } = useTheme();
@@ -75,7 +87,7 @@ export default function Services({ serviceSlug, fromNav = false }: ServicesProps
 
     return (
         <>
-            <Head title={`${serviceData?.hero?.title || 'Services'} | HardRock - Digital Marketing Agency Jordan`}>
+            <Head title={SERVICE_TITLES[serviceSlug] || 'Services | HardRock - Digital Marketing Agency Jordan'}>
                 <script type="application/ld+json">{JSON.stringify({
                     "@context": "https://schema.org",
                     "@type": "Service",

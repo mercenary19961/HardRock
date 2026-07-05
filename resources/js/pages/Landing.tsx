@@ -84,7 +84,8 @@ export default function Landing() {
 
     return (
         <>
-            <Head title="Smart Digital Solutions for Growth" />
+            {/* Must match the default $pageTitle in app.blade.php — see SERVICE_TITLES note in Services.tsx */}
+            <Head title="HardRock | Digital Marketing Agency & AI Solutions in Jordan" />
 
             <SmoothScroll>
                 <div className="min-h-screen bg-background text-foreground font-sans antialiased selection:bg-primary/20 selection:text-primary">

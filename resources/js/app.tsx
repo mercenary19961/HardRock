@@ -7,8 +7,6 @@ import { ThemeProvider } from '@/contexts/ThemeContext';
 import { PageLoader } from '@/components/ui/page-loader';
 import { initI18n, type AppLanguage } from './i18n';
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
-
 const pages = import.meta.glob<{ default: any }>('./pages/**/*.tsx');
 
 interface Appearance {
@@ -25,7 +23,15 @@ function readAppearance(setupProps: any): Appearance {
 }
 
 createInertiaApp({
-    title: (title) => `${title} - ${appName}`,
+    // Public page titles already carry full branding and must stay identical to
+    // the Blade $serviceSeo titles (see app.blade.php) — SSR emits a second
+    // <title> alongside Blade's, so any divergence shows crawlers two different
+    // titles. Hardcoded suffix (not VITE_APP_NAME): each Railway service bakes
+    // its own bundle and their env vars can silently diverge.
+    title: (title) => {
+        if (!title) return 'HardRock';
+        return title.includes('HardRock') ? title : `${title} - HardRock`;
+    },
     resolve: async (name) => {
         const path = `./pages/${name}.tsx`;
         const importer = pages[path];

@@ -23,8 +23,18 @@ Route::get('/consultation', function () {
     return Inertia::render('Consultation');
 })->name('consultation');
 
-// Services Page (with optional service slug, defaults to 'branding')
-Route::get('/services/{slug?}', function (Illuminate\Http\Request $request, string $slug = 'branding') {
+// Bare /services used to serve branding content at its own canonical URL,
+// creating a sitewide-linked duplicate of /services/branding that competed
+// with it in Google's index. 301 instead, keeping the query string so
+// ?from=nav survives the hop.
+Route::get('/services', function (Illuminate\Http\Request $request) {
+    $query = $request->getQueryString();
+
+    return redirect()->to('/services/branding'.($query ? '?'.$query : ''), 301);
+});
+
+// Services Page
+Route::get('/services/{slug}', function (Illuminate\Http\Request $request, string $slug) {
     $validSlugs = ['social-media', 'paid-ads', 'seo', 'pr-social-listening', 'branding', 'software-ai'];
 
     if (!in_array($slug, $validSlugs)) {

@@ -1,5 +1,7 @@
 # HardRock - Codebase Context for Claude
 
+> **📍 Doc sync:** CLAUDE.md last synced to commit `9e7af8f` — 2026-06-02 13:38 (Tue).
+
 This document provides comprehensive context about the HardRock codebase to help Claude understand and work with the project effectively.
 
 ---
@@ -246,7 +248,8 @@ Laravel queue system tables.
 | Method | URI | Controller | Description |
 |--------|-----|------------|-------------|
 | GET | / | - | Landing page (Inertia) |
-| GET | /services/{slug?} | - (closure) | Service detail page (defaults to 'branding') |
+| GET | /services | - (closure) | 301 → /services/branding (query string preserved; bare URL was an indexed duplicate) |
+| GET | /services/{slug} | - (closure) | Service detail page |
 | POST | /contact | ContactController@store | Contact form submission |
 
 #### Valid Service Slugs
@@ -601,6 +604,27 @@ php artisan admin:create email@example.com password "Name"
 **`route('name')` errors in SSR-rendered components**
 - Ziggy data is shared via the `ziggy` Inertia prop and rebound to `globalThis.route` inside `ssr.tsx`. If you're seeing route errors, confirm `HandleInertiaRequests::share()` includes the `ziggy` key.
 
+### Foundation Gotchas (hard-won, don't re-debug)
+
+**Literal `${APP_NAME}` in every SSR title (found 2026-07-05, cost ~2 months of failed indexing)**
+- *Symptom:* raw SSR HTML had a second `<title>` ending in the literal string `- ${APP_NAME}` on every page. Invisible to humans — the HardRock service's client bundle had the correct value, so hydration fixed the tab title. Only crawlers ever saw it.
+- *Root cause:* Railway does **not** interpolate `${VAR}` in variables (its reference syntax is `${{...}}`). `VITE_APP_NAME="${APP_NAME}"` copied from `.env.example` onto **hardrock-ssr** got baked as a literal into `bootstrap/ssr/ssr.js` at build time. Each Railway service builds its **own** bundle from its **own** env vars, so HardRock (correct) and hardrock-ssr (broken) silently diverged.
+- *Fix:* Railway vars set to literal `HardRock` on both services (2026-07-05), and the `title:` callback in `app.tsx`/`ssr.tsx` no longer reads `VITE_APP_NAME` at all — suffix is hardcoded, so per-service env divergence can't recreate this.
+
+**Two `<title>` tags per page (Blade + Inertia SSR)**
+- *Symptom:* every SSR'd page has two title tags: Blade's `<title inertia>` and the one `@inertiaHead` injects from the page's `<Head title>`.
+- *Root cause:* standard Inertia SSR behavior when the Blade root template also declares a title. Harmless **only if both are identical** — Google may pick either.
+- *Fix/rule:* Blade `$serviceSeo` in `app.blade.php` is the source of truth (it survives SSR-fallback mode). `SERVICE_TITLES` in `Services.tsx` and the Landing `<Head title>` MUST mirror it exactly. When changing any page title, change it in BOTH places.
+
+**Spoofed-Googlebot curl returns 403 (Cloudflare)**
+- *Symptom:* `curl -A "Googlebot" https://www.hardrock-co.com/...` → 403, `Server: cloudflare`. Looks like Googlebot is blocked; it isn't.
+- *Root cause:* Cloudflare verifies real Googlebot by IP range and blocks impostors. Our own verification commands were the impostor.
+- *Fix:* use a browser UA for curl checks (see "Verifying SSR in production"); use GSC URL Inspection live test to see what real Googlebot gets.
+
+**Bare `/services` was a sitewide duplicate of `/services/branding`**
+- *Symptom:* navbar linked every page to `/services?from=nav`; the slug route's `?slug = 'branding'` default served identical content at a second self-canonical URL, competing in Google's index.
+- *Fix:* `/services` now 301s to `/services/branding` (query preserved) and the navbar links to the real URL. Don't reintroduce optional-slug rendering.
+
 ---
 
 ## File Locations Quick Reference
@@ -727,12 +751,20 @@ This is why React/react-dom/@inertiajs/react/axios MUST be in `dependencies` —
 
 ### Verifying SSR in production
 ```bash
-curl -s -A "Googlebot" --compressed https://www.hardrock-co.com/services/seo | wc -c
-# Expected: ~80,000–100,000  (was ~908 pre-SSR)
+# NOTE: do NOT use -A "Googlebot" — Cloudflare verifies real Googlebot by IP and
+# returns 403 to spoofed Googlebot UAs from anywhere else. Use a browser UA:
+UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36"
 
-curl -s -A "Googlebot" --compressed https://www.hardrock-co.com/ | grep -oE 'href="/services/[^"]+"' | sort -u | wc -l
+curl -s -A "$UA" --compressed https://www.hardrock-co.com/services/seo | wc -c
+# Expected: ~80,000–100,000  (was ~908 pre-SSR; ~32–42 KB means client-only fallback)
+
+curl -s -A "$UA" --compressed https://www.hardrock-co.com/ | grep -oE 'href="/services/[^"]+"' | sort -u | wc -l
 # Expected: 6
+
+curl -s -A "$UA" --compressed https://www.hardrock-co.com/services/seo | grep -oE '<title[^>]*>[^<]*</title>'
+# Expected: TWO title tags (Blade + SSR) with IDENTICAL text and no ${APP_NAME} literal
 ```
+To check what real Googlebot sees (past Cloudflare), use GSC → URL Inspection → Test live URL.
 
 ---
 
@@ -766,6 +798,8 @@ curl -s -A "Googlebot" --compressed https://www.hardrock-co.com/ | grep -oE 'hre
 | Cookie consent (CookieYes) | ✅ Done | `resources/views/app.blade.php` |
 | **SSR for full-body crawl** | ✅ Done (2026-05-02) | `resources/js/ssr.tsx` + `hardrock-ssr` Railway service. Body went from ~908 B to 70–100 KB; all 6 service hrefs visible to Googlebot on every page |
 | Server-rendered `<html lang dir class>` | ✅ Done | `resources/views/app.blade.php` reads `theme` + `language` cookies |
+| Unified Blade/SSR titles (killed `${APP_NAME}` literal) | ✅ Done (2026-07-05) | `SERVICE_TITLES` in `Services.tsx` + title callbacks in `app.tsx`/`ssr.tsx` mirror `$serviceSeo` in `app.blade.php` |
+| Bare `/services` duplicate removed (301) | ✅ Done (2026-07-05) | `routes/web.php` + `Navbar.tsx` links to `/services/branding?from=nav` |
 
 ### TODO: When Adding News/Blog Section
 
@@ -833,4 +867,4 @@ Target these keyword themes in blog posts:
 
 ---
 
-> **Last updated:** 2026-05-04 — based on commit `47197b9` (*rename /dashboard routes and route names to /admin; URL prefix and route names changed, internal folder/class names kept*)
+> **Last updated:** 2026-07-05 — GSC indexing fixes: unified Blade/SSR titles (killed literal `${APP_NAME}` baked into hardrock-ssr's bundle from an uninterpolated Railway var), 301'd bare `/services` duplicate, bumped sitemap lastmod, documented Cloudflare 403 on spoofed-Googlebot curls. Previous: 2026-05-04, commit `47197b9` (/dashboard → /admin rename).

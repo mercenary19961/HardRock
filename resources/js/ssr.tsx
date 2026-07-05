@@ -5,8 +5,6 @@ import { route } from 'ziggy-js';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { initI18n, type AppLanguage } from './i18n';
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
-
 const pages = import.meta.glob<{ default: any }>('./pages/**/*.tsx', { eager: true });
 
 interface Appearance {
@@ -26,7 +24,13 @@ createServer((page) =>
     createInertiaApp({
         page,
         render: ReactDOMServer.renderToString,
-        title: (title) => `${title} - ${appName}`,
+        // Must match app.tsx. Hardcoded suffix (not VITE_APP_NAME): each Railway
+        // service bakes its own bundle and their env vars can silently diverge —
+        // hardrock-ssr once shipped a literal "${APP_NAME}" in every SSR title.
+        title: (title) => {
+            if (!title) return 'HardRock';
+            return title.includes('HardRock') ? title : `${title} - HardRock`;
+        },
         resolve: (name) => {
             const path = `./pages/${name}.tsx`;
             const mod = pages[path];
