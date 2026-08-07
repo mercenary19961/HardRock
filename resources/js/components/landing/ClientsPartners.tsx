@@ -80,7 +80,7 @@ export default function ClientsPartners() {
     }, [folder]);
 
     return (
-        <section className="relative py-10 md:py-14 lg:py-20 bg-white dark:bg-black overflow-hidden">
+        <section className="relative py-10 md:py-14 lg:py-20 bg-[#06060f] overflow-hidden">
             <div
                 ref={sectionRef}
                 className={`space-y-20 md:space-y-24 animate-on-scroll animate-fade-in-up ${sectionInView ? 'in-view' : ''}`}
