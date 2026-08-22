@@ -51,11 +51,11 @@ export default function Navbar() {
      * The bar has no solid background any more, so what sits behind it decides what
      * colour it has to be — and on the landing page that changes with scroll.
      *
-     * At `lg` the hero backdrop is the dark character art in BOTH themes (the copy
-     * there is already forced to `lg:text-white` for the same reason), so a white
-     * light-theme logo scrim over it would erase the logo. Past the hero the page is
-     * white again in light mode, where white nav content would be just as invisible.
-     * Hence a measured flag rather than a fixed choice.
+     * Wherever the character renders, the hero backdrop is dark art in BOTH themes (the
+     * copy there is already forced to `desktop-pointer:text-white` for the same
+     * reason), so a white light-theme scrim over it would erase the logo. Past the hero
+     * the page is white again in light mode, where white nav content would be just as
+     * invisible. Hence a measured flag rather than a fixed choice.
      *
      * Seeded from the URL instead of from a measurement so the server-rendered markup
      * is already correct — measuring first would flash a black logo over the dark art
@@ -159,17 +159,19 @@ export default function Navbar() {
      * the hero. Deliberately no backdrop blur — the blur would stop dead at the bottom
      * of the box while the colour keeps fading, leaving the very seam this removes.
      *
-     * The `lg:` override is the dark-art case above: it wins over the light-theme
-     * stops by source order, and loses to the `dark:` ones on specificity, which is
-     * what we want since those are already black.
+     * The `desktop-pointer:` override is the dark-art case above: it wins over the
+     * light-theme stops by source order, and loses to the `dark:` ones on specificity,
+     * which is what we want since those are already black.
      */
     const scrim = `bg-gradient-to-b from-white/90 via-white/45 to-transparent dark:from-black/90 dark:via-black/45 ${
-        overHero ? 'lg:from-black/80 lg:via-black/40' : ''
+        overHero ? 'desktop-pointer:from-black/80 desktop-pointer:via-black/40' : ''
     }`;
 
-    // Over the dark hero art the light theme has to borrow the dark theme's colours,
-    // but only at lg — below that the hero is plain white and the defaults are right.
-    const overArt = overHero ? 'lg:text-white' : '';
+    // Over the dark hero art the light theme has to borrow the dark theme's colours.
+    // Keyed to desktop-pointer rather than to lg, because a pointerless desktop screen
+    // gets the original light hero instead of the character, and white on that is white
+    // on white.
+    const overArt = overHero ? 'desktop-pointer:text-white' : '';
 
     return (
         <nav className={`fixed top-0 left-0 right-0 z-50 overflow-x-hidden ${scrim} transition-transform duration-500 ${hidden ? '-translate-y-full' : 'translate-y-0'}`}>
@@ -177,20 +179,20 @@ export default function Navbar() {
                 <div className="flex items-center justify-between h-20 gap-2 sm:gap-4">
                     {/* Logo */}
                     <Link href="/" className="flex-shrink-0">
-                        {/* The white logo stands in for the black one at lg while the bar
-                            is over the character art, in either theme. `dark:` outranks
-                            `lg:` on specificity, so the dark theme is unaffected. */}
+                        {/* The white logo stands in for the black one while the bar is over
+                            the character art, in either theme. `dark:` outranks a screen
+                            variant on specificity, so the dark theme is unaffected. */}
                         <img
                             src="/images/HOR-BLACK LOGO.svg"
                             alt="HardRock"
                             title="HardRock"
-                            className={`h-5 sm:h-8 w-auto dark:hidden ${overHero ? 'lg:hidden' : ''}`}
+                            className={`h-5 sm:h-8 w-auto dark:hidden ${overHero ? 'desktop-pointer:hidden' : ''}`}
                         />
                         <img
                             src="/images/OR-WHITE LOGO.svg"
                             alt="HardRock"
                             title="HardRock"
-                            className={`h-5 sm:h-8 w-auto hidden dark:block ${overHero ? 'lg:block' : ''}`}
+                            className={`h-5 sm:h-8 w-auto hidden dark:block ${overHero ? 'desktop-pointer:block' : ''}`}
                         />
                     </Link>
 

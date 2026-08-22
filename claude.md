@@ -1,6 +1,6 @@
 # HardRock - Codebase Context for Claude
 
-> **📍 Doc sync:** CLAUDE.md last synced to commit `64c4bb5` — 2026-08-22 (Sat) [`hero-frog-tracker`; the transparent navbar + hidden native cursor below are uncommitted].
+> **📍 Doc sync:** CLAUDE.md last synced to commit `28f7067` — 2026-08-22 14:38 (Sat) [`hero-frog-tracker`; the `desktop-pointer` variant and the language switcher below are uncommitted].
 
 This document provides comprehensive context about the HardRock codebase to help Claude understand and work with the project effectively.
 
@@ -542,17 +542,40 @@ adjacent frames were near-duplicates. What *can* be reduced is the time spent ne
 50/50, which is why the fraction is eased with a smoothstep rather than used raw.
 Removing the softness properly needs more real poses over the same rotation.
 
-### Mobile and RTL
+### Mobile, tablets and RTL
 
-- **Mobile is untouched.** The component returns `null` below `lg` and on any device
-  without `(hover: hover) and (pointer: fine)`, so there is no payload, no listener and
-  no frames in the DOM. The chevron, its glow and the "Reach The Peak" h2 render exactly
-  as before.
-- 🔴 **Arabic needs `lg:col-start-2` on the text column.** Under RTL the FIRST grid
-  child is the RIGHT column — which is where the character stands — so the copy landed
-  on his face and was unreadable. Placing it in column two puts it back on the left
-  visually while the Arabic text inside still reads right-to-left. Below `lg` the grid
-  is single-column, so this changes nothing on mobile.
+🔴 **`lg:` is NOT the test for "has this character" — use the `desktop-pointer:`
+variant.** An iPad in landscape is 1024px+ with no pointer, so the component returns
+`null` there while any `lg:`-keyed styling still fires. That combination shipped briefly
+and left iPads with a hero that had no artwork at all and, in the light theme, white
+copy on a white background. Everything the character affects is therefore keyed to a
+custom screen in `tailwind.config.js`:
+
+```js
+'desktop-pointer': { raw: '(hover: hover) and (pointer: fine) and (min-width: 1024px)' }
+```
+
+- **Deliberately CSS, not the JS hook.** A media query is right on first paint; a
+  hydration-time boolean would flash the wrong hero on every load. `usePrecisePointer`
+  carries the identical query and decides only whether to MOUNT the character (and to
+  hide the cursor, which must not happen before the mosquito exists). **Change one
+  string and you must change the other.**
+- **What it gates:** the wave (`hidden lg:block desktop-pointer:hidden`), the chevron,
+  the copy going white, and the RTL column swap. Anything a pointerless screen must keep
+  stays on `lg:`, so the original desktop hero survives intact on an iPad.
+- **Mobile is untouched** either way: no payload, no listener, no frames in the DOM.
+- 🔴 **Arabic needs `desktop-pointer:col-start-2` on the text column.** Under RTL the
+  FIRST grid child is the RIGHT column — which is where the character stands — so the
+  copy landed on his face and was unreadable. Placing it in column two puts it back on
+  the left visually while the Arabic text inside still reads right-to-left. It is keyed
+  to the character's own condition because with no character there is nothing to dodge,
+  and the original layout deliberately put the Arabic copy on the right. Below `lg` the
+  grid is single-column, so mobile is unaffected either way.
+- ⚠️ **The `lg:hidden` on the dark-mode purple glow is a no-op**, left as found.
+  `dark:block` compiles to `:is(.dark *)` at specificity 0-2-0 and outranks `lg:hidden`
+  at 0-1-0, so the glow still washes over the character in dark mode. Realising the
+  original intent needs `dark:desktop-pointer:hidden` (0-2-0 inside a media query); it
+  is a visual change to the current desktop hero, so it was left for a deliberate call.
 - A gradient scrim sits under the copy. The backdrop measures 12:1 against white, so
   white was fine — but the brand's purple-to-red gradient on "Digital Solutions" all but
   vanished against purple. Darkening the copy side keeps the gradient rather than
@@ -620,14 +643,17 @@ edge, so nothing draws a line across the hero.
 while the colour keeps fading, which leaves a visible horizontal seam — the exact
 artifact the transparent bar was meant to remove.
 
-🔴 **`overHero` exists because the light theme is wrong over the hero art.** At `lg` the
-hero backdrop is the dark character render in BOTH themes (the hero copy is already
-forced to `lg:text-white` for the same reason). A white light-theme scrim over it erases
-the logo; past the hero the page is white again, where white nav content is just as
-invisible. So the flag is measured from `#hero`'s bottom edge against the bar height,
-and drives three `lg:`-only overrides: a dark scrim, `lg:text-white` links, and the
-white logo swapped in for the black one. Below `lg` nothing changes — the mobile hero is
-still plain white.
+🔴 **`overHero` exists because the light theme is wrong over the hero art.** Wherever the
+character renders, the hero backdrop is the dark render in BOTH themes (the hero copy is
+already forced to `desktop-pointer:text-white` for the same reason). A white light-theme
+scrim over it erases the logo; past the hero the page is white again, where white nav
+content is just as invisible. So the flag is measured from `#hero`'s bottom edge against
+the bar height, and drives three `desktop-pointer:`-only overrides: a dark scrim, white
+links, and the white logo swapped in for the black one.
+
+⚠️ **Those overrides are keyed to `desktop-pointer:`, never to `lg:`.** An iPad gets the
+original light hero, so a width-keyed rule would paint a white logo onto a white
+background there. Same trap as the hero itself, one component further out.
 
 ⚠️ **It is seeded from the URL (`usePage().url === '/'`), not from a measurement.**
 Measuring first would flash a black logo over the dark art on every light-theme landing
@@ -635,8 +661,11 @@ load, for as long as hydration takes. The scroll handler then refines it, and pa
 without a `#hero` never set it.
 
 ⚠️ Specificity, if you touch these classes: `dark:` (a class selector, 0-2-0) outranks
-`lg:` (0-1-0) regardless of source order, so the `lg:` overrides only ever bite in the
-light theme. That is intended — the dark theme is already dark.
+any screen variant (0-1-0) regardless of source order, so the overrides only ever bite
+in the light theme. That is intended — the dark theme is already dark. Screen variants
+beat plain utilities by SOURCE ORDER instead, and `desktop-pointer` is declared in
+`extend.screens`, so it lands after both the base utilities and `lg:`. Verify that
+ordering in the built CSS if you ever reorder the screens.
 
 ⚠️ **Content now scrolls under the bar on `/services` and `/consultation`** (both start
 their content at `pt-20`, so only scrolled content reaches it). Accepted trade-off of
@@ -813,7 +842,8 @@ php artisan admin:create email@example.com password "Name"
 | Service Selector | resources/js/components/ui/expandable-service-selector.tsx |
 | Contact Form | resources/js/components/landing/ContactUs.tsx |
 | Hero Character (cursor-tracked) | resources/js/components/landing/HeroFrog.tsx + public/images/frog/ |
-| Desktop-pointer test (frog + cursor) | resources/js/hooks/usePrecisePointer.ts |
+| Desktop-pointer test (mount + cursor) | resources/js/hooks/usePrecisePointer.ts |
+| Desktop-pointer test (all styling) | `desktop-pointer` screen in tailwind.config.js |
 | Contact Processing | app/Jobs/ProcessContactSubmission.php |
 | Clients & Partners Section | resources/js/components/landing/ClientsPartners.tsx |
 | Login Page | resources/js/pages/Auth/Login.tsx |
@@ -1046,4 +1076,4 @@ Target these keyword themes in blog posts:
 
 ---
 
-> **Last updated:** 2026-08-22 (later) — Navbar is now a transparent top-to-bottom scrim on every page and scroll position, and the native cursor is hidden over the hero so the mosquito is the only pointer. Both are on `hero-frog-tracker`, uncommitted. Two traps recorded above: a link's UA `cursor: pointer` beats an inherited `cursor: none`, so the descendant rule is required; and the light theme has to borrow the dark theme's nav colours at `lg` while the bar sits over the character art, seeded from the URL so it does not flash. Same day — Landing hero: cursor-tracked character (branch `hero-frog-tracker`, WIP, not merged). Desktop-only frame-sequence hero replacing the static chevron; mobile untouched by construction. See "Landing Hero" above for the extraction rules and the four traps that cost real time: sorting frames by a computed head-angle proxy scrambles the tail, mirroring to fake the missing half leaves the frame uncovered, RTL puts the copy on top of the character without `lg:col-start-2`, and frame direction must be verified by screenshot rather than by metric. Previous: 2026-07-05 — GSC indexing fixes: unified Blade/SSR titles (killed literal `${APP_NAME}` baked into hardrock-ssr's bundle from an uninterpolated Railway var), 301'd bare `/services` duplicate, bumped sitemap lastmod, documented Cloudflare 403 on spoofed-Googlebot curls. Previous: 2026-05-04, commit `47197b9` (/dashboard → /admin rename).
+> **Last updated:** 2026-08-22 (later) — Navbar is now a transparent top-to-bottom scrim on every page and scroll position; the native cursor is hidden over the hero so the mosquito is the only pointer; a new `desktop-pointer` screen variant replaces every `lg:` rule that assumed the character was on screen, which is what gives an iPad in landscape the original chevron hero back instead of an empty hero with white-on-white copy; and the language switcher now shows a translate glyph plus `AR`/`EN` rather than a globe plus `عربي`. All on `hero-frog-tracker`; the scrim and cursor landed in `28f7067`, the variant and the switcher are still uncommitted. Three traps recorded above: a link's UA `cursor: pointer` beats an inherited `cursor: none`, so the descendant rule is required; `lg:` is not a test for "has a pointer"; and the light theme has to borrow the dark theme's nav colours while the bar sits over the character art, seeded from the URL so it does not flash. Same day — Landing hero: cursor-tracked character (branch `hero-frog-tracker`, WIP, not merged). Desktop-only frame-sequence hero replacing the static chevron; mobile untouched by construction. See "Landing Hero" above for the extraction rules and the four traps that cost real time: sorting frames by a computed head-angle proxy scrambles the tail, mirroring to fake the missing half leaves the frame uncovered, RTL puts the copy on top of the character without `lg:col-start-2`, and frame direction must be verified by screenshot rather than by metric. Previous: 2026-07-05 — GSC indexing fixes: unified Blade/SSR titles (killed literal `${APP_NAME}` baked into hardrock-ssr's bundle from an uninterpolated Railway var), 301'd bare `/services` duplicate, bumped sitemap lastmod, documented Cloudflare 403 on spoofed-Googlebot curls. Previous: 2026-05-04, commit `47197b9` (/dashboard → /admin rename).

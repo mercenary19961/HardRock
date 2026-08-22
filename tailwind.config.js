@@ -103,7 +103,21 @@ export default {
     		},
     		screens: {
     			xs: '475px',
-    			'3xl': '1920px'
+    			'3xl': '1920px',
+    			/*
+    			 * A desktop-sized screen driven by a real pointer — the only place the
+    			 * cursor-tracked hero character exists. `lg:` alone is not the same
+    			 * test: an iPad in landscape is 1024px+ but has no pointer, so it gets
+    			 * the original chevron hero instead, and anything styled FOR the
+    			 * character must be keyed off this rather than off width.
+    			 *
+    			 * Kept in CSS on purpose. The equivalent JS test lives in
+    			 * resources/js/hooks/usePrecisePointer.ts, which decides whether to
+    			 * MOUNT the character; the two strings must stay identical.
+    			 */
+    			'desktop-pointer': {
+    				raw: '(hover: hover) and (pointer: fine) and (min-width: 1024px)'
+    			}
     		},
     		fontSize: {
     			xxs: '0.65rem',
