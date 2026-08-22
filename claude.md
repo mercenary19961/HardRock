@@ -650,6 +650,13 @@ custom screen in `tailwind.config.js`:
   to the character's own condition because with no character there is nothing to dodge,
   and the original layout deliberately put the Arabic copy on the right. Below `lg` the
   grid is single-column, so mobile is unaffected either way.
+- 🔴 **The mosquito needs an explicit `left-0 top-0`, or it vanishes in Arabic.** An
+  absolute box with no offset sits at its STATIC position, and under `dir="rtl"` that is
+  the container's RIGHT edge — the `translate(x, y)` that follows then pushed it further
+  right, off the hero and into `overflow-hidden`. Every other layer here uses `inset-0`,
+  which sets all four offsets and so is direction-proof; the mosquito was the only one
+  relying on the static position. Physical `left`, never the logical `start-0`: the
+  coordinates come from `r.left`, which is physical too.
 - ⚠️ **The `lg:hidden` on the dark-mode purple glow is a no-op**, left as found.
   `dark:block` compiles to `:is(.dark *)` at specificity 0-2-0 and outranks `lg:hidden`
   at 0-1-0, so the glow still washes over the character in dark mode. Realising the
