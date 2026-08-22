@@ -1,6 +1,6 @@
 # HardRock - Codebase Context for Claude
 
-> **📍 Doc sync:** CLAUDE.md last synced to commit `28f7067` — 2026-08-22 14:38 (Sat) [`hero-frog-tracker`; the `desktop-pointer` variant and the language switcher below are uncommitted].
+> **📍 Doc sync:** CLAUDE.md last synced to commit `77a47fa` — 2026-08-22 14:48 (Sat) [`hero-frog-tracker`; only the idle hunt below is uncommitted].
 
 This document provides comprehensive context about the HardRock codebase to help Claude understand and work with the project effectively.
 
@@ -529,6 +529,37 @@ screen-left extreme depends on how the sequence was built; a sorted harvest need
 reversing and a temporal one does not. Getting this wrong has inverted the hero twice.
 Screenshot the two extremes and look — pixel metrics for "which way is he facing" have
 been unreliable here.
+
+### Three modes: track, idle, return
+
+Which pose is painted is decided by a small state machine inside the effect; `renderPose`
+just paints whatever float it is handed, and `poseRef` is how the modes hand off to each
+other.
+
+- **track** — the absolute mapping above. One rAF per mousemove, no loop.
+- **idle** — after `IDLE_AFTER` (2s) with no movement, the mosquito fades out and he
+  starts hunting for it: eased legs to a random new pose, each crossing at least 35% of
+  the sweep so it reads as a turn rather than a twitch, with a 250-950ms hold between.
+  Runs a continuous rAF.
+- **return** — the first mousemove brings the mosquito straight back and eases the head
+  from wherever the search left it onto the pointer over `RETURN_MS` (260ms), then hands
+  back to track.
+
+⚠️ **The return target is re-read every frame, not fixed when the return starts.** A
+visitor who keeps moving would otherwise be chased to a position they had already left,
+and the head would arrive somewhere stale before snapping.
+
+⚠️ **The mosquito is the only pointer over the hero** (Hero hides the native arrow), so
+an idle frog means the visitor briefly has no pointer at all. That is why the return is
+triggered by the first mousemove rather than by any timer, and why the mosquito's
+opacity is restored in the same frame as the movement.
+
+🔴 **Idling is gated three ways, and all three matter:** `prefers-reduced-motion` (a head
+that turns on its own forever is exactly what that setting is for; tracking still works,
+since that is a response to the visitor's own input), an IntersectionObserver on the
+wrapper (an rAF loop running on a section nobody has scrolled to is a battery leak), and
+`mode === 'track'` (never interrupt a return). He also starts hunting on a fresh load
+without any pointer ever being seen, which is the common case.
 
 ### Blending, and its cost
 
@@ -1076,4 +1107,4 @@ Target these keyword themes in blog posts:
 
 ---
 
-> **Last updated:** 2026-08-22 (later) — Navbar is now a transparent top-to-bottom scrim on every page and scroll position; the native cursor is hidden over the hero so the mosquito is the only pointer; a new `desktop-pointer` screen variant replaces every `lg:` rule that assumed the character was on screen, which is what gives an iPad in landscape the original chevron hero back instead of an empty hero with white-on-white copy; and the language switcher now shows a translate glyph plus `AR`/`EN` rather than a globe plus `عربي`. All on `hero-frog-tracker`; the scrim and cursor landed in `28f7067`, the variant and the switcher are still uncommitted. Three traps recorded above: a link's UA `cursor: pointer` beats an inherited `cursor: none`, so the descendant rule is required; `lg:` is not a test for "has a pointer"; and the light theme has to borrow the dark theme's nav colours while the bar sits over the character art, seeded from the URL so it does not flash. Same day — Landing hero: cursor-tracked character (branch `hero-frog-tracker`, WIP, not merged). Desktop-only frame-sequence hero replacing the static chevron; mobile untouched by construction. See "Landing Hero" above for the extraction rules and the four traps that cost real time: sorting frames by a computed head-angle proxy scrambles the tail, mirroring to fake the missing half leaves the frame uncovered, RTL puts the copy on top of the character without `lg:col-start-2`, and frame direction must be verified by screenshot rather than by metric. Previous: 2026-07-05 — GSC indexing fixes: unified Blade/SSR titles (killed literal `${APP_NAME}` baked into hardrock-ssr's bundle from an uninterpolated Railway var), 301'd bare `/services` duplicate, bumped sitemap lastmod, documented Cloudflare 403 on spoofed-Googlebot curls. Previous: 2026-05-04, commit `47197b9` (/dashboard → /admin rename).
+> **Last updated:** 2026-08-22 (later) — Navbar is now a transparent top-to-bottom scrim on every page and scroll position; the native cursor is hidden over the hero so the mosquito is the only pointer; a new `desktop-pointer` screen variant replaces every `lg:` rule that assumed the character was on screen, which is what gives an iPad in landscape the original chevron hero back instead of an empty hero with white-on-white copy; the language switcher now shows a translate glyph plus `AR`/`EN` rather than a globe plus `عربي`; and the character now hunts for the mosquito after two still seconds (track / idle / return state machine, gated on reduced-motion and on the hero being on screen). All on `hero-frog-tracker`: the scrim and cursor landed in `28f7067`, the variant and the switcher in `77a47fa`, the idle hunt is still uncommitted. Three traps recorded above: a link's UA `cursor: pointer` beats an inherited `cursor: none`, so the descendant rule is required; `lg:` is not a test for "has a pointer"; and the light theme has to borrow the dark theme's nav colours while the bar sits over the character art, seeded from the URL so it does not flash. Same day — Landing hero: cursor-tracked character (branch `hero-frog-tracker`, WIP, not merged). Desktop-only frame-sequence hero replacing the static chevron; mobile untouched by construction. See "Landing Hero" above for the extraction rules and the four traps that cost real time: sorting frames by a computed head-angle proxy scrambles the tail, mirroring to fake the missing half leaves the frame uncovered, RTL puts the copy on top of the character without `lg:col-start-2`, and frame direction must be verified by screenshot rather than by metric. Previous: 2026-07-05 — GSC indexing fixes: unified Blade/SSR titles (killed literal `${APP_NAME}` baked into hardrock-ssr's bundle from an uninterpolated Railway var), 301'd bare `/services` duplicate, bumped sitemap lastmod, documented Cloudflare 403 on spoofed-Googlebot curls. Previous: 2026-05-04, commit `47197b9` (/dashboard → /admin rename).

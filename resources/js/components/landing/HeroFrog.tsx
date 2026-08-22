@@ -3,7 +3,8 @@ import { useCallback, useEffect, useRef } from 'react';
 import { usePrecisePointer } from '@/hooks/usePrecisePointer';
 
 /**
- * The hero backdrop: a character who follows the visitor's cursor.
+ * The hero backdrop: a character who follows the visitor's cursor, and hunts for it
+ * when it stops moving.
  *
  * DESKTOP ONLY, by design. There is no cursor on a phone, so below `lg` this
  * renders nothing at all and the original hero (chevron, glow, "Reach The Peak")
@@ -39,6 +40,7 @@ import { usePrecisePointer } from '@/hooks/usePrecisePointer';
  */
 const FRAME_COUNT = 59;
 const FRAMES = Array.from({ length: FRAME_COUNT }, (_, i) => `/images/frog/f${String(i).padStart(3, '0')}.webp`);
+const SPAN = FRAME_COUNT - 1;
 
 /**
  * Height of the fixed navbar, in px (`h-20`). The bar is transparent, so the
@@ -48,6 +50,33 @@ const FRAMES = Array.from({ length: FRAME_COUNT }, (_, i) => `/images/frog/f${St
  * is up there. The frog goes on tracking; only the mosquito is withheld.
  */
 const NAV_HEIGHT = 80;
+
+/*
+ * Idle behaviour. A still pointer means a still mosquito, and a character frozen
+ * mid-stare reads as a broken image rather than as a character. So after a pause the
+ * mosquito hides and he starts looking around for it, which is also the story: the
+ * thing he was watching got away.
+ *
+ * ⚠️ The mosquito is the ONLY pointer over the hero (Hero hides the native arrow), so
+ * hiding it while idle means the visitor briefly has no pointer at all. That is why
+ * any movement returns it immediately, on the first mousemove rather than on a timer.
+ */
+const IDLE_AFTER = 2000;
+/** Pace of a search turn, per pose. 59 poses × 34ms ≈ 2s for the full sweep. */
+const IDLE_MS_PER_POSE = 34;
+const IDLE_MIN_MS = 420;
+/** A new look must cross at least this much of the sweep, or it reads as a twitch. */
+const IDLE_MIN_TRAVEL = 0.35;
+const IDLE_HOLD_MIN = 250;
+const IDLE_HOLD_VARY = 700;
+/** How long the head takes to swing back once the mosquito reappears. */
+const RETURN_MS = 260;
+
+const clamp01 = (t: number) => Math.min(1, Math.max(0, t));
+/** Same easing as the cross-fade: quick through the middle, gentle at both ends. */
+const smoothstep = (t: number) => t * t * (3 - 2 * t);
+
+type Mode = 'track' | 'idle' | 'return';
 
 export default function HeroFrog() {
     const wrapRef = useRef<HTMLDivElement>(null);
@@ -62,30 +91,25 @@ export default function HeroFrog() {
     // pointer has not been seen yet.
     const posRef = useRef({ x: -1, y: -1 });
     const pairRef = useRef({ lo: 0, hi: 0 });
+    /** Last pose painted, as a float. Every mode hands off through this. */
+    const poseRef = useRef(0);
 
     // Shared with Hero, which hides the native cursor on exactly this condition.
     const armed = usePrecisePointer();
 
-    const paint = useCallback(() => {
-        rafRef.current = 0;
-        const wrap = wrapRef.current;
+    /**
+     * Paints one pose. WHICH pose is the caller's business — the pointer decides it
+     * while tracking, a timeline decides it while searching.
+     */
+    const renderPose = useCallback((exact: number) => {
         const imgs = imgsRef.current;
-        if (!wrap || imgs.length !== FRAME_COUNT) return;
+        if (imgs.length !== FRAME_COUNT) return;
 
-        const r = wrap.getBoundingClientRect();
-        const vp = posRef.current;
-        if (vp.x < 0) return;
-        const x = vp.x - r.left;
-        const y = vp.y - r.top;
+        const pose = Math.min(SPAN, Math.max(0, exact));
+        poseRef.current = pose;
 
-        // ABSOLUTE mapping: cursor position maps straight onto a pose, so where he
-        // looks always corresponds to where the visitor actually is. Accumulating
-        // deltas instead (the usual implementation of this effect) drifts, which is
-        // fine for an abstract shape and fatal for a face.
-        const t = Math.min(1, Math.max(0, x / r.width));
-        const exact = t * (FRAME_COUNT - 1);
-        const lo = Math.min(FRAME_COUNT - 1, Math.floor(exact));
-        const hi = Math.min(FRAME_COUNT - 1, lo + 1);
+        const lo = Math.min(SPAN, Math.floor(pose));
+        const hi = Math.min(SPAN, lo + 1);
         /*
          * Eased, not linear.
          *
@@ -99,8 +123,7 @@ export default function HeroFrog() {
          * pose, so it just parks the same image over more cursor travel — a dead spot
          * rather than smoother motion.
          */
-        const raw = exact - lo;
-        const frac = raw * raw * (3 - 2 * raw);
+        const frac = smoothstep(clamp01(pose - lo));
 
         const prev = pairRef.current;
         if (prev.lo !== lo || prev.hi !== hi) {
@@ -113,39 +136,192 @@ export default function HeroFrog() {
         // disappears for that whole stretch of the screen.
         imgs[hi].style.opacity = String(frac);
         imgs[lo].style.opacity = '1';
+    }, []);
 
+    /**
+     * Where the pointer is, in hero coordinates, plus the pose that looks at it.
+     * Null until the pointer has been seen at all. One rect read per call, so callers
+     * take everything they need from a single result.
+     */
+    const readPointer = useCallback(() => {
+        const wrap = wrapRef.current;
+        const vp = posRef.current;
+        if (!wrap || vp.x < 0) return null;
+
+        const r = wrap.getBoundingClientRect();
+        return {
+            x: vp.x - r.left,
+            y: vp.y - r.top,
+            pose: clamp01((vp.x - r.left) / r.width) * SPAN,
+            // The navbar is fixed, so this is a viewport comparison.
+            overNav: vp.y < NAV_HEIGHT,
+        };
+    }, []);
+
+    const setSkeeterShown = useCallback((shown: boolean) => {
         const skeeter = skeeterRef.current;
-        if (skeeter) {
-            skeeter.style.transform = `translate(${x}px, ${y}px)`;
-            // The navbar is fixed, so this is a viewport comparison. It also doubles as
-            // the reveal: the mosquito renders at opacity 0, so it is never parked in
-            // the corner before the visitor has moved.
-            skeeter.style.opacity = vp.y < NAV_HEIGHT ? '0' : '1';
-        }
+        if (skeeter) skeeter.style.opacity = shown ? '1' : '0';
     }, []);
 
     useEffect(() => {
         if (!armed) return;
+
+        /*
+         * A head that turns on its own, indefinitely, is exactly what this setting is
+         * meant to stop. Reduced motion keeps the pointer tracking (that is a direct
+         * response to the visitor's own input, not an animation) and drops the search.
+         */
+        const calm = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+        let mode: Mode = 'track';
+        let idleTimer: ReturnType<typeof setTimeout> | null = null;
+        let onScreen = true;
+        // Current search leg: he eases from one look to the next, then holds.
+        let leg = { from: 0, to: 0, start: 0, dur: 0, hold: 0 };
+        // Where the head was when the mosquito came back.
+        let ret = { from: 0, start: 0 };
+
         const schedule = () => {
-            if (!rafRef.current) rafRef.current = requestAnimationFrame(paint);
+            if (!rafRef.current) rafRef.current = requestAnimationFrame(frame);
         };
-        const onMove = (e: MouseEvent) => {
-            posRef.current = { x: e.clientX, y: e.clientY };
+
+        const clearIdleTimer = () => {
+            if (idleTimer) {
+                clearTimeout(idleTimer);
+                idleTimer = null;
+            }
+        };
+
+        const armIdleTimer = () => {
+            clearIdleTimer();
+            idleTimer = setTimeout(goIdle, IDLE_AFTER);
+        };
+
+        /** Picks somewhere new to look, far enough to read as a real turn. */
+        const nextLeg = (at: number) => {
+            const from = poseRef.current;
+            let to = Math.random() * SPAN;
+            if (Math.abs(to - from) < SPAN * IDLE_MIN_TRAVEL) {
+                // Too close to be worth turning for: strike out toward the far end.
+                const away = from > SPAN / 2 ? -1 : 1;
+                to = from + away * SPAN * (IDLE_MIN_TRAVEL + Math.random() * 0.35);
+            }
+            to = Math.min(SPAN, Math.max(0, to));
+
+            leg = {
+                from,
+                to,
+                start: at,
+                dur: Math.max(IDLE_MIN_MS, Math.abs(to - from) * IDLE_MS_PER_POSE),
+                hold: IDLE_HOLD_MIN + Math.random() * IDLE_HOLD_VARY,
+            };
+        };
+
+        const goIdle = () => {
+            idleTimer = null;
+            if (mode !== 'track' || calm.matches || !onScreen) return;
+
+            mode = 'idle';
+            setSkeeterShown(false);
+            nextLeg(performance.now());
             schedule();
         };
-        window.addEventListener('mousemove', onMove, { passive: true });
+
+        const frame = () => {
+            rafRef.current = 0;
+
+            if (mode === 'idle') {
+                const now = performance.now();
+                const k = clamp01((now - leg.start) / leg.dur);
+                renderPose(leg.from + (leg.to - leg.from) * smoothstep(k));
+                if (k >= 1 && now - (leg.start + leg.dur) >= leg.hold) nextLeg(now);
+                schedule();
+                return;
+            }
+
+            const p = readPointer();
+            if (!p) {
+                // The pointer has never been seen. Nothing to track, and nothing to
+                // ease back to — leaving 'return' scheduled here would spin forever.
+                if (mode === 'return') mode = 'track';
+                return;
+            }
+
+            if (mode === 'return') {
+                /*
+                 * Eases from wherever the search left the head back onto the pointer.
+                 * The target is re-read every frame rather than fixed at the start, so
+                 * a visitor who keeps moving is converged on rather than chased to a
+                 * position they have already left.
+                 */
+                const k = clamp01((performance.now() - ret.start) / RETURN_MS);
+                renderPose(ret.from + (p.pose - ret.from) * smoothstep(k));
+                if (k >= 1) mode = 'track';
+            } else {
+                renderPose(p.pose);
+            }
+
+            const skeeter = skeeterRef.current;
+            if (skeeter) skeeter.style.transform = `translate(${p.x}px, ${p.y}px)`;
+            setSkeeterShown(!p.overNav);
+
+            if (mode === 'return') schedule();
+        };
+
+        const onMove = (e: MouseEvent) => {
+            posRef.current = { x: e.clientX, y: e.clientY };
+            if (mode === 'idle') {
+                // Straight back to 'return', on the first movement rather than on a
+                // timer: the mosquito is the visitor's pointer and must not lag it.
+                mode = 'return';
+                ret = { from: poseRef.current, start: performance.now() };
+            }
+            armIdleTimer();
+            schedule();
+        };
+
         // The pointer does not move during a wheel-scroll but the hero does, so the
         // mosquito has to be redrawn against the section's new position to stay under
         // the visitor's hand.
+        window.addEventListener('mousemove', onMove, { passive: true });
         window.addEventListener('scroll', schedule, { passive: true });
+
+        /*
+         * Nobody watches a character they have scrolled past, and an rAF loop that runs
+         * forever on a section nobody is looking at is a battery leak. Idling stops when
+         * the hero leaves the viewport and picks up again when it returns.
+         */
+        const io = new IntersectionObserver(
+            ([entry]) => {
+                onScreen = entry.isIntersecting;
+                if (onScreen) {
+                    if (mode === 'track') armIdleTimer();
+                    return;
+                }
+                clearIdleTimer();
+                if (mode === 'idle') mode = 'track';
+                if (rafRef.current) {
+                    cancelAnimationFrame(rafRef.current);
+                    rafRef.current = 0;
+                }
+            },
+            { threshold: 0 },
+        );
+        if (wrapRef.current) io.observe(wrapRef.current);
+
+        // He starts hunting on his own if the visitor never moves at all, which is the
+        // usual case on a fresh page load.
+        armIdleTimer();
 
         return () => {
             window.removeEventListener('mousemove', onMove);
             window.removeEventListener('scroll', schedule);
+            io.disconnect();
+            clearIdleTimer();
             if (rafRef.current) cancelAnimationFrame(rafRef.current);
             rafRef.current = 0;
         };
-    }, [armed, paint]);
+    }, [armed, readPointer, renderPose, setSkeeterShown]);
 
     if (!armed) return null;
 
@@ -177,11 +353,13 @@ export default function HeroFrog() {
             {/* The cursor IS the mosquito he is watching — without it a visitor sees a
                 character looking around for no reason. Hero hides the native arrow over
                 this section (on the same usePrecisePointer condition) so only one
-                pointer is ever on screen. */}
+                pointer is ever on screen. It starts hidden, so it is never parked in the
+                corner before the visitor has moved, and it fades rather than blinks when
+                the search starts. */}
             <svg
                 ref={skeeterRef}
                 viewBox="0 0 40 40"
-                className="absolute -ml-4 -mt-4 h-8 w-8 transition-opacity duration-150 will-change-transform"
+                className="absolute -ml-4 -mt-4 h-8 w-8 transition-opacity duration-300 will-change-transform"
                 style={{ opacity: 0 }}
             >
                 <g fill="none" stroke="#1a1020" strokeWidth="1.6" strokeLinecap="round">
