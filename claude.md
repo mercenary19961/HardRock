@@ -1,6 +1,6 @@
 # HardRock - Codebase Context for Claude
 
-> **📍 Doc sync:** CLAUDE.md last synced to commit `77a47fa` — 2026-08-22 14:48 (Sat) [`hero-frog-tracker`; only the idle hunt below is uncommitted].
+> **📍 Doc sync:** CLAUDE.md last synced to commit `df164d4` — 2026-08-22 15:31 (Sat) [`hero-frog-tracker`; only the navbar going fully transparent over the hero is uncommitted].
 
 This document provides comprehensive context about the HardRock codebase to help Claude understand and work with the project effectively.
 
@@ -705,11 +705,17 @@ rather than dropping the section rule.
 
 ---
 
-## Navbar — transparent scrim (no solid bar)
+## Navbar — transparent over the hero, scrim elsewhere
 
-The bar has no solid background on any page or scroll position. It is a top-to-bottom
-gradient (`from-*/90 via-*/45 to-transparent`) that fades out before its own bottom
-edge, so nothing draws a line across the hero.
+The bar has no solid background anywhere. It takes one of two backgrounds depending on
+what is behind it:
+
+- **Over the hero: none at all** (`bg-transparent`). The hero is the thing meant to be
+  looked at, and any wash across the top of it is a band the eye reads as a bar. Nothing
+  is needed because the bar's contents are already matched to that backdrop.
+- **Everywhere else: a top-to-bottom gradient** (`from-*/90 via-*/45 to-transparent`)
+  that fades out before its own bottom edge, so it carries the logo and links over
+  whatever scrolls underneath without ever drawing a line across the page.
 
 ⚠️ **No `backdrop-blur`, deliberately.** Blur stops dead at the bottom of the nav box
 while the colour keeps fading, which leaves a visible horizontal seam — the exact
@@ -717,11 +723,15 @@ artifact the transparent bar was meant to remove.
 
 🔴 **`overHero` exists because the light theme is wrong over the hero art.** Wherever the
 character renders, the hero backdrop is the dark render in BOTH themes (the hero copy is
-already forced to `desktop-pointer:text-white` for the same reason). A white light-theme
-scrim over it erases the logo; past the hero the page is white again, where white nav
+already forced to `desktop-pointer:text-white` for the same reason). Black light-theme
+nav content disappears into it; past the hero the page is white again, where white nav
 content is just as invisible. So the flag is measured from `#hero`'s bottom edge against
-the bar height, and drives three `desktop-pointer:`-only overrides: a dark scrim, white
-links, and the white logo swapped in for the black one.
+the bar height, and it drives the background choice plus two `desktop-pointer:`-only
+overrides: white links, and the white logo swapped in for the black one.
+
+⚠️ **With no scrim over the hero, those two overrides are the ONLY thing keeping the bar
+legible there.** They are not dressing — drop them and the light theme puts a black logo
+on dark art.
 
 ⚠️ **Those overrides are keyed to `desktop-pointer:`, never to `lg:`.** An iPad gets the
 original light hero, so a width-keyed rule would paint a white logo onto a white
@@ -1148,4 +1158,4 @@ Target these keyword themes in blog posts:
 
 ---
 
-> **Last updated:** 2026-08-22 (later) — Navbar is now a transparent top-to-bottom scrim on every page and scroll position; the native cursor is hidden over the hero so the mosquito is the only pointer; a new `desktop-pointer` screen variant replaces every `lg:` rule that assumed the character was on screen, which is what gives an iPad in landscape the original chevron hero back instead of an empty hero with white-on-white copy; the language switcher now shows a translate glyph plus `AR`/`EN` rather than a globe plus `عربي`; and the character now hunts for the mosquito after one still second, sweeping the full range end to end and back on a cosine (track / settle / idle / return state machine, gated on reduced-motion and on the hero being on screen), rests only on whole frames, and paints the mosquito in a `z-20` layer so it no longer vanishes behind the CTA. All on `hero-frog-tracker`: the scrim and cursor landed in `28f7067`, the variant and the switcher in `77a47fa`, the idle hunt is still uncommitted. Three traps recorded above: a link's UA `cursor: pointer` beats an inherited `cursor: none`, so the descendant rule is required; `lg:` is not a test for "has a pointer"; and the light theme has to borrow the dark theme's nav colours while the bar sits over the character art, seeded from the URL so it does not flash. Same day — Landing hero: cursor-tracked character (branch `hero-frog-tracker`, WIP, not merged). Desktop-only frame-sequence hero replacing the static chevron; mobile untouched by construction. See "Landing Hero" above for the extraction rules and the four traps that cost real time: sorting frames by a computed head-angle proxy scrambles the tail, mirroring to fake the missing half leaves the frame uncovered, RTL puts the copy on top of the character without `lg:col-start-2`, and frame direction must be verified by screenshot rather than by metric. Previous: 2026-07-05 — GSC indexing fixes: unified Blade/SSR titles (killed literal `${APP_NAME}` baked into hardrock-ssr's bundle from an uninterpolated Railway var), 301'd bare `/services` duplicate, bumped sitemap lastmod, documented Cloudflare 403 on spoofed-Googlebot curls. Previous: 2026-05-04, commit `47197b9` (/dashboard → /admin rename).
+> **Last updated:** 2026-08-22 (later) — Navbar has no solid background anywhere: fully transparent while it sits over the hero, a top-to-bottom scrim elsewhere; the native cursor is hidden over the hero so the mosquito is the only pointer; a new `desktop-pointer` screen variant replaces every `lg:` rule that assumed the character was on screen, which is what gives an iPad in landscape the original chevron hero back instead of an empty hero with white-on-white copy; the language switcher now shows a translate glyph plus `AR`/`EN` rather than a globe plus `عربي`; and the character now hunts for the mosquito after one still second, sweeping the full range end to end and back on a cosine (track / settle / idle / return state machine, gated on reduced-motion and on the hero being on screen), rests only on whole frames, and paints the mosquito in a `z-20` layer so it no longer vanishes behind the CTA. All on `hero-frog-tracker`: the scrim and cursor landed in `28f7067`, the variant and the switcher in `77a47fa`, the idle hunt in `f45cd06` and `df164d4`; only the navbar going fully transparent over the hero is still uncommitted. Three traps recorded above: a link's UA `cursor: pointer` beats an inherited `cursor: none`, so the descendant rule is required; `lg:` is not a test for "has a pointer"; and the light theme has to borrow the dark theme's nav colours while the bar sits over the character art, seeded from the URL so it does not flash. Same day — Landing hero: cursor-tracked character (branch `hero-frog-tracker`, WIP, not merged). Desktop-only frame-sequence hero replacing the static chevron; mobile untouched by construction. See "Landing Hero" above for the extraction rules and the four traps that cost real time: sorting frames by a computed head-angle proxy scrambles the tail, mirroring to fake the missing half leaves the frame uncovered, RTL puts the copy on top of the character without `lg:col-start-2`, and frame direction must be verified by screenshot rather than by metric. Previous: 2026-07-05 — GSC indexing fixes: unified Blade/SSR titles (killed literal `${APP_NAME}` baked into hardrock-ssr's bundle from an uninterpolated Railway var), 301'd bare `/services` duplicate, bumped sitemap lastmod, documented Cloudflare 403 on spoofed-Googlebot curls. Previous: 2026-05-04, commit `47197b9` (/dashboard → /admin rename).
