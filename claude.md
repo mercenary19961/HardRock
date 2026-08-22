@@ -530,11 +530,26 @@ reversing and a temporal one does not. Getting this wrong has inverted the hero 
 Screenshot the two extremes and look — pixel metrics for "which way is he facing" have
 been unreliable here.
 
-### Three modes: track, idle, return
+### Four modes: track, settle, idle, return
 
 Which pose is painted is decided by a small state machine inside the effect; `renderPose`
 just paints whatever float it is handed, and `poseRef` is how the modes hand off to each
 other.
+
+**The hero opens in `idle`, not in `track`.** For `INTRO_MS` (2s from mount) he is
+already hunting and the pointer cannot take his head; after that the machine behaves
+normally. Without it the first thing a visitor sees is a character standing dead still,
+which reads as a background image — the effect only announces itself once he moves.
+
+- ⚠️ **The mosquito still tracks the pointer through the intro; only the HEAD ignores
+  it.** Hiding the pointer for two seconds on arrival would strand a visitor reaching
+  straight for the CTA, and the story holds either way: the mosquito is in the room, he
+  has not spotted it yet. The idle branch hides it again the moment the intro lapses,
+  which covers the visitor who moved during the opening and then went still.
+- The clock starts at MOUNT, i.e. after hydration, not at first paint. It is the only
+  anchor available on the client and it is close enough.
+- Reduced motion and an off-screen hero both skip the intro through `goIdle`'s existing
+  guards and land on plain tracking, exactly as before.
 
 - **track** — the absolute mapping above. One rAF per mousemove, no loop.
 - **settle** — 200ms after the pointer stops, a 160ms ease onto the nearest whole frame
@@ -557,9 +572,9 @@ other.
   starts from his current pose instead of jumping to an end. Verified numerically: entry
   jump 7e-15 poses, range exactly 0..58, two reversals per round trip, peak speed 0.61
   poses per frame at 60fps (so adjacent frames are always cross-faded, never skipped).
-- **return** — the first mousemove brings the mosquito straight back and eases the head
-  from wherever the search left it onto the pointer over `RETURN_MS` (260ms), then hands
-  back to track.
+- **return** — the first mousemove AFTER the intro brings the mosquito straight back and
+  eases the head from wherever the search left it onto the pointer over `RETURN_MS`
+  (260ms), then hands back to track.
 
 ⚠️ **The return target is re-read every frame, not fixed when the return starts.** A
 visitor who keeps moving would otherwise be chased to a position they had already left,

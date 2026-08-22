@@ -80,6 +80,22 @@ const SWEEP_MS = 2400;
 /** How long the head takes to swing back once the mosquito reappears. */
 const RETURN_MS = 260;
 
+/**
+ * The hero opens mid-hunt: he is already sweeping when the page arrives, and the pointer
+ * cannot take his head until this is up. Without it the first thing a visitor sees is a
+ * character standing dead still, which reads as a background image rather than as
+ * something alive — the effect only announces itself once he moves.
+ *
+ * ⚠️ The mosquito still tracks the pointer throughout, it is only the HEAD that ignores
+ * it. Hiding the pointer for two seconds on arrival would strand a visitor who reaches
+ * for the CTA immediately, and the story survives intact: the mosquito is in the room,
+ * he simply has not spotted it yet.
+ *
+ * At `SWEEP_MS` 2400 this covers about 83% of one pass. Raise it to 2400 for exactly one
+ * full pass, or 4800 for a complete there-and-back.
+ */
+const INTRO_MS = 2000;
+
 /*
  * 🔑 He must never come to REST between two frames.
  *
@@ -204,6 +220,10 @@ export default function HeroFrog() {
         let onScreen = true;
         // The search sweep, as a phase into a cosine: 0 is one extreme, π the other.
         let sweep = { phase0: 0, start: 0 };
+
+        const openedAt = performance.now();
+        /** True while the opening hunt still owns the head. */
+        const inIntro = () => performance.now() - openedAt < INTRO_MS;
         // Where the head was when the mosquito came back.
         let ret = { from: 0, start: 0 };
         // The nudge onto a whole frame once the pointer goes still.
@@ -255,7 +275,6 @@ export default function HeroFrog() {
             if (mode !== 'track' || calm.matches || !onScreen) return;
 
             mode = 'idle';
-            setSkeeterShown(false);
             /*
              * Enter the sweep at the phase that already matches where the head is, so
              * the hunt starts from his current pose rather than snapping to an end.
@@ -277,6 +296,22 @@ export default function HeroFrog() {
                 // holds, nothing to land on — the phase just keeps advancing.
                 const phase = sweep.phase0 + (Math.PI * (performance.now() - sweep.start)) / SWEEP_MS;
                 renderPose((SPAN / 2) * (1 - Math.cos(phase)));
+
+                if (inIntro()) {
+                    // Opening hunt: the head is his, but the mosquito is still the
+                    // visitor's pointer and has to keep up with it.
+                    const p = readPointer();
+                    if (p) {
+                        const skeeter = skeeterRef.current;
+                        if (skeeter) skeeter.style.transform = `translate(${p.x}px, ${p.y}px)`;
+                        setSkeeterShown(!p.overNav);
+                    }
+                } else {
+                    // Also what hides it the moment the intro lapses, if a visitor moved
+                    // during the opening and then went still.
+                    setSkeeterShown(false);
+                }
+
                 schedule();
                 return;
             }
@@ -322,9 +357,10 @@ export default function HeroFrog() {
 
         const onMove = (e: MouseEvent) => {
             posRef.current = { x: e.clientX, y: e.clientY };
-            if (mode === 'idle') {
+            if (mode === 'idle' && !inIntro()) {
                 // Straight back to 'return', on the first movement rather than on a
                 // timer: the mosquito is the visitor's pointer and must not lag it.
+                // During the intro this is skipped, and the sweep keeps the head.
                 mode = 'return';
                 ret = { from: poseRef.current, start: performance.now() };
             } else if (mode === 'settle') {
@@ -365,9 +401,16 @@ export default function HeroFrog() {
         );
         if (wrapRef.current) io.observe(wrapRef.current);
 
-        // He starts hunting on his own if the visitor never moves at all, which is the
-        // usual case on a fresh page load.
+        /*
+         * The hero opens on the hunt rather than on a still frame — see INTRO_MS. After
+         * it lapses this is also what keeps him hunting when the visitor never moves at
+         * all, which is the usual case on a fresh page load.
+         *
+         * goIdle's own guards do the rest: reduced motion and an off-screen hero both
+         * fall through to plain tracking, exactly as before.
+         */
         armTimers();
+        goIdle();
 
         return () => {
             window.removeEventListener('mousemove', onMove);
