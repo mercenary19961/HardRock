@@ -1,5 +1,7 @@
 import { useTranslation } from 'react-i18next';
 
+import HeroFrog from './HeroFrog';
+
 export default function Hero() {
     const { t, i18n } = useTranslation('hero');
     const isArabic = i18n.language === 'ar';
@@ -17,13 +19,19 @@ export default function Hero() {
 
     return (
         <section className="relative min-h-screen flex items-center overflow-hidden bg-white dark:bg-black">
-            {/* Purple Glow Background - Dark Mode */}
-            <div className="absolute inset-0 overflow-hidden dark:block hidden">
+            {/* Cursor-tracked character, desktop only — renders nothing below lg, so
+                the mobile hero is untouched. */}
+            <HeroFrog />
+
+            {/* Purple Glow Background - Dark Mode.
+                lg:hidden because the frog backdrop supplies its own lighting; leaving
+                this on top of it just muddies the frame. */}
+            <div className="absolute inset-0 overflow-hidden dark:block hidden lg:hidden">
                 <div className="absolute top-1/3 ltr:left-0 rtl:right-0 w-1/2 h-1/2 ltr:bg-gradient-to-r rtl:bg-gradient-to-l from-purple-600/30 to-transparent blur-[100px]" />
             </div>
 
             {/* Background Wave */}
-            <div className="hidden lg:block absolute ltr:bottom-12 ltr:left-0 rtl:bottom-12 rtl:right-0 ltr:origin-bottom-left rtl:origin-bottom-right lg:w-[40%] opacity-30 dark:opacity-60">
+            <div className="hidden absolute ltr:bottom-12 ltr:left-0 rtl:bottom-12 rtl:right-0 ltr:origin-bottom-left rtl:origin-bottom-right lg:w-[40%] opacity-30 dark:opacity-60">
                 <img
                     src="/images/bg wave.webp"
                     alt="Background wave decoration"
@@ -36,13 +44,19 @@ export default function Hero() {
             <div className="relative z-10 w-full px-8 sm:px-12 lg:px-16 xl:px-20 pt-36 pb-0 md:pt-24 md:pb-20">
                 <div className="grid lg:grid-cols-2 gap-10 items-center">
                     {/* Left Column - Text Content */}
+                    {/* 🔴 lg:col-start-2 in Arabic. Under RTL the FIRST grid child is the
+                        RIGHT column — which is exactly where the character stands, so the
+                        copy landed on top of him and was unreadable. Placing it in column
+                        two puts it back on the left visually while the Arabic text inside
+                        still reads right-to-left. Below lg the grid is a single column, so
+                        this changes nothing on mobile. */}
                     <div
-                        className="text-center animate-on-load fade-in-left"
+                        className={`text-center animate-on-load fade-in-left ${isArabic ? 'lg:col-start-2' : ''}`}
                         style={{ animationDuration: '0.8s', opacity: 0 }}
                     >
                         {isArabic ? (
                             <h1
-                                className="text-3xl md:text-4xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-bold text-black dark:text-white text-center mb-6 font-tajawal animate-on-load fade-in-up"
+                                className="text-3xl md:text-4xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-bold text-black dark:text-white lg:text-white text-center mb-6 font-tajawal animate-on-load fade-in-up"
                                 style={{ lineHeight: '1.6', paddingTop: '8px', animationDelay: '0.2s', animationDuration: '0.8s', opacity: 0 }}
                             >
                                 {t('title.line1')}<br />
@@ -56,7 +70,7 @@ export default function Hero() {
                                 className="text-center font-sf-pro animate-on-load fade-in-up"
                                 style={{ lineHeight: '1.5', animationDelay: '0.2s', animationDuration: '0.8s', opacity: 0 }}
                             >
-                                <span className="block text-xl xs:text-3xl sm:text-4xl md:text-4xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold text-black dark:text-white mb-2" style={{ lineHeight: '1.5' }}>
+                                <span className="block text-xl xs:text-3xl sm:text-4xl md:text-4xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold text-black dark:text-white lg:text-white mb-2" style={{ lineHeight: '1.5' }}>
                                     {t('title.line1')}<br />
                                     {t('title.line2')}
                                 </span>
@@ -67,7 +81,7 @@ export default function Hero() {
                         )}
 
                         <p
-                            className={`text-gray-700 dark:text-gray-300 mx-auto text-center leading-relaxed animate-on-load fade-in-up ${
+                            className={`text-gray-700 dark:text-gray-300 lg:text-gray-200 mx-auto text-center leading-relaxed animate-on-load fade-in-up ${
                                 isArabic
                                     ? 'text-base md:text-lg lg:text-xl xl:text-2xl mb-12 max-w-[250px] md:max-w-xs font-tajawal font-light'
                                     : 'text-sm sm:text-md md:text-lg lg:text-1xl xl:text-2xl mb-10 max-w-[250px] sm:max-w-2xl md:max-w-xl font-sf-pro font-light'
@@ -100,10 +114,10 @@ export default function Hero() {
 
                     {/* Right Column - Hero Image */}
                     <div
-                        className="relative flex flex-col justify-center items-center animate-on-load fade-in-scale"
+                        className={`relative flex flex-col justify-center items-center animate-on-load fade-in-scale ${isArabic ? 'lg:col-start-1 lg:row-start-1' : ''}`}
                         style={{ animationDelay: '0.3s', animationDuration: '1s', opacity: 0 }}
                     >
-                        <div className="relative w-full max-w-lg">
+                        <div className="relative w-full max-w-lg lg:hidden">
                             {/* Glow effect behind image - reduced on mobile */}
                             <div className="absolute inset-12 bg-gradient-to-br from-pink-500/10 via-purple-500/10 to-purple-600/10 blur-[40px] md:from-pink-500/30 md:via-purple-500/30 md:to-purple-600/30 md:blur-[85px] rounded-full" />
 

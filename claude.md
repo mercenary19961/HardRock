@@ -1,6 +1,6 @@
 # HardRock - Codebase Context for Claude
 
-> **📍 Doc sync:** CLAUDE.md last synced to commit `9e7af8f` — 2026-06-02 13:38 (Tue).
+> **📍 Doc sync:** CLAUDE.md last synced to commit `e694e60` — 2026-08-22 (Fri) [`hero-frog-tracker`, uncommitted].
 
 This document provides comprehensive context about the HardRock codebase to help Claude understand and work with the project effectively.
 
@@ -127,6 +127,7 @@ hardrock/
 │       │   ├── landing/              # Landing page sections
 │       │   │   ├── Navbar.tsx
 │       │   │   ├── Hero.tsx
+│       │   │   ├── HeroFrog.tsx        # Cursor-tracked character backdrop (desktop only)
 │       │   │   ├── WhyHardRock.tsx
 │       │   │   ├── Services.tsx
 │       │   │   ├── ClientsPartners.tsx  # Animated marquee belts with client/partner logos
@@ -467,6 +468,118 @@ $validated = $request->validate([
 
 ---
 
+## Landing Hero — cursor-tracked character
+
+> **Status: WIP on branch `hero-frog-tracker`, not merged.** Replaces the static
+> `hero-icon.webp` chevron on DESKTOP ONLY. Nothing about the mobile hero changes.
+
+**Files:** `resources/js/components/landing/HeroFrog.tsx` (new) ·
+`resources/js/components/landing/Hero.tsx` (mounts it, hides the chevron/glow/wave at
+`lg`) · `public/images/frog/f000..f058.webp` (59 frames, 1.5 MB)
+
+A character in the hero turns his head to follow the visitor's cursor. The cursor is
+drawn as a mosquito, so the reason he is watching is legible.
+
+### It is a stack of stills, not a video
+
+🔑 The source is an MP4, but seeking it measured **~68 ms per jump** — far too slow to
+track a pointer, because a normal H.264 export only carries a keyframe every couple of
+seconds and the decoder has to walk forward from the last one. Stills have no decoder:
+moving between poses is an opacity change. They also work in Safari, where video
+`currentTime` scrubbing is unreliable, and they let the dead holds in the clip be
+dropped at build time rather than sat through at runtime.
+
+Frames are all in the DOM from first paint and only their opacity changes. Swapping a
+single `src` would decode on demand and stutter on the first pass through the sweep.
+
+### Extracting frames from a new render
+
+The source is 30 fps. Sample at the native frame rate, keep the video's **temporal
+order**, and select frames on *monotonic pose progress* — a frame earns its place only
+if the head has actually advanced since the last kept one, measured as pixel distance
+over the head region. That single rule drops the holds at either end, the stall in the
+middle, and any small backward step. From FROG_3: **128 native frames → 59 kept.**
+
+🔴 **Do NOT sort frames by a computed "head angle".** An earlier version scored each
+frame by where the dark eye-pixels sat inside the head's bounding box and sorted on
+that. The proxy is noisy, and in the tail it put genuinely different poses in the wrong
+order — on screen the head turned, snapped back, and turned again. The video's own
+order *is* the rotation order; nothing needs inferring.
+
+⚠️ **Do not pad the sequence by duplicating frames.** A duplicate carries no new pose,
+so it parks one image over more cursor travel — a dead spot, not smoother motion.
+
+### Mapping
+
+**ABSOLUTE**: cursor x maps straight onto a pose, so where he looks always corresponds
+to where the visitor actually is. The usual implementation of this effect accumulates
+mouse deltas instead, which drifts — acceptable for an abstract shape, fatal for a face.
+
+⚠️ Two cleverer schemes were tried and both made it worse, so plain linear is
+deliberate:
+- **Pivoting the head-on frame onto his screen position** is geometrically right, but
+  the current footage *ends* at head-on, so everything past him froze — a third of the
+  hero dead.
+- **Mirroring frames to fake the missing half** left the opposite corner uncovered
+  (reflecting about his axis moves the image off its own box) and flipped the lapel-pin
+  logo.
+
+⚠️ **Check the direction empirically after any re-harvest.** Whether frame 0 is the
+screen-left extreme depends on how the sequence was built; a sorted harvest needed
+reversing and a temporal one does not. Getting this wrong has inverted the hero twice.
+Screenshot the two extremes and look — pixel metrics for "which way is he facing" have
+been unreliable here.
+
+### Blending, and its cost
+
+Adjacent frames are cross-faded by the sub-frame fraction, otherwise the step is ~24 px
+of cursor travel per pose and each one is visible landing.
+
+⚠️ A cross-fade is a double exposure: at 50/50 it costs about **15% of the head's edge
+detail**, which reads as blur. That cost is inherent and does not shrink with frame
+count — an earlier measurement suggesting it did had sampled the stalled region, where
+adjacent frames were near-duplicates. What *can* be reduced is the time spent near
+50/50, which is why the fraction is eased with a smoothstep rather than used raw.
+Removing the softness properly needs more real poses over the same rotation.
+
+### Mobile and RTL
+
+- **Mobile is untouched.** The component returns `null` below `lg` and on any device
+  without `(hover: hover) and (pointer: fine)`, so there is no payload, no listener and
+  no frames in the DOM. The chevron, its glow and the "Reach The Peak" h2 render exactly
+  as before.
+- 🔴 **Arabic needs `lg:col-start-2` on the text column.** Under RTL the FIRST grid
+  child is the RIGHT column — which is where the character stands — so the copy landed
+  on his face and was unreadable. Placing it in column two puts it back on the left
+  visually while the Arabic text inside still reads right-to-left. Below `lg` the grid
+  is single-column, so this changes nothing on mobile.
+- A gradient scrim sits under the copy. The backdrop measures 12:1 against white, so
+  white was fine — but the brand's purple-to-red gradient on "Digital Solutions" all but
+  vanished against purple. Darkening the copy side keeps the gradient rather than
+  recolouring it for one breakpoint.
+
+### Known limitation
+
+🔴 **The footage has never contained a turn to the viewer's RIGHT.** Across three
+renders the sweep runs profile-left → head-on and stops. The mapping therefore spreads
+what exists evenly across the width, so he is not strictly looking *at* the cursor when
+it sits on him. **A render covering both sides makes this exact code correct with no
+change.** The brief for it: one continuous head turn, full profile facing the viewer's
+left all the way to full profile facing the viewer's right, both ends full profile,
+never turning back, no blinks, over about 4 seconds.
+
+⚠️ A blink is not a blink here. Cursor position maps to a frame, so a blink becomes a
+permanently closed-eyed patch of the page rather than something that flashes past.
+
+### Not built
+
+Audio. A synthesised mosquito whine that rises as the cursor nears his face is written
+and tested in the prototype but deliberately left out of the site: browsers block audio
+until a user gesture, and WCAG 2.2.2 requires a stop control for anything over three
+seconds, so it needs a visible toggle and its own decision.
+
+---
+
 ## Development Commands
 
 ### Setup
@@ -635,6 +748,7 @@ php artisan admin:create email@example.com password "Name"
 | Services Page | resources/js/pages/Services.tsx |
 | Service Selector | resources/js/components/ui/expandable-service-selector.tsx |
 | Contact Form | resources/js/components/landing/ContactUs.tsx |
+| Hero Character (cursor-tracked) | resources/js/components/landing/HeroFrog.tsx + public/images/frog/ |
 | Contact Processing | app/Jobs/ProcessContactSubmission.php |
 | Clients & Partners Section | resources/js/components/landing/ClientsPartners.tsx |
 | Login Page | resources/js/pages/Auth/Login.tsx |
@@ -867,4 +981,4 @@ Target these keyword themes in blog posts:
 
 ---
 
-> **Last updated:** 2026-07-05 — GSC indexing fixes: unified Blade/SSR titles (killed literal `${APP_NAME}` baked into hardrock-ssr's bundle from an uninterpolated Railway var), 301'd bare `/services` duplicate, bumped sitemap lastmod, documented Cloudflare 403 on spoofed-Googlebot curls. Previous: 2026-05-04, commit `47197b9` (/dashboard → /admin rename).
+> **Last updated:** 2026-08-22 — Landing hero: cursor-tracked character (branch `hero-frog-tracker`, WIP, not merged). Desktop-only frame-sequence hero replacing the static chevron; mobile untouched by construction. See "Landing Hero" above for the extraction rules and the four traps that cost real time: sorting frames by a computed head-angle proxy scrambles the tail, mirroring to fake the missing half leaves the frame uncovered, RTL puts the copy on top of the character without `lg:col-start-2`, and frame direction must be verified by screenshot rather than by metric. Previous: 2026-07-05 — GSC indexing fixes: unified Blade/SSR titles (killed literal `${APP_NAME}` baked into hardrock-ssr's bundle from an uninterpolated Railway var), 301'd bare `/services` duplicate, bumped sitemap lastmod, documented Cloudflare 403 on spoofed-Googlebot curls. Previous: 2026-05-04, commit `47197b9` (/dashboard → /admin rename).
