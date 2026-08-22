@@ -181,7 +181,7 @@ export default function Navbar() {
      * gets the original light hero instead of the character, and white on that is white
      * on white.
      */
-    const overArt = overHero ? 'desktop-pointer:text-white' : '';
+    const overArtText = overHero ? 'desktop-pointer:text-white' : '';
 
     return (
         <nav className={`fixed top-0 left-0 right-0 z-50 overflow-x-hidden ${scrim} transition-transform duration-500 ${hidden ? '-translate-y-full' : 'translate-y-0'}`}>
@@ -212,7 +212,7 @@ export default function Navbar() {
                             <a
                                 key={link.name}
                                 href={link.href}
-                                className={`text-black/90 dark:text-white/90 ${overArt} hover:!text-brand-purple transition-all duration-200 text-sm lg:text-base font-poppins rtl:font-tajawal rtl:font-normal`}
+                                className={`text-black/90 dark:text-white/90 ${overArtText} hover:!text-brand-purple transition-all duration-200 text-sm lg:text-base font-poppins rtl:font-tajawal rtl:font-normal`}
                             >
                                 {link.name}
                             </a>
@@ -233,8 +233,13 @@ export default function Navbar() {
                                 {ctaText}
                             </span>
                         </a>
-                        <CinematicSwitch />
-                        <LanguageSwitcher />
+                        {/* These two carry their own pill background, so they need the
+                            over-art treatment passed in rather than inherited. Only the
+                            desktop pair: the mobile copies below are `md:hidden`, and
+                            `desktop-pointer` starts at 1024px, so they can never both
+                            apply. */}
+                        <CinematicSwitch overArt={overHero} />
+                        <LanguageSwitcher overArt={overHero} />
                     </div>
 
                     {/* Mobile menu button */}

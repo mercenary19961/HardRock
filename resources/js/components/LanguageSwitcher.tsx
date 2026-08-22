@@ -26,7 +26,18 @@ const LanguagesIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-export default function LanguageSwitcher() {
+interface LanguageSwitcherProps {
+  /**
+   * The bar is sitting over the hero's character art, which is dark in BOTH themes.
+   * The light theme's pale pill and black glyph wash out against it, so the control
+   * borrows the dark theme's colours there — the same trick the nav links and the logo
+   * already use, and keyed to the same `desktop-pointer:` condition, since a pointerless
+   * desktop screen gets the original light hero and must keep the light styling.
+   */
+  overArt?: boolean;
+}
+
+export default function LanguageSwitcher({ overArt = false }: LanguageSwitcherProps) {
   const { i18n } = useTranslation();
 
   const toggleLanguage = () => {
@@ -42,7 +53,11 @@ export default function LanguageSwitcher() {
   return (
     <button
       onClick={toggleLanguage}
-      className="flex items-center gap-1.5 md:gap-2 px-2 md:px-3 py-1.5 md:py-2 rounded-xl bg-white/50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 backdrop-blur-sm shadow-md hover:border-brand-purple dark:hover:border-brand-purple transition-all text-black dark:text-white hover:text-brand-purple dark:hover:text-brand-purple"
+      className={`flex items-center gap-1.5 md:gap-2 px-2 md:px-3 py-1.5 md:py-2 rounded-xl bg-white/50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 backdrop-blur-sm shadow-md hover:border-brand-purple dark:hover:border-brand-purple transition-all text-black dark:text-white hover:text-brand-purple dark:hover:text-brand-purple ${
+        // `dark:` outranks a screen variant on specificity, so these only bite in the
+        // light theme; `hover:` outranks them in turn, so the hover state survives.
+        overArt ? 'desktop-pointer:bg-zinc-900/50 desktop-pointer:border-zinc-800 desktop-pointer:text-white' : ''
+      }`}
       aria-label={currentLang === 'en' ? 'Switch to Arabic' : 'Switch to English'}
     >
       <LanguagesIcon className="w-3.5 h-3.5 md:w-4 md:h-4" />
