@@ -7,16 +7,28 @@ import { useTheme } from "@/contexts/ThemeContext";
 
 interface CinematicSwitchProps {
     className?: string;
+    /**
+     * The bar is sitting over the hero's character art, which is dark in BOTH themes.
+     * The light theme's pale pill washes out against it, so the control borrows the dark
+     * theme's colours there — same treatment as the nav links and the logo, and keyed to
+     * the same `desktop-pointer:` condition, since a pointerless desktop screen gets the
+     * original light hero and must keep the light styling.
+     */
+    overArt?: boolean;
 }
 
-export default function CinematicSwitch({ className }: CinematicSwitchProps) {
+export default function CinematicSwitch({ className, overArt = false }: CinematicSwitchProps) {
     const { theme, toggleTheme } = useTheme();
     const isOn = theme === 'dark';
 
     return (
         <div
             className={cn(
-                "flex items-center gap-2 p-2 rounded-xl bg-zinc-900/50 dark:bg-zinc-900/50 bg-white/50 border border-zinc-200 dark:border-zinc-800 backdrop-blur-sm shadow-md cursor-pointer",
+                // ⚠️ One background per theme. This carried a base `bg-zinc-900/50` AND a
+                // base `bg-white/50`, two unconditional values for the same property, and
+                // only survived because tailwind-merge silently dropped the first.
+                "flex items-center gap-2 p-2 rounded-xl bg-white/50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 backdrop-blur-sm shadow-md cursor-pointer",
+                overArt && "desktop-pointer:bg-zinc-900/50 desktop-pointer:border-zinc-800",
                 className
             )}
             onClick={toggleTheme}
