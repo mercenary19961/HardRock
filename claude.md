@@ -1,6 +1,6 @@
 # HardRock - Codebase Context for Claude
 
-> **📍 Doc sync:** CLAUDE.md last synced to commit `9e7af8f` — 2026-06-02 13:38 (Tue).
+> **📍 Doc sync:** CLAUDE.md last synced to commit `28f7067` — 2026-08-22 14:38 (Sat) [`hero-frog-tracker`; the `desktop-pointer` variant and the language switcher below are uncommitted].
 
 This document provides comprehensive context about the HardRock codebase to help Claude understand and work with the project effectively.
 
@@ -127,6 +127,7 @@ hardrock/
 │       │   ├── landing/              # Landing page sections
 │       │   │   ├── Navbar.tsx
 │       │   │   ├── Hero.tsx
+│       │   │   ├── HeroFrog.tsx        # Cursor-tracked character backdrop (desktop only)
 │       │   │   ├── WhyHardRock.tsx
 │       │   │   ├── Services.tsx
 │       │   │   ├── ClientsPartners.tsx  # Animated marquee belts with client/partner logos
@@ -467,6 +468,211 @@ $validated = $request->validate([
 
 ---
 
+## Landing Hero — cursor-tracked character
+
+> **Status: WIP on branch `hero-frog-tracker`, not merged.** Replaces the static
+> `hero-icon.webp` chevron on DESKTOP ONLY. Nothing about the mobile hero changes.
+
+**Files:** `resources/js/components/landing/HeroFrog.tsx` (new) ·
+`resources/js/components/landing/Hero.tsx` (mounts it, hides the chevron/glow/wave at
+`lg`) · `public/images/frog/f000..f058.webp` (59 frames, 1.5 MB)
+
+A character in the hero turns his head to follow the visitor's cursor. The cursor is
+drawn as a mosquito, so the reason he is watching is legible.
+
+### It is a stack of stills, not a video
+
+🔑 The source is an MP4, but seeking it measured **~68 ms per jump** — far too slow to
+track a pointer, because a normal H.264 export only carries a keyframe every couple of
+seconds and the decoder has to walk forward from the last one. Stills have no decoder:
+moving between poses is an opacity change. They also work in Safari, where video
+`currentTime` scrubbing is unreliable, and they let the dead holds in the clip be
+dropped at build time rather than sat through at runtime.
+
+Frames are all in the DOM from first paint and only their opacity changes. Swapping a
+single `src` would decode on demand and stutter on the first pass through the sweep.
+
+### Extracting frames from a new render
+
+The source is 30 fps. Sample at the native frame rate, keep the video's **temporal
+order**, and select frames on *monotonic pose progress* — a frame earns its place only
+if the head has actually advanced since the last kept one, measured as pixel distance
+over the head region. That single rule drops the holds at either end, the stall in the
+middle, and any small backward step. From FROG_3: **128 native frames → 59 kept.**
+
+🔴 **Do NOT sort frames by a computed "head angle".** An earlier version scored each
+frame by where the dark eye-pixels sat inside the head's bounding box and sorted on
+that. The proxy is noisy, and in the tail it put genuinely different poses in the wrong
+order — on screen the head turned, snapped back, and turned again. The video's own
+order *is* the rotation order; nothing needs inferring.
+
+⚠️ **Do not pad the sequence by duplicating frames.** A duplicate carries no new pose,
+so it parks one image over more cursor travel — a dead spot, not smoother motion.
+
+### Mapping
+
+**ABSOLUTE**: cursor x maps straight onto a pose, so where he looks always corresponds
+to where the visitor actually is. The usual implementation of this effect accumulates
+mouse deltas instead, which drifts — acceptable for an abstract shape, fatal for a face.
+
+⚠️ Two cleverer schemes were tried and both made it worse, so plain linear is
+deliberate:
+- **Pivoting the head-on frame onto his screen position** is geometrically right, but
+  the current footage *ends* at head-on, so everything past him froze — a third of the
+  hero dead.
+- **Mirroring frames to fake the missing half** left the opposite corner uncovered
+  (reflecting about his axis moves the image off its own box) and flipped the lapel-pin
+  logo.
+
+⚠️ **Check the direction empirically after any re-harvest.** Whether frame 0 is the
+screen-left extreme depends on how the sequence was built; a sorted harvest needed
+reversing and a temporal one does not. Getting this wrong has inverted the hero twice.
+Screenshot the two extremes and look — pixel metrics for "which way is he facing" have
+been unreliable here.
+
+### Blending, and its cost
+
+Adjacent frames are cross-faded by the sub-frame fraction, otherwise the step is ~24 px
+of cursor travel per pose and each one is visible landing.
+
+⚠️ A cross-fade is a double exposure: at 50/50 it costs about **15% of the head's edge
+detail**, which reads as blur. That cost is inherent and does not shrink with frame
+count — an earlier measurement suggesting it did had sampled the stalled region, where
+adjacent frames were near-duplicates. What *can* be reduced is the time spent near
+50/50, which is why the fraction is eased with a smoothstep rather than used raw.
+Removing the softness properly needs more real poses over the same rotation.
+
+### Mobile, tablets and RTL
+
+🔴 **`lg:` is NOT the test for "has this character" — use the `desktop-pointer:`
+variant.** An iPad in landscape is 1024px+ with no pointer, so the component returns
+`null` there while any `lg:`-keyed styling still fires. That combination shipped briefly
+and left iPads with a hero that had no artwork at all and, in the light theme, white
+copy on a white background. Everything the character affects is therefore keyed to a
+custom screen in `tailwind.config.js`:
+
+```js
+'desktop-pointer': { raw: '(hover: hover) and (pointer: fine) and (min-width: 1024px)' }
+```
+
+- **Deliberately CSS, not the JS hook.** A media query is right on first paint; a
+  hydration-time boolean would flash the wrong hero on every load. `usePrecisePointer`
+  carries the identical query and decides only whether to MOUNT the character (and to
+  hide the cursor, which must not happen before the mosquito exists). **Change one
+  string and you must change the other.**
+- **What it gates:** the wave (`hidden lg:block desktop-pointer:hidden`), the chevron,
+  the copy going white, and the RTL column swap. Anything a pointerless screen must keep
+  stays on `lg:`, so the original desktop hero survives intact on an iPad.
+- **Mobile is untouched** either way: no payload, no listener, no frames in the DOM.
+- 🔴 **Arabic needs `desktop-pointer:col-start-2` on the text column.** Under RTL the
+  FIRST grid child is the RIGHT column — which is where the character stands — so the
+  copy landed on his face and was unreadable. Placing it in column two puts it back on
+  the left visually while the Arabic text inside still reads right-to-left. It is keyed
+  to the character's own condition because with no character there is nothing to dodge,
+  and the original layout deliberately put the Arabic copy on the right. Below `lg` the
+  grid is single-column, so mobile is unaffected either way.
+- ⚠️ **The `lg:hidden` on the dark-mode purple glow is a no-op**, left as found.
+  `dark:block` compiles to `:is(.dark *)` at specificity 0-2-0 and outranks `lg:hidden`
+  at 0-1-0, so the glow still washes over the character in dark mode. Realising the
+  original intent needs `dark:desktop-pointer:hidden` (0-2-0 inside a media query); it
+  is a visual change to the current desktop hero, so it was left for a deliberate call.
+- A gradient scrim sits under the copy. The backdrop measures 12:1 against white, so
+  white was fine — but the brand's purple-to-red gradient on "Digital Solutions" all but
+  vanished against purple. Darkening the copy side keeps the gradient rather than
+  recolouring it for one breakpoint.
+
+### Known limitation
+
+🔴 **The footage has never contained a turn to the viewer's RIGHT.** Across three
+renders the sweep runs profile-left → head-on and stops. The mapping therefore spreads
+what exists evenly across the width, so he is not strictly looking *at* the cursor when
+it sits on him. **A render covering both sides makes this exact code correct with no
+change.** The brief for it: one continuous head turn, full profile facing the viewer's
+left all the way to full profile facing the viewer's right, both ends full profile,
+never turning back, no blinks, over about 4 seconds.
+
+⚠️ A blink is not a blink here. Cursor position maps to a frame, so a blink becomes a
+permanently closed-eyed patch of the page rather than something that flashes past.
+
+### Not built
+
+Audio. A synthesised mosquito whine that rises as the cursor nears his face is written
+and tested in the prototype but deliberately left out of the site: browsers block audio
+until a user gesture, and WCAG 2.2.2 requires a stop control for anything over three
+seconds, so it needs a visible toggle and its own decision.
+
+### The native cursor is hidden over the hero
+
+The mosquito is the pointer, so the arrow is switched off for the section — otherwise
+the visitor sees two cursors. `Hero` puts `cursor-none [&_*]:cursor-none` on the section
+on exactly the condition that mounts the character.
+
+🔑 **The condition is shared, via `usePrecisePointer()`.** Hiding the cursor where the
+character does not render would leave a visitor with no pointer at all, so the media
+query (`hover: hover` + `pointer: fine` + `min-width: 1024px`) lives in one hook that
+both components read. Never let those two decisions drift apart.
+
+⚠️ **`cursor-none` alone is not enough — the descendant rule is load-bearing.** `cursor`
+inherits, but a link carries `cursor: pointer` from the UA stylesheet as a declaration
+*on the element*, and a declared value always beats an inherited one, so the hero CTA
+kept its arrow. `[&_*]:cursor-none` fixes it because an author rule outranks the UA
+stylesheet at any specificity.
+
+⚠️ **The mosquito hides under the top 80 px** (`NAV_HEIGHT`). The navbar is transparent
+now, so it would otherwise show through the bar next to the real arrow — which the nav
+keeps, because its links need a click affordance.
+
+🔑 **`posRef` holds VIEWPORT coordinates, and `scroll` repaints.** Storing hero-relative
+coordinates let the mosquito ride up with the section during a wheel-scroll and sit
+where the pointer was not. That was merely odd before; with the native cursor hidden it
+strands the visitor without a pointer until they jiggle the mouse.
+
+The CTA has no pointer cursor as a result; its hover scale and shadow are the whole
+affordance. If that ever reads as broken, restore `cursor-pointer` on that one anchor
+rather than dropping the section rule.
+
+---
+
+## Navbar — transparent scrim (no solid bar)
+
+The bar has no solid background on any page or scroll position. It is a top-to-bottom
+gradient (`from-*/90 via-*/45 to-transparent`) that fades out before its own bottom
+edge, so nothing draws a line across the hero.
+
+⚠️ **No `backdrop-blur`, deliberately.** Blur stops dead at the bottom of the nav box
+while the colour keeps fading, which leaves a visible horizontal seam — the exact
+artifact the transparent bar was meant to remove.
+
+🔴 **`overHero` exists because the light theme is wrong over the hero art.** Wherever the
+character renders, the hero backdrop is the dark render in BOTH themes (the hero copy is
+already forced to `desktop-pointer:text-white` for the same reason). A white light-theme
+scrim over it erases the logo; past the hero the page is white again, where white nav
+content is just as invisible. So the flag is measured from `#hero`'s bottom edge against
+the bar height, and drives three `desktop-pointer:`-only overrides: a dark scrim, white
+links, and the white logo swapped in for the black one.
+
+⚠️ **Those overrides are keyed to `desktop-pointer:`, never to `lg:`.** An iPad gets the
+original light hero, so a width-keyed rule would paint a white logo onto a white
+background there. Same trap as the hero itself, one component further out.
+
+⚠️ **It is seeded from the URL (`usePage().url === '/'`), not from a measurement.**
+Measuring first would flash a black logo over the dark art on every light-theme landing
+load, for as long as hydration takes. The scroll handler then refines it, and pages
+without a `#hero` never set it.
+
+⚠️ Specificity, if you touch these classes: `dark:` (a class selector, 0-2-0) outranks
+any screen variant (0-1-0) regardless of source order, so the overrides only ever bite
+in the light theme. That is intended — the dark theme is already dark. Screen variants
+beat plain utilities by SOURCE ORDER instead, and `desktop-pointer` is declared in
+`extend.screens`, so it lands after both the base utilities and `lg:`. Verify that
+ordering in the built CSS if you ever reorder the screens.
+
+⚠️ **Content now scrolls under the bar on `/services` and `/consultation`** (both start
+their content at `pt-20`, so only scrolled content reaches it). Accepted trade-off of
+"always transparent"; the scrim's opaque top edge is what keeps the links readable.
+
+---
+
 ## Development Commands
 
 ### Setup
@@ -635,6 +841,9 @@ php artisan admin:create email@example.com password "Name"
 | Services Page | resources/js/pages/Services.tsx |
 | Service Selector | resources/js/components/ui/expandable-service-selector.tsx |
 | Contact Form | resources/js/components/landing/ContactUs.tsx |
+| Hero Character (cursor-tracked) | resources/js/components/landing/HeroFrog.tsx + public/images/frog/ |
+| Desktop-pointer test (mount + cursor) | resources/js/hooks/usePrecisePointer.ts |
+| Desktop-pointer test (all styling) | `desktop-pointer` screen in tailwind.config.js |
 | Contact Processing | app/Jobs/ProcessContactSubmission.php |
 | Clients & Partners Section | resources/js/components/landing/ClientsPartners.tsx |
 | Login Page | resources/js/pages/Auth/Login.tsx |
@@ -867,4 +1076,4 @@ Target these keyword themes in blog posts:
 
 ---
 
-> **Last updated:** 2026-07-05 — GSC indexing fixes: unified Blade/SSR titles (killed literal `${APP_NAME}` baked into hardrock-ssr's bundle from an uninterpolated Railway var), 301'd bare `/services` duplicate, bumped sitemap lastmod, documented Cloudflare 403 on spoofed-Googlebot curls. Previous: 2026-05-04, commit `47197b9` (/dashboard → /admin rename).
+> **Last updated:** 2026-08-22 (later) — Navbar is now a transparent top-to-bottom scrim on every page and scroll position; the native cursor is hidden over the hero so the mosquito is the only pointer; a new `desktop-pointer` screen variant replaces every `lg:` rule that assumed the character was on screen, which is what gives an iPad in landscape the original chevron hero back instead of an empty hero with white-on-white copy; and the language switcher now shows a translate glyph plus `AR`/`EN` rather than a globe plus `عربي`. All on `hero-frog-tracker`; the scrim and cursor landed in `28f7067`, the variant and the switcher are still uncommitted. Three traps recorded above: a link's UA `cursor: pointer` beats an inherited `cursor: none`, so the descendant rule is required; `lg:` is not a test for "has a pointer"; and the light theme has to borrow the dark theme's nav colours while the bar sits over the character art, seeded from the URL so it does not flash. Same day — Landing hero: cursor-tracked character (branch `hero-frog-tracker`, WIP, not merged). Desktop-only frame-sequence hero replacing the static chevron; mobile untouched by construction. See "Landing Hero" above for the extraction rules and the four traps that cost real time: sorting frames by a computed head-angle proxy scrambles the tail, mirroring to fake the missing half leaves the frame uncovered, RTL puts the copy on top of the character without `lg:col-start-2`, and frame direction must be verified by screenshot rather than by metric. Previous: 2026-07-05 — GSC indexing fixes: unified Blade/SSR titles (killed literal `${APP_NAME}` baked into hardrock-ssr's bundle from an uninterpolated Railway var), 301'd bare `/services` duplicate, bumped sitemap lastmod, documented Cloudflare 403 on spoofed-Googlebot curls. Previous: 2026-05-04, commit `47197b9` (/dashboard → /admin rename).
