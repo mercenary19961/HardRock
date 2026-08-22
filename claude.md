@@ -640,8 +640,32 @@ custom screen in `tailwind.config.js`:
   hide the cursor, which must not happen before the mosquito exists). **Change one
   string and you must change the other.**
 - **What it gates:** the wave (`hidden lg:block desktop-pointer:hidden`), the chevron,
-  the copy going white, and the RTL column swap. Anything a pointerless screen must keep
-  stays on `lg:`, so the original desktop hero survives intact on an iPad.
+  the copy going white, the RTL column swap, and the ENGLISH headline sizes. Anything a
+  pointerless screen must keep stays on `lg:`, so the original desktop hero survives
+  intact on an iPad.
+- 🔴 **The English headline is sized FROM THE COLUMN, not off the breakpoint scale.**
+  `desktop-pointer:text-[min(3.78vw_-_7.56px,65px)]` on the white lines and
+  `min(5.64vw_-_11.28px,97px)` on the gradient line, plus
+  `desktop-pointer:whitespace-nowrap`. The column is `(100vw - padding - gap) / 2`, so a
+  `Nvw - Mpx` expression tracks it exactly and each line lands at **88% of it at every
+  width** (85% at 1024, where the lg padding makes the real column wider than the
+  formula assumes). The `min()` freezes growth at the 1920px size so a 4K display does
+  not get a 130px headline.
+
+  ⚠️ **Bumping the step scale instead is what NOT to do, and it was tried.** One step up
+  put the line at 98-109% of the column at the bottom of each breakpoint; every line
+  wrapped, the line count doubled, and the section grew past `min-h-screen`. `nowrap`
+  now makes that failure impossible — a bad constant nudges into the 12% margin instead
+  of adding a line.
+
+  📊 **The constants come from the font, not from a screenshot.** No SF Pro webfont is
+  loaded, so `font-sf-pro` falls through `system-ui` to **Segoe UI Bold** on Windows.
+  Measured from `segoeuib.ttf` (head/hhea/hmtx/cmap): "Transform Your Business" is
+  **11.645 em**, "Digital Solutions" **7.803 em**. N = 0.88 / 2 / ems, M = N × 200 (the
+  xl padding + gap). Both lines therefore render the same width. **Re-measure if the
+  English headline is reworded.** Reading sizes off a screenshot is what produced the
+  wrap: screenshots carry an unknown DPI scale, and the estimate was out by ~40%.
+  Arabic has its own `<h1>` branch and keeps its tuned step sizes.
 - **Mobile is untouched** either way: no payload, no listener, no frames in the DOM.
 - 🔴 **Arabic needs `desktop-pointer:col-start-2` on the text column.** Under RTL the
   FIRST grid child is the RIGHT column — which is where the character stands — so the

@@ -96,11 +96,38 @@ export default function Hero() {
                                 className="text-center font-sf-pro animate-on-load fade-in-up"
                                 style={{ lineHeight: '1.5', animationDelay: '0.2s', animationDuration: '0.8s', opacity: 0 }}
                             >
-                                <span className="block text-xl xs:text-3xl sm:text-4xl md:text-4xl lg:text-3xl xl:text-4xl 2xl:text-5xl font-bold text-black dark:text-white desktop-pointer:text-white mb-2" style={{ lineHeight: '1.5' }}>
+                                {/* 🔑 On the character hero the headline is sized FROM THE COLUMN,
+                                    not from the breakpoint scale, so each line grows to fill the
+                                    width it has and can never wrap.
+
+                                    The column is `(100vw - padding - gap) / 2`, so
+                                    `calc(Nvw - Mpx)` tracks it exactly, and each line is set to
+                                    88% of it. N and M come from the line's own width in ems,
+                                    measured off the rendered font (Segoe UI Bold via
+                                    `system-ui` — no SF Pro webfont is loaded): 11.645em for
+                                    "Transform Your Business", 7.803em for "Digital Solutions".
+                                    Both lines therefore end up the same rendered width.
+
+                                    ⚠️ Step sizes were tried first and are the wrong tool: one
+                                    step up overflowed the column at the bottom of each
+                                    breakpoint, every line wrapped, and the doubled line count
+                                    grew the section. `whitespace-nowrap` now makes that failure
+                                    mode impossible — a mis-measure would nudge into the margin
+                                    rather than add a line.
+
+                                    The `min()` caps growth at the size it reaches on a 1920px
+                                    screen. Past that it stops tracking the column, exactly as the
+                                    old `2xl` step did, so a 4K display does not get a 130px
+                                    headline.
+
+                                    ⚠️ The constants assume THIS copy. Re-measure if the English
+                                    headline is ever reworded. Arabic has its own branch below and
+                                    is untouched. */}
+                                <span className="block text-xl xs:text-3xl sm:text-4xl md:text-4xl lg:text-3xl xl:text-4xl 2xl:text-5xl desktop-pointer:text-[min(3.78vw_-_7.56px,65px)] desktop-pointer:whitespace-nowrap font-bold text-black dark:text-white desktop-pointer:text-white mb-2" style={{ lineHeight: '1.5' }}>
                                     {t('title.line1')}<br />
                                     {t('title.line2')}
                                 </span>
-                                <span className="block text-4xl xs:text-5xl sm:text-6xl md:text-6xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold bg-gradient-to-r from-brand-purple to-brand-red bg-clip-text text-transparent pb-[0.15em] mb-4" style={{ lineHeight: '1.5' }}>
+                                <span className="block text-4xl xs:text-5xl sm:text-6xl md:text-6xl lg:text-5xl xl:text-6xl 2xl:text-7xl desktop-pointer:text-[min(5.64vw_-_11.28px,97px)] desktop-pointer:whitespace-nowrap font-bold bg-gradient-to-r from-brand-purple to-brand-red bg-clip-text text-transparent pb-[0.15em] mb-4" style={{ lineHeight: '1.5' }}>
                                     {t('title.gradient')}
                                 </span>
                             </h1>
