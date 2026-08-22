@@ -154,23 +154,33 @@ export default function Navbar() {
     }, [isOpen]);
 
     /*
-     * A top-to-bottom scrim rather than a bar: opaque enough at the top edge to carry
-     * the logo and the links, gone by the bottom edge so nothing draws a line across
-     * the hero. Deliberately no backdrop blur — the blur would stop dead at the bottom
-     * of the box while the colour keeps fading, leaving the very seam this removes.
+     * Two backgrounds, chosen by what is behind the bar.
      *
-     * The `desktop-pointer:` override is the dark-art case above: it wins over the
-     * light-theme stops by source order, and loses to the `dark:` ones on specificity,
-     * which is what we want since those are already black.
+     * **Over the hero: nothing at all.** The hero is built to be looked at — the
+     * character on a desktop, the chevron everywhere else — and any wash across the top
+     * of it is a band the eye reads as a bar. Nothing is needed there because the bar's
+     * own contents are already matched to that backdrop: white over the dark art (see
+     * `overArt`), theme colours over the plain hero.
+     *
+     * **Everywhere else: a top-to-bottom scrim**, opaque enough at the top edge to carry
+     * the logo and the links over whatever scrolls underneath, gone by the bottom edge
+     * so it never draws a line across the page. Deliberately no backdrop blur — blur
+     * would stop dead at the bottom of the box while the colour keeps fading, leaving
+     * the very seam the fade removes.
      */
-    const scrim = `bg-gradient-to-b from-white/90 via-white/45 to-transparent dark:from-black/90 dark:via-black/45 ${
-        overHero ? 'desktop-pointer:from-black/80 desktop-pointer:via-black/40' : ''
-    }`;
+    const scrim = overHero
+        ? 'bg-transparent'
+        : 'bg-gradient-to-b from-white/90 via-white/45 to-transparent dark:from-black/90 dark:via-black/45';
 
-    // Over the dark hero art the light theme has to borrow the dark theme's colours.
-    // Keyed to desktop-pointer rather than to lg, because a pointerless desktop screen
-    // gets the original light hero instead of the character, and white on that is white
-    // on white.
+    /*
+     * Over the dark hero art the light theme has to borrow the dark theme's colours.
+     * With no scrim behind the bar this is now the ONLY thing keeping the nav legible
+     * there, so it is not optional dressing.
+     *
+     * Keyed to desktop-pointer rather than to lg, because a pointerless desktop screen
+     * gets the original light hero instead of the character, and white on that is white
+     * on white.
+     */
     const overArt = overHero ? 'desktop-pointer:text-white' : '';
 
     return (

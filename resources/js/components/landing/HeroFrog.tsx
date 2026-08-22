@@ -3,7 +3,8 @@ import { useCallback, useEffect, useRef } from 'react';
 import { usePrecisePointer } from '@/hooks/usePrecisePointer';
 
 /**
- * The hero backdrop: a character who follows the visitor's cursor.
+ * The hero backdrop: a character who follows the visitor's cursor, and hunts for it
+ * when it stops moving.
  *
  * DESKTOP ONLY, by design. There is no cursor on a phone, so below `lg` this
  * renders nothing at all and the original hero (chevron, glow, "Reach The Peak")
@@ -39,6 +40,7 @@ import { usePrecisePointer } from '@/hooks/usePrecisePointer';
  */
 const FRAME_COUNT = 59;
 const FRAMES = Array.from({ length: FRAME_COUNT }, (_, i) => `/images/frog/f${String(i).padStart(3, '0')}.webp`);
+const SPAN = FRAME_COUNT - 1;
 
 /**
  * Height of the fixed navbar, in px (`h-20`). The bar is transparent, so the
@@ -48,6 +50,58 @@ const FRAMES = Array.from({ length: FRAME_COUNT }, (_, i) => `/images/frog/f${St
  * is up there. The frog goes on tracking; only the mosquito is withheld.
  */
 const NAV_HEIGHT = 80;
+
+/*
+ * Idle behaviour. A still pointer means a still mosquito, and a character frozen
+ * mid-stare reads as a broken image rather than as a character. So after a second the
+ * mosquito hides and he sweeps the whole room looking for it, which is also the story:
+ * the thing he was watching got away.
+ *
+ * ⚠️ The mosquito is the ONLY pointer over the hero (Hero hides the native arrow), so
+ * hiding it while idle means the visitor briefly has no pointer at all. That is why
+ * any movement returns it immediately, on the first mousemove rather than on a timer.
+ */
+const IDLE_AFTER = 1000;
+/**
+ * One end-to-end sweep of the head; a full there-and-back takes twice this.
+ *
+ * 🔑 The search is ONE continuous sweep, end to end and back, not a series of looks at
+ * chosen poses. An earlier version picked random targets and held on each: every hold
+ * was a stop, every stop showed a single frame in isolation, and the whole thing read as
+ * a video being scrubbed rather than a head turning. Sweeping the full range means the
+ * only thing on screen is motion, which is also the one condition under which the
+ * cross-fade blur is invisible.
+ *
+ * ⚠️ Driven by a cosine, not a linear ping-pong. Reversing a constant velocity at the
+ * ends snaps; a cosine arrives at each extreme with zero velocity and turns around
+ * smoothly, which is exactly how a head actually moves.
+ */
+const SWEEP_MS = 2400;
+/** How long the head takes to swing back once the mosquito reappears. */
+const RETURN_MS = 260;
+
+/*
+ * 🔑 He must never come to REST between two frames.
+ *
+ * A cross-fade is a double exposure, worth ~15% of the head's edge detail at 50/50.
+ * While he is moving that is invisible; parked, it is a permanently soft frame, and it
+ * reads exactly like a video paused between keyframes. The idle sweep never stops, so
+ * this only applies where he genuinely comes to rest: the pointer going still.
+ *
+ * Measured on the current 59: sharpness (variance of the Laplacian over the head)
+ * spans only 1.47x end to end, worst frame 83% of median, best 121%. So no single
+ * frame is meaningfully blurry — a mid-blend rest is as soft as the WORST frame in the
+ * set, and lands there from any pose. Snapping to a whole frame is therefore the whole
+ * fix; hand-picking "sharp" frames to stop on would buy almost nothing on top.
+ */
+const SETTLE_AFTER = 200;
+const SETTLE_MS = 160;
+
+const clamp01 = (t: number) => Math.min(1, Math.max(0, t));
+/** Same easing as the cross-fade: quick through the middle, gentle at both ends. */
+const smoothstep = (t: number) => t * t * (3 - 2 * t);
+
+type Mode = 'track' | 'idle' | 'return' | 'settle';
 
 export default function HeroFrog() {
     const wrapRef = useRef<HTMLDivElement>(null);
@@ -62,30 +116,25 @@ export default function HeroFrog() {
     // pointer has not been seen yet.
     const posRef = useRef({ x: -1, y: -1 });
     const pairRef = useRef({ lo: 0, hi: 0 });
+    /** Last pose painted, as a float. Every mode hands off through this. */
+    const poseRef = useRef(0);
 
     // Shared with Hero, which hides the native cursor on exactly this condition.
     const armed = usePrecisePointer();
 
-    const paint = useCallback(() => {
-        rafRef.current = 0;
-        const wrap = wrapRef.current;
+    /**
+     * Paints one pose. WHICH pose is the caller's business — the pointer decides it
+     * while tracking, a timeline decides it while searching.
+     */
+    const renderPose = useCallback((exact: number) => {
         const imgs = imgsRef.current;
-        if (!wrap || imgs.length !== FRAME_COUNT) return;
+        if (imgs.length !== FRAME_COUNT) return;
 
-        const r = wrap.getBoundingClientRect();
-        const vp = posRef.current;
-        if (vp.x < 0) return;
-        const x = vp.x - r.left;
-        const y = vp.y - r.top;
+        const pose = Math.min(SPAN, Math.max(0, exact));
+        poseRef.current = pose;
 
-        // ABSOLUTE mapping: cursor position maps straight onto a pose, so where he
-        // looks always corresponds to where the visitor actually is. Accumulating
-        // deltas instead (the usual implementation of this effect) drifts, which is
-        // fine for an abstract shape and fatal for a face.
-        const t = Math.min(1, Math.max(0, x / r.width));
-        const exact = t * (FRAME_COUNT - 1);
-        const lo = Math.min(FRAME_COUNT - 1, Math.floor(exact));
-        const hi = Math.min(FRAME_COUNT - 1, lo + 1);
+        const lo = Math.min(SPAN, Math.floor(pose));
+        const hi = Math.min(SPAN, lo + 1);
         /*
          * Eased, not linear.
          *
@@ -99,8 +148,7 @@ export default function HeroFrog() {
          * pose, so it just parks the same image over more cursor travel — a dead spot
          * rather than smoother motion.
          */
-        const raw = exact - lo;
-        const frac = raw * raw * (3 - 2 * raw);
+        const frac = smoothstep(clamp01(pose - lo));
 
         const prev = pairRef.current;
         if (prev.lo !== lo || prev.hi !== hi) {
@@ -113,75 +161,282 @@ export default function HeroFrog() {
         // disappears for that whole stretch of the screen.
         imgs[hi].style.opacity = String(frac);
         imgs[lo].style.opacity = '1';
+    }, []);
 
+    /**
+     * Where the pointer is, in hero coordinates, plus the pose that looks at it.
+     * Null until the pointer has been seen at all. One rect read per call, so callers
+     * take everything they need from a single result.
+     */
+    const readPointer = useCallback(() => {
+        const wrap = wrapRef.current;
+        const vp = posRef.current;
+        if (!wrap || vp.x < 0) return null;
+
+        const r = wrap.getBoundingClientRect();
+        return {
+            x: vp.x - r.left,
+            y: vp.y - r.top,
+            pose: clamp01((vp.x - r.left) / r.width) * SPAN,
+            // The navbar is fixed, so this is a viewport comparison.
+            overNav: vp.y < NAV_HEIGHT,
+        };
+    }, []);
+
+    const setSkeeterShown = useCallback((shown: boolean) => {
         const skeeter = skeeterRef.current;
-        if (skeeter) {
-            skeeter.style.transform = `translate(${x}px, ${y}px)`;
-            // The navbar is fixed, so this is a viewport comparison. It also doubles as
-            // the reveal: the mosquito renders at opacity 0, so it is never parked in
-            // the corner before the visitor has moved.
-            skeeter.style.opacity = vp.y < NAV_HEIGHT ? '0' : '1';
-        }
+        if (skeeter) skeeter.style.opacity = shown ? '1' : '0';
     }, []);
 
     useEffect(() => {
         if (!armed) return;
+
+        /*
+         * A head that turns on its own, indefinitely, is exactly what this setting is
+         * meant to stop. Reduced motion keeps the pointer tracking (that is a direct
+         * response to the visitor's own input, not an animation) and drops the search.
+         */
+        const calm = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+        let mode: Mode = 'track';
+        let idleTimer: ReturnType<typeof setTimeout> | null = null;
+        let settleTimer: ReturnType<typeof setTimeout> | null = null;
+        let onScreen = true;
+        // The search sweep, as a phase into a cosine: 0 is one extreme, π the other.
+        let sweep = { phase0: 0, start: 0 };
+        // Where the head was when the mosquito came back.
+        let ret = { from: 0, start: 0 };
+        // The nudge onto a whole frame once the pointer goes still.
+        let stl = { from: 0, to: 0, start: 0 };
+
         const schedule = () => {
-            if (!rafRef.current) rafRef.current = requestAnimationFrame(paint);
+            if (!rafRef.current) rafRef.current = requestAnimationFrame(frame);
         };
-        const onMove = (e: MouseEvent) => {
-            posRef.current = { x: e.clientX, y: e.clientY };
+
+        const clearTimers = () => {
+            if (idleTimer) {
+                clearTimeout(idleTimer);
+                idleTimer = null;
+            }
+            if (settleTimer) {
+                clearTimeout(settleTimer);
+                settleTimer = null;
+            }
+        };
+
+        const armTimers = () => {
+            clearTimers();
+            settleTimer = setTimeout(goSettle, SETTLE_AFTER);
+            idleTimer = setTimeout(goIdle, IDLE_AFTER);
+        };
+
+        /**
+         * The pointer has gone still. Nudge the head onto the nearest whole frame so it
+         * rests on a real photograph rather than on a blend of two. At most half a pose,
+         * well under a degree of rotation — invisible as movement, decisive for
+         * sharpness. Unconditional, including under reduced motion: it is a correction,
+         * not decoration, and a soft frozen frame is a worse outcome for everyone.
+         */
+        const goSettle = () => {
+            settleTimer = null;
+            if (mode !== 'track') return;
+
+            const from = poseRef.current;
+            const to = Math.round(from);
+            if (Math.abs(to - from) < 0.005) return;
+
+            stl = { from, to, start: performance.now() };
+            mode = 'settle';
             schedule();
         };
-        window.addEventListener('mousemove', onMove, { passive: true });
+
+        const goIdle = () => {
+            idleTimer = null;
+            if (mode !== 'track' || calm.matches || !onScreen) return;
+
+            mode = 'idle';
+            setSkeeterShown(false);
+            /*
+             * Enter the sweep at the phase that already matches where the head is, so
+             * the hunt starts from his current pose rather than snapping to an end.
+             * acos returns [0, π], which puts him on the outbound leg from wherever he
+             * happens to be looking.
+             */
+            sweep = {
+                phase0: Math.acos(1 - 2 * clamp01(poseRef.current / SPAN)),
+                start: performance.now(),
+            };
+            schedule();
+        };
+
+        const frame = () => {
+            rafRef.current = 0;
+
+            if (mode === 'idle') {
+                // One unbroken cosine: end to end, back again, forever. No targets, no
+                // holds, nothing to land on — the phase just keeps advancing.
+                const phase = sweep.phase0 + (Math.PI * (performance.now() - sweep.start)) / SWEEP_MS;
+                renderPose((SPAN / 2) * (1 - Math.cos(phase)));
+                schedule();
+                return;
+            }
+
+            if (mode === 'settle') {
+                // The pointer is not moving, so the mosquito needs no repositioning and
+                // keeps whatever visibility the last tracked frame gave it.
+                const k = clamp01((performance.now() - stl.start) / SETTLE_MS);
+                renderPose(stl.from + (stl.to - stl.from) * smoothstep(k));
+                if (k >= 1) mode = 'track';
+                else schedule();
+                return;
+            }
+
+            const p = readPointer();
+            if (!p) {
+                // The pointer has never been seen. Nothing to track, and nothing to
+                // ease back to — leaving 'return' scheduled here would spin forever.
+                if (mode === 'return') mode = 'track';
+                return;
+            }
+
+            if (mode === 'return') {
+                /*
+                 * Eases from wherever the search left the head back onto the pointer.
+                 * The target is re-read every frame rather than fixed at the start, so
+                 * a visitor who keeps moving is converged on rather than chased to a
+                 * position they have already left.
+                 */
+                const k = clamp01((performance.now() - ret.start) / RETURN_MS);
+                renderPose(ret.from + (p.pose - ret.from) * smoothstep(k));
+                if (k >= 1) mode = 'track';
+            } else {
+                renderPose(p.pose);
+            }
+
+            const skeeter = skeeterRef.current;
+            if (skeeter) skeeter.style.transform = `translate(${p.x}px, ${p.y}px)`;
+            setSkeeterShown(!p.overNav);
+
+            if (mode === 'return') schedule();
+        };
+
+        const onMove = (e: MouseEvent) => {
+            posRef.current = { x: e.clientX, y: e.clientY };
+            if (mode === 'idle') {
+                // Straight back to 'return', on the first movement rather than on a
+                // timer: the mosquito is the visitor's pointer and must not lag it.
+                mode = 'return';
+                ret = { from: poseRef.current, start: performance.now() };
+            } else if (mode === 'settle') {
+                // Abandon the nudge; tracking is absolute, so the next frame simply
+                // paints the pointer's pose and the half-frame difference never shows.
+                mode = 'track';
+            }
+            armTimers();
+            schedule();
+        };
+
         // The pointer does not move during a wheel-scroll but the hero does, so the
         // mosquito has to be redrawn against the section's new position to stay under
         // the visitor's hand.
+        window.addEventListener('mousemove', onMove, { passive: true });
         window.addEventListener('scroll', schedule, { passive: true });
+
+        /*
+         * Nobody watches a character they have scrolled past, and an rAF loop that runs
+         * forever on a section nobody is looking at is a battery leak. Idling stops when
+         * the hero leaves the viewport and picks up again when it returns.
+         */
+        const io = new IntersectionObserver(
+            ([entry]) => {
+                onScreen = entry.isIntersecting;
+                if (onScreen) {
+                    if (mode === 'track') armTimers();
+                    return;
+                }
+                clearTimers();
+                if (mode === 'idle') mode = 'track';
+                if (rafRef.current) {
+                    cancelAnimationFrame(rafRef.current);
+                    rafRef.current = 0;
+                }
+            },
+            { threshold: 0 },
+        );
+        if (wrapRef.current) io.observe(wrapRef.current);
+
+        // He starts hunting on his own if the visitor never moves at all, which is the
+        // usual case on a fresh page load.
+        armTimers();
 
         return () => {
             window.removeEventListener('mousemove', onMove);
             window.removeEventListener('scroll', schedule);
+            io.disconnect();
+            clearTimers();
             if (rafRef.current) cancelAnimationFrame(rafRef.current);
             rafRef.current = 0;
         };
-    }, [armed, paint]);
+    }, [armed, readPointer, renderPose, setSkeeterShown]);
 
     if (!armed) return null;
 
     return (
-        <div ref={wrapRef} className="pointer-events-none absolute inset-0 hidden overflow-hidden lg:block" aria-hidden="true">
-            {FRAMES.map((src, i) => (
-                <img
-                    key={src}
-                    ref={(el) => {
-                        if (el) imgsRef.current[i] = el;
-                    }}
-                    src={src}
-                    alt=""
-                    decoding="sync"
-                    // Every frame is in the DOM from the start; only opacity changes.
-                    // Swapping a single src would decode on demand and stutter on the
-                    // first pass through the sweep.
-                    className="absolute inset-0 h-full w-full object-cover"
-                    style={{ objectPosition: '50% 40%', opacity: i === 0 ? 1 : 0 }}
-                />
-            ))}
+        <>
+            {/* Backdrop: the frames and the scrim, deliberately BELOW the hero copy. */}
+            <div ref={wrapRef} className="pointer-events-none absolute inset-0 hidden overflow-hidden lg:block" aria-hidden="true">
+                {FRAMES.map((src, i) => (
+                    <img
+                        key={src}
+                        ref={(el) => {
+                            if (el) imgsRef.current[i] = el;
+                        }}
+                        src={src}
+                        alt=""
+                        decoding="sync"
+                        // Every frame is in the DOM from the start; only opacity changes.
+                        // Swapping a single src would decode on demand and stutter on the
+                        // first pass through the sweep.
+                        className="absolute inset-0 h-full w-full object-cover"
+                        style={{ objectPosition: '50% 40%', opacity: i === 0 ? 1 : 0 }}
+                    />
+                ))}
 
-            {/* Copy sits over this. The backdrop is mid-luminance purple, so the
-                brand's purple-to-red gradient headline all but vanished on it —
-                white was fine, the gradient was not. Darkening the copy side keeps
-                the gradient intact rather than recolouring it for one breakpoint. */}
-            <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/25 to-transparent" />
+                {/* Copy sits over this. The backdrop is mid-luminance purple, so the
+                    brand's purple-to-red gradient headline all but vanished on it —
+                    white was fine, the gradient was not. Darkening the copy side keeps
+                    the gradient intact rather than recolouring it for one breakpoint. */}
+                <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/25 to-transparent" />
+            </div>
 
+            <Mosquito innerRef={skeeterRef} />
+        </>
+    );
+}
+
+/**
+ * The mosquito, in its own layer ABOVE the hero copy.
+ *
+ * 🔴 It cannot live in the backdrop with the frames. The hero's content column is
+ * `relative z-10`, so anything painted with the frames goes UNDER it — over the CTA,
+ * whose gradient is opaque, the mosquito vanished completely and the visitor was left
+ * with no pointer at all, because Hero has hidden the native arrow.
+ *
+ * Same box as the backdrop (`absolute inset-0` on the same section), so the
+ * coordinates it is painted at need no adjustment. `overflow-hidden` still clips it to
+ * the hero, and `pointer-events-none` keeps the CTA clickable through it.
+ */
+function Mosquito({ innerRef }: { innerRef: React.RefObject<SVGSVGElement> }) {
+    return (
+        <div className="pointer-events-none absolute inset-0 z-20 hidden overflow-hidden lg:block" aria-hidden="true">
             {/* The cursor IS the mosquito he is watching — without it a visitor sees a
-                character looking around for no reason. Hero hides the native arrow over
-                this section (on the same usePrecisePointer condition) so only one
-                pointer is ever on screen. */}
+                character looking around for no reason. It starts hidden, so it is never
+                parked in the corner before the visitor has moved, and it fades rather
+                than blinks when the search starts. */}
             <svg
-                ref={skeeterRef}
+                ref={innerRef}
                 viewBox="0 0 40 40"
-                className="absolute -ml-4 -mt-4 h-8 w-8 transition-opacity duration-150 will-change-transform"
+                className="absolute -ml-4 -mt-4 h-8 w-8 transition-opacity duration-300 will-change-transform"
                 style={{ opacity: 0 }}
             >
                 <g fill="none" stroke="#1a1020" strokeWidth="1.6" strokeLinecap="round">

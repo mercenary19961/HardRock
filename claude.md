@@ -1,6 +1,6 @@
 # HardRock - Codebase Context for Claude
 
-> **📍 Doc sync:** CLAUDE.md last synced to commit `28f7067` — 2026-08-22 14:38 (Sat) [`hero-frog-tracker`; the `desktop-pointer` variant and the language switcher below are uncommitted].
+> **📍 Doc sync:** CLAUDE.md last synced to commit `df164d4` — 2026-08-22 15:31 (Sat) [`hero-frog-tracker`; only the navbar going fully transparent over the hero is uncommitted].
 
 This document provides comprehensive context about the HardRock codebase to help Claude understand and work with the project effectively.
 
@@ -530,6 +530,53 @@ reversing and a temporal one does not. Getting this wrong has inverted the hero 
 Screenshot the two extremes and look — pixel metrics for "which way is he facing" have
 been unreliable here.
 
+### Three modes: track, idle, return
+
+Which pose is painted is decided by a small state machine inside the effect; `renderPose`
+just paints whatever float it is handed, and `poseRef` is how the modes hand off to each
+other.
+
+- **track** — the absolute mapping above. One rAF per mousemove, no loop.
+- **settle** — 200ms after the pointer stops, a 160ms ease onto the nearest whole frame
+  so he never rests on a blend. Unconditional, including under reduced motion: it is a
+  correction rather than decoration. Any movement abandons it, and because tracking is
+  absolute the half-frame difference never shows.
+- **idle** — after `IDLE_AFTER` (1s) with no movement, the mosquito fades out and he
+  sweeps the room for it: ONE unbroken cosine across the full range, end to end and back
+  (`SWEEP_MS`, 2.4s each way), forever. Runs a continuous rAF.
+
+  🔴 **No targets, no holds, no randomness — that was tried and it looked wrong.** The
+  first version picked random poses and held on each; every hold was a stop, every stop
+  showed one frame in isolation, and the result read as a video being scrubbed rather
+  than a head turning. Sweeping the whole range means the only thing on screen is
+  motion, which is also the one condition under which the cross-fade blur is invisible.
+
+  ⚠️ **A cosine, not a linear ping-pong.** Reversing a constant velocity at the ends
+  snaps; a cosine arrives at each extreme with zero velocity. He also enters the sweep
+  at `acos(1 - 2·pose/SPAN)`, the phase matching where his head already is, so the hunt
+  starts from his current pose instead of jumping to an end. Verified numerically: entry
+  jump 7e-15 poses, range exactly 0..58, two reversals per round trip, peak speed 0.61
+  poses per frame at 60fps (so adjacent frames are always cross-faded, never skipped).
+- **return** — the first mousemove brings the mosquito straight back and eases the head
+  from wherever the search left it onto the pointer over `RETURN_MS` (260ms), then hands
+  back to track.
+
+⚠️ **The return target is re-read every frame, not fixed when the return starts.** A
+visitor who keeps moving would otherwise be chased to a position they had already left,
+and the head would arrive somewhere stale before snapping.
+
+⚠️ **The mosquito is the only pointer over the hero** (Hero hides the native arrow), so
+an idle frog means the visitor briefly has no pointer at all. That is why the return is
+triggered by the first mousemove rather than by any timer, and why the mosquito's
+opacity is restored in the same frame as the movement.
+
+🔴 **Idling is gated three ways, and all three matter:** `prefers-reduced-motion` (a head
+that turns on its own forever is exactly what that setting is for; tracking still works,
+since that is a response to the visitor's own input), an IntersectionObserver on the
+wrapper (an rAF loop running on a section nobody has scrolled to is a battery leak), and
+`mode === 'track'` (never interrupt a return). He also starts hunting on a fresh load
+without any pointer ever being seen, which is the common case.
+
 ### Blending, and its cost
 
 Adjacent frames are cross-faded by the sub-frame fraction, otherwise the step is ~24 px
@@ -541,6 +588,23 @@ count — an earlier measurement suggesting it did had sampled the stalled regio
 adjacent frames were near-duplicates. What *can* be reduced is the time spent near
 50/50, which is why the fraction is eased with a smoothstep rather than used raw.
 Removing the softness properly needs more real poses over the same rotation.
+
+🔑 **He must never come to REST on a blend.** In motion the double exposure is invisible;
+parked on it, the hero holds a permanently soft frame and it reads exactly like a video
+paused between keyframes. The idle sweep never stops, so the only place he genuinely
+comes to rest is a still pointer: 200ms after it stops he eases onto the nearest whole
+frame (`SETTLE_AFTER` / `SETTLE_MS`). The nudge is at most half a pose, under a degree
+of rotation, so it is invisible as movement.
+
+📊 **Measured, so don't go hunting for "the blurry frames".** Sharpness across all 59
+(variance of the Laplacian over the head region, located by taking the bounding box of
+the top decile of inter-frame movement) spans just **1.47x** end to end: worst frame 83%
+of median, best
+121%, and the even/odd alternation visible in the numbers averages out to ~4%. **No
+individual frame is meaningfully soft.** A mid-blend rest costs about as much as the
+single worst frame in the set and stacks on top of whatever frame it lands between, so
+snapping to whole frames is the entire fix; curating a list of "sharp" frames to stop on
+would buy almost nothing.
 
 ### Mobile, tablets and RTL
 
@@ -622,6 +686,14 @@ stylesheet at any specificity.
 now, so it would otherwise show through the bar next to the real arrow — which the nav
 keeps, because its links need a click affordance.
 
+🔴 **The mosquito lives in its OWN layer at `z-20`, not with the frames.** The hero's
+content column is `relative z-10`, so anything painted alongside the backdrop goes under
+it: over the CTA, whose gradient is opaque, the mosquito disappeared completely and the
+visitor was left with no pointer at all. The layer is `absolute inset-0` on the same
+section, so the coordinates need no adjustment, `overflow-hidden` still clips it to the
+hero, and `pointer-events-none` keeps the CTA clickable through it. **Anything else that
+must be visible over the copy belongs in that layer too.**
+
 🔑 **`posRef` holds VIEWPORT coordinates, and `scroll` repaints.** Storing hero-relative
 coordinates let the mosquito ride up with the section during a wheel-scroll and sit
 where the pointer was not. That was merely odd before; with the native cursor hidden it
@@ -633,11 +705,17 @@ rather than dropping the section rule.
 
 ---
 
-## Navbar — transparent scrim (no solid bar)
+## Navbar — transparent over the hero, scrim elsewhere
 
-The bar has no solid background on any page or scroll position. It is a top-to-bottom
-gradient (`from-*/90 via-*/45 to-transparent`) that fades out before its own bottom
-edge, so nothing draws a line across the hero.
+The bar has no solid background anywhere. It takes one of two backgrounds depending on
+what is behind it:
+
+- **Over the hero: none at all** (`bg-transparent`). The hero is the thing meant to be
+  looked at, and any wash across the top of it is a band the eye reads as a bar. Nothing
+  is needed because the bar's contents are already matched to that backdrop.
+- **Everywhere else: a top-to-bottom gradient** (`from-*/90 via-*/45 to-transparent`)
+  that fades out before its own bottom edge, so it carries the logo and links over
+  whatever scrolls underneath without ever drawing a line across the page.
 
 ⚠️ **No `backdrop-blur`, deliberately.** Blur stops dead at the bottom of the nav box
 while the colour keeps fading, which leaves a visible horizontal seam — the exact
@@ -645,11 +723,15 @@ artifact the transparent bar was meant to remove.
 
 🔴 **`overHero` exists because the light theme is wrong over the hero art.** Wherever the
 character renders, the hero backdrop is the dark render in BOTH themes (the hero copy is
-already forced to `desktop-pointer:text-white` for the same reason). A white light-theme
-scrim over it erases the logo; past the hero the page is white again, where white nav
+already forced to `desktop-pointer:text-white` for the same reason). Black light-theme
+nav content disappears into it; past the hero the page is white again, where white nav
 content is just as invisible. So the flag is measured from `#hero`'s bottom edge against
-the bar height, and drives three `desktop-pointer:`-only overrides: a dark scrim, white
-links, and the white logo swapped in for the black one.
+the bar height, and it drives the background choice plus two `desktop-pointer:`-only
+overrides: white links, and the white logo swapped in for the black one.
+
+⚠️ **With no scrim over the hero, those two overrides are the ONLY thing keeping the bar
+legible there.** They are not dressing — drop them and the light theme puts a black logo
+on dark art.
 
 ⚠️ **Those overrides are keyed to `desktop-pointer:`, never to `lg:`.** An iPad gets the
 original light hero, so a width-keyed rule would paint a white logo onto a white
@@ -1076,4 +1158,4 @@ Target these keyword themes in blog posts:
 
 ---
 
-> **Last updated:** 2026-08-22 (later) — Navbar is now a transparent top-to-bottom scrim on every page and scroll position; the native cursor is hidden over the hero so the mosquito is the only pointer; a new `desktop-pointer` screen variant replaces every `lg:` rule that assumed the character was on screen, which is what gives an iPad in landscape the original chevron hero back instead of an empty hero with white-on-white copy; and the language switcher now shows a translate glyph plus `AR`/`EN` rather than a globe plus `عربي`. All on `hero-frog-tracker`; the scrim and cursor landed in `28f7067`, the variant and the switcher are still uncommitted. Three traps recorded above: a link's UA `cursor: pointer` beats an inherited `cursor: none`, so the descendant rule is required; `lg:` is not a test for "has a pointer"; and the light theme has to borrow the dark theme's nav colours while the bar sits over the character art, seeded from the URL so it does not flash. Same day — Landing hero: cursor-tracked character (branch `hero-frog-tracker`, WIP, not merged). Desktop-only frame-sequence hero replacing the static chevron; mobile untouched by construction. See "Landing Hero" above for the extraction rules and the four traps that cost real time: sorting frames by a computed head-angle proxy scrambles the tail, mirroring to fake the missing half leaves the frame uncovered, RTL puts the copy on top of the character without `lg:col-start-2`, and frame direction must be verified by screenshot rather than by metric. Previous: 2026-07-05 — GSC indexing fixes: unified Blade/SSR titles (killed literal `${APP_NAME}` baked into hardrock-ssr's bundle from an uninterpolated Railway var), 301'd bare `/services` duplicate, bumped sitemap lastmod, documented Cloudflare 403 on spoofed-Googlebot curls. Previous: 2026-05-04, commit `47197b9` (/dashboard → /admin rename).
+> **Last updated:** 2026-08-22 (later) — Navbar has no solid background anywhere: fully transparent while it sits over the hero, a top-to-bottom scrim elsewhere; the native cursor is hidden over the hero so the mosquito is the only pointer; a new `desktop-pointer` screen variant replaces every `lg:` rule that assumed the character was on screen, which is what gives an iPad in landscape the original chevron hero back instead of an empty hero with white-on-white copy; the language switcher now shows a translate glyph plus `AR`/`EN` rather than a globe plus `عربي`; and the character now hunts for the mosquito after one still second, sweeping the full range end to end and back on a cosine (track / settle / idle / return state machine, gated on reduced-motion and on the hero being on screen), rests only on whole frames, and paints the mosquito in a `z-20` layer so it no longer vanishes behind the CTA. All on `hero-frog-tracker`: the scrim and cursor landed in `28f7067`, the variant and the switcher in `77a47fa`, the idle hunt in `f45cd06` and `df164d4`; only the navbar going fully transparent over the hero is still uncommitted. Three traps recorded above: a link's UA `cursor: pointer` beats an inherited `cursor: none`, so the descendant rule is required; `lg:` is not a test for "has a pointer"; and the light theme has to borrow the dark theme's nav colours while the bar sits over the character art, seeded from the URL so it does not flash. Same day — Landing hero: cursor-tracked character (branch `hero-frog-tracker`, WIP, not merged). Desktop-only frame-sequence hero replacing the static chevron; mobile untouched by construction. See "Landing Hero" above for the extraction rules and the four traps that cost real time: sorting frames by a computed head-angle proxy scrambles the tail, mirroring to fake the missing half leaves the frame uncovered, RTL puts the copy on top of the character without `lg:col-start-2`, and frame direction must be verified by screenshot rather than by metric. Previous: 2026-07-05 — GSC indexing fixes: unified Blade/SSR titles (killed literal `${APP_NAME}` baked into hardrock-ssr's bundle from an uninterpolated Railway var), 301'd bare `/services` duplicate, bumped sitemap lastmod, documented Cloudflare 403 on spoofed-Googlebot curls. Previous: 2026-05-04, commit `47197b9` (/dashboard → /admin rename).
