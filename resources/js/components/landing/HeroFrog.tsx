@@ -476,10 +476,16 @@ function Mosquito({ innerRef }: { innerRef: React.RefObject<SVGSVGElement> }) {
                 character looking around for no reason. It starts hidden, so it is never
                 parked in the corner before the visitor has moved, and it fades rather
                 than blinks when the search starts. */}
+            {/* 🔴 `left-0 top-0` is REQUIRED, not tidiness. Without an explicit offset an
+                absolute box sits at its static position, which under `dir="rtl"` is the
+                RIGHT edge of the container — the transform below then pushed it further
+                right, off the hero and into the clip, so the mosquito simply vanished in
+                Arabic. Physical `left`, deliberately, never the logical `start-0`: the
+                coordinates come from `r.left`, which is physical too. */}
             <svg
                 ref={innerRef}
                 viewBox="0 0 40 40"
-                className="absolute -ml-4 -mt-4 h-8 w-8 transition-opacity duration-300 will-change-transform"
+                className="absolute left-0 top-0 -ml-4 -mt-4 h-8 w-8 transition-opacity duration-300 will-change-transform"
                 style={{ opacity: 0 }}
             >
                 <g fill="none" stroke="#1a1020" strokeWidth="1.6" strokeLinecap="round">
