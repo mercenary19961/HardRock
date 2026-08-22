@@ -1,10 +1,22 @@
 import { useTranslation } from 'react-i18next';
 
+import { usePrecisePointer } from '@/hooks/usePrecisePointer';
+
 import HeroFrog from './HeroFrog';
 
 export default function Hero() {
     const { t, i18n } = useTranslation('hero');
     const isArabic = i18n.language === 'ar';
+
+    // Same condition that mounts the character: where the mosquito stands in for the
+    // pointer, the native arrow is hidden so there is only one cursor on screen.
+    //
+    // The descendant rule is not redundant. `cursor` inherits, but a link carries
+    // `cursor: pointer` as a UA declaration on the element itself, and a declared
+    // value always beats an inherited one — so the hero CTA would keep its arrow.
+    // An author rule outranks the UA stylesheet whatever its specificity.
+    const precise = usePrecisePointer();
+    const cursorClass = precise ? 'cursor-none [&_*]:cursor-none' : '';
 
     // Scroll to contact section
     const scrollToContact = () => {
@@ -17,8 +29,13 @@ export default function Hero() {
         }
     };
 
+    // id="hero": Navbar reads this section's box to know it is sitting over the dark
+    // character backdrop, where its own light-theme colours would vanish.
     return (
-        <section className="relative min-h-screen flex items-center overflow-hidden bg-white dark:bg-black">
+        <section
+            id="hero"
+            className={`relative min-h-screen flex items-center overflow-hidden bg-white dark:bg-black ${cursorClass}`}
+        >
             {/* Cursor-tracked character, desktop only — renders nothing below lg, so
                 the mobile hero is untouched. */}
             <HeroFrog />

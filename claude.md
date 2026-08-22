@@ -1,6 +1,6 @@
 # HardRock - Codebase Context for Claude
 
-> **📍 Doc sync:** CLAUDE.md last synced to commit `e694e60` — 2026-08-22 (Fri) [`hero-frog-tracker`, uncommitted].
+> **📍 Doc sync:** CLAUDE.md last synced to commit `64c4bb5` — 2026-08-22 (Sat) [`hero-frog-tracker`; the transparent navbar + hidden native cursor below are uncommitted].
 
 This document provides comprehensive context about the HardRock codebase to help Claude understand and work with the project effectively.
 
@@ -578,6 +578,70 @@ and tested in the prototype but deliberately left out of the site: browsers bloc
 until a user gesture, and WCAG 2.2.2 requires a stop control for anything over three
 seconds, so it needs a visible toggle and its own decision.
 
+### The native cursor is hidden over the hero
+
+The mosquito is the pointer, so the arrow is switched off for the section — otherwise
+the visitor sees two cursors. `Hero` puts `cursor-none [&_*]:cursor-none` on the section
+on exactly the condition that mounts the character.
+
+🔑 **The condition is shared, via `usePrecisePointer()`.** Hiding the cursor where the
+character does not render would leave a visitor with no pointer at all, so the media
+query (`hover: hover` + `pointer: fine` + `min-width: 1024px`) lives in one hook that
+both components read. Never let those two decisions drift apart.
+
+⚠️ **`cursor-none` alone is not enough — the descendant rule is load-bearing.** `cursor`
+inherits, but a link carries `cursor: pointer` from the UA stylesheet as a declaration
+*on the element*, and a declared value always beats an inherited one, so the hero CTA
+kept its arrow. `[&_*]:cursor-none` fixes it because an author rule outranks the UA
+stylesheet at any specificity.
+
+⚠️ **The mosquito hides under the top 80 px** (`NAV_HEIGHT`). The navbar is transparent
+now, so it would otherwise show through the bar next to the real arrow — which the nav
+keeps, because its links need a click affordance.
+
+🔑 **`posRef` holds VIEWPORT coordinates, and `scroll` repaints.** Storing hero-relative
+coordinates let the mosquito ride up with the section during a wheel-scroll and sit
+where the pointer was not. That was merely odd before; with the native cursor hidden it
+strands the visitor without a pointer until they jiggle the mouse.
+
+The CTA has no pointer cursor as a result; its hover scale and shadow are the whole
+affordance. If that ever reads as broken, restore `cursor-pointer` on that one anchor
+rather than dropping the section rule.
+
+---
+
+## Navbar — transparent scrim (no solid bar)
+
+The bar has no solid background on any page or scroll position. It is a top-to-bottom
+gradient (`from-*/90 via-*/45 to-transparent`) that fades out before its own bottom
+edge, so nothing draws a line across the hero.
+
+⚠️ **No `backdrop-blur`, deliberately.** Blur stops dead at the bottom of the nav box
+while the colour keeps fading, which leaves a visible horizontal seam — the exact
+artifact the transparent bar was meant to remove.
+
+🔴 **`overHero` exists because the light theme is wrong over the hero art.** At `lg` the
+hero backdrop is the dark character render in BOTH themes (the hero copy is already
+forced to `lg:text-white` for the same reason). A white light-theme scrim over it erases
+the logo; past the hero the page is white again, where white nav content is just as
+invisible. So the flag is measured from `#hero`'s bottom edge against the bar height,
+and drives three `lg:`-only overrides: a dark scrim, `lg:text-white` links, and the
+white logo swapped in for the black one. Below `lg` nothing changes — the mobile hero is
+still plain white.
+
+⚠️ **It is seeded from the URL (`usePage().url === '/'`), not from a measurement.**
+Measuring first would flash a black logo over the dark art on every light-theme landing
+load, for as long as hydration takes. The scroll handler then refines it, and pages
+without a `#hero` never set it.
+
+⚠️ Specificity, if you touch these classes: `dark:` (a class selector, 0-2-0) outranks
+`lg:` (0-1-0) regardless of source order, so the `lg:` overrides only ever bite in the
+light theme. That is intended — the dark theme is already dark.
+
+⚠️ **Content now scrolls under the bar on `/services` and `/consultation`** (both start
+their content at `pt-20`, so only scrolled content reaches it). Accepted trade-off of
+"always transparent"; the scrim's opaque top edge is what keeps the links readable.
+
 ---
 
 ## Development Commands
@@ -749,6 +813,7 @@ php artisan admin:create email@example.com password "Name"
 | Service Selector | resources/js/components/ui/expandable-service-selector.tsx |
 | Contact Form | resources/js/components/landing/ContactUs.tsx |
 | Hero Character (cursor-tracked) | resources/js/components/landing/HeroFrog.tsx + public/images/frog/ |
+| Desktop-pointer test (frog + cursor) | resources/js/hooks/usePrecisePointer.ts |
 | Contact Processing | app/Jobs/ProcessContactSubmission.php |
 | Clients & Partners Section | resources/js/components/landing/ClientsPartners.tsx |
 | Login Page | resources/js/pages/Auth/Login.tsx |
@@ -981,4 +1046,4 @@ Target these keyword themes in blog posts:
 
 ---
 
-> **Last updated:** 2026-08-22 — Landing hero: cursor-tracked character (branch `hero-frog-tracker`, WIP, not merged). Desktop-only frame-sequence hero replacing the static chevron; mobile untouched by construction. See "Landing Hero" above for the extraction rules and the four traps that cost real time: sorting frames by a computed head-angle proxy scrambles the tail, mirroring to fake the missing half leaves the frame uncovered, RTL puts the copy on top of the character without `lg:col-start-2`, and frame direction must be verified by screenshot rather than by metric. Previous: 2026-07-05 — GSC indexing fixes: unified Blade/SSR titles (killed literal `${APP_NAME}` baked into hardrock-ssr's bundle from an uninterpolated Railway var), 301'd bare `/services` duplicate, bumped sitemap lastmod, documented Cloudflare 403 on spoofed-Googlebot curls. Previous: 2026-05-04, commit `47197b9` (/dashboard → /admin rename).
+> **Last updated:** 2026-08-22 (later) — Navbar is now a transparent top-to-bottom scrim on every page and scroll position, and the native cursor is hidden over the hero so the mosquito is the only pointer. Both are on `hero-frog-tracker`, uncommitted. Two traps recorded above: a link's UA `cursor: pointer` beats an inherited `cursor: none`, so the descendant rule is required; and the light theme has to borrow the dark theme's nav colours at `lg` while the bar sits over the character art, seeded from the URL so it does not flash. Same day — Landing hero: cursor-tracked character (branch `hero-frog-tracker`, WIP, not merged). Desktop-only frame-sequence hero replacing the static chevron; mobile untouched by construction. See "Landing Hero" above for the extraction rules and the four traps that cost real time: sorting frames by a computed head-angle proxy scrambles the tail, mirroring to fake the missing half leaves the frame uncovered, RTL puts the copy on top of the character without `lg:col-start-2`, and frame direction must be verified by screenshot rather than by metric. Previous: 2026-07-05 — GSC indexing fixes: unified Blade/SSR titles (killed literal `${APP_NAME}` baked into hardrock-ssr's bundle from an uninterpolated Railway var), 301'd bare `/services` duplicate, bumped sitemap lastmod, documented Cloudflare 403 on spoofed-Googlebot curls. Previous: 2026-05-04, commit `47197b9` (/dashboard → /admin rename).

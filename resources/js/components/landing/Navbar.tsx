@@ -1,4 +1,4 @@
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import CinematicSwitch from '@/components/ui/cinematic-glow-toggle';
@@ -37,11 +37,32 @@ const XIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
+/** Height of the bar itself (`h-20`), in px. */
+const NAV_HEIGHT = 80;
+
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const [hidden, setHidden] = useState(false);
     const { t } = useTranslation('common');
     const menuRef = useRef<HTMLDivElement>(null);
+    const { url } = usePage();
+
+    /*
+     * The bar has no solid background any more, so what sits behind it decides what
+     * colour it has to be — and on the landing page that changes with scroll.
+     *
+     * At `lg` the hero backdrop is the dark character art in BOTH themes (the copy
+     * there is already forced to `lg:text-white` for the same reason), so a white
+     * light-theme logo scrim over it would erase the logo. Past the hero the page is
+     * white again in light mode, where white nav content would be just as invisible.
+     * Hence a measured flag rather than a fixed choice.
+     *
+     * Seeded from the URL instead of from a measurement so the server-rendered markup
+     * is already correct — measuring first would flash a black logo over the dark art
+     * on every light-theme load, for as long as hydration takes.
+     */
+    const isLanding = url === '/' || url.startsWith('/?') || url.startsWith('/#');
+    const [overHero, setOverHero] = useState(isLanding);
 
     const [showConsultation, setShowConsultation] = useState(false);
 
@@ -71,7 +92,15 @@ export default function Navbar() {
             return rect.top <= 0 && rect.bottom >= window.innerHeight;
         };
 
+        // Over the hero for as long as its bottom edge is still under the bar. Pages
+        // without a #hero (services, consultation) simply never set it.
+        const syncOverHero = () => {
+            const hero = document.getElementById('hero');
+            setOverHero(!!hero && hero.getBoundingClientRect().bottom > NAV_HEIGHT);
+        };
+
         const handleScroll = () => {
+            syncOverHero();
             const section = servicesEl();
             if (!section) { clearHideTimer(); setHidden(false); return; }
             clearHideTimer();
@@ -94,12 +123,15 @@ export default function Navbar() {
 
         window.addEventListener('scroll', handleScroll, { passive: true });
         window.addEventListener('mousemove', handleMouseMove, { passive: true });
+        // The hero is min-h-screen, so its bottom edge moves whenever the viewport does.
+        window.addEventListener('resize', syncOverHero);
         handleScroll();
 
         return () => {
             clearHideTimer();
             window.removeEventListener('scroll', handleScroll);
             window.removeEventListener('mousemove', handleMouseMove);
+            window.removeEventListener('resize', syncOverHero);
         };
     }, []);
 
@@ -121,23 +153,44 @@ export default function Navbar() {
         }
     }, [isOpen]);
 
+    /*
+     * A top-to-bottom scrim rather than a bar: opaque enough at the top edge to carry
+     * the logo and the links, gone by the bottom edge so nothing draws a line across
+     * the hero. Deliberately no backdrop blur — the blur would stop dead at the bottom
+     * of the box while the colour keeps fading, leaving the very seam this removes.
+     *
+     * The `lg:` override is the dark-art case above: it wins over the light-theme
+     * stops by source order, and loses to the `dark:` ones on specificity, which is
+     * what we want since those are already black.
+     */
+    const scrim = `bg-gradient-to-b from-white/90 via-white/45 to-transparent dark:from-black/90 dark:via-black/45 ${
+        overHero ? 'lg:from-black/80 lg:via-black/40' : ''
+    }`;
+
+    // Over the dark hero art the light theme has to borrow the dark theme's colours,
+    // but only at lg — below that the hero is plain white and the defaults are right.
+    const overArt = overHero ? 'lg:text-white' : '';
+
     return (
-        <nav className={`fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-black/90 backdrop-blur-md border-b border-white/80 overflow-x-hidden transition-transform duration-500 ${hidden ? '-translate-y-full' : 'translate-y-0'}`}>
+        <nav className={`fixed top-0 left-0 right-0 z-50 overflow-x-hidden ${scrim} transition-transform duration-500 ${hidden ? '-translate-y-full' : 'translate-y-0'}`}>
             <div className="w-full ltr:pl-2 ltr:pr-4 rtl:pr-2 rtl:pl-4 sm:ltr:px-12 sm:rtl:px-12 lg:px-16 xl:px-20">
                 <div className="flex items-center justify-between h-20 gap-2 sm:gap-4">
                     {/* Logo */}
                     <Link href="/" className="flex-shrink-0">
+                        {/* The white logo stands in for the black one at lg while the bar
+                            is over the character art, in either theme. `dark:` outranks
+                            `lg:` on specificity, so the dark theme is unaffected. */}
                         <img
                             src="/images/HOR-BLACK LOGO.svg"
                             alt="HardRock"
                             title="HardRock"
-                            className="h-5 sm:h-8 w-auto dark:hidden"
+                            className={`h-5 sm:h-8 w-auto dark:hidden ${overHero ? 'lg:hidden' : ''}`}
                         />
                         <img
                             src="/images/OR-WHITE LOGO.svg"
                             alt="HardRock"
                             title="HardRock"
-                            className="h-5 sm:h-8 w-auto hidden dark:block"
+                            className={`h-5 sm:h-8 w-auto hidden dark:block ${overHero ? 'lg:block' : ''}`}
                         />
                     </Link>
 
@@ -147,7 +200,7 @@ export default function Navbar() {
                             <a
                                 key={link.name}
                                 href={link.href}
-                                className="text-black/90 dark:text-white/90 hover:!text-brand-purple transition-all duration-200 text-sm lg:text-base font-poppins rtl:font-tajawal rtl:font-normal"
+                                className={`text-black/90 dark:text-white/90 ${overArt} hover:!text-brand-purple transition-all duration-200 text-sm lg:text-base font-poppins rtl:font-tajawal rtl:font-normal`}
                             >
                                 {link.name}
                             </a>

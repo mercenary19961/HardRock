@@ -1,4 +1,6 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
+
+import { usePrecisePointer } from '@/hooks/usePrecisePointer';
 
 /**
  * The hero backdrop: a character who follows the visitor's cursor.
@@ -38,25 +40,31 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 const FRAME_COUNT = 59;
 const FRAMES = Array.from({ length: FRAME_COUNT }, (_, i) => `/images/frog/f${String(i).padStart(3, '0')}.webp`);
 
+/**
+ * Height of the fixed navbar, in px (`h-20`). The bar is transparent, so the
+ * mosquito would otherwise be visible underneath it alongside the real arrow
+ * cursor — which the nav keeps, since its links need a click affordance. Two
+ * cursors in one strip reads as a bug, so the mosquito hides while the pointer
+ * is up there. The frog goes on tracking; only the mosquito is withheld.
+ */
+const NAV_HEIGHT = 80;
+
 export default function HeroFrog() {
     const wrapRef = useRef<HTMLDivElement>(null);
     const imgsRef = useRef<HTMLImageElement[]>([]);
     const skeeterRef = useRef<SVGSVGElement>(null);
     const rafRef = useRef(0);
+    // VIEWPORT coordinates, not hero-relative ones, so that a scroll can be repainted
+    // from the last known pointer position. Storing hero-relative coordinates would
+    // let the mosquito ride up with the section on a wheel-scroll and sit somewhere
+    // the pointer is not — which was invisible before, but the native cursor is now
+    // hidden here, so the mosquito is the only pointer the visitor has. -1 means the
+    // pointer has not been seen yet.
     const posRef = useRef({ x: -1, y: -1 });
     const pairRef = useRef({ lo: 0, hi: 0 });
-    const [armed, setArmed] = useState(false);
 
-    // Only arm on a device that genuinely has a pointer. `hover: hover` also keeps
-    // it off tablets, where a tap would otherwise latch a stale position.
-    useEffect(() => {
-        const mq = window.matchMedia('(hover: hover) and (pointer: fine) and (min-width: 1024px)');
-        const sync = () => setArmed(mq.matches);
-        sync();
-        mq.addEventListener('change', sync);
-
-        return () => mq.removeEventListener('change', sync);
-    }, []);
+    // Shared with Hero, which hides the native cursor on exactly this condition.
+    const armed = usePrecisePointer();
 
     const paint = useCallback(() => {
         rafRef.current = 0;
@@ -65,8 +73,10 @@ export default function HeroFrog() {
         if (!wrap || imgs.length !== FRAME_COUNT) return;
 
         const r = wrap.getBoundingClientRect();
-        const { x, y } = posRef.current;
-        if (x < 0) return;
+        const vp = posRef.current;
+        if (vp.x < 0) return;
+        const x = vp.x - r.left;
+        const y = vp.y - r.top;
 
         // ABSOLUTE mapping: cursor position maps straight onto a pose, so where he
         // looks always corresponds to where the visitor actually is. Accumulating
@@ -104,24 +114,34 @@ export default function HeroFrog() {
         imgs[hi].style.opacity = String(frac);
         imgs[lo].style.opacity = '1';
 
-        // Cross-fading the two nearest poses is what makes 38 frames read as motion:
-        // without it the step is ~38px of travel per pose and you see each one land.
-        if (skeeterRef.current) skeeterRef.current.style.transform = `translate(${x}px, ${y}px)`;
+        const skeeter = skeeterRef.current;
+        if (skeeter) {
+            skeeter.style.transform = `translate(${x}px, ${y}px)`;
+            // The navbar is fixed, so this is a viewport comparison. It also doubles as
+            // the reveal: the mosquito renders at opacity 0, so it is never parked in
+            // the corner before the visitor has moved.
+            skeeter.style.opacity = vp.y < NAV_HEIGHT ? '0' : '1';
+        }
     }, []);
 
     useEffect(() => {
         if (!armed) return;
-        const onMove = (e: MouseEvent) => {
-            const wrap = wrapRef.current;
-            if (!wrap) return;
-            const r = wrap.getBoundingClientRect();
-            posRef.current = { x: e.clientX - r.left, y: e.clientY - r.top };
+        const schedule = () => {
             if (!rafRef.current) rafRef.current = requestAnimationFrame(paint);
         };
+        const onMove = (e: MouseEvent) => {
+            posRef.current = { x: e.clientX, y: e.clientY };
+            schedule();
+        };
         window.addEventListener('mousemove', onMove, { passive: true });
+        // The pointer does not move during a wheel-scroll but the hero does, so the
+        // mosquito has to be redrawn against the section's new position to stay under
+        // the visitor's hand.
+        window.addEventListener('scroll', schedule, { passive: true });
 
         return () => {
             window.removeEventListener('mousemove', onMove);
+            window.removeEventListener('scroll', schedule);
             if (rafRef.current) cancelAnimationFrame(rafRef.current);
             rafRef.current = 0;
         };
@@ -154,9 +174,16 @@ export default function HeroFrog() {
                 the gradient intact rather than recolouring it for one breakpoint. */}
             <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/25 to-transparent" />
 
-            {/* The cursor is the mosquito he is watching. Without it a visitor sees a
-                character looking around for no reason. */}
-            <svg ref={skeeterRef} viewBox="0 0 40 40" className="absolute -ml-4 -mt-4 h-8 w-8 will-change-transform">
+            {/* The cursor IS the mosquito he is watching — without it a visitor sees a
+                character looking around for no reason. Hero hides the native arrow over
+                this section (on the same usePrecisePointer condition) so only one
+                pointer is ever on screen. */}
+            <svg
+                ref={skeeterRef}
+                viewBox="0 0 40 40"
+                className="absolute -ml-4 -mt-4 h-8 w-8 transition-opacity duration-150 will-change-transform"
+                style={{ opacity: 0 }}
+            >
                 <g fill="none" stroke="#1a1020" strokeWidth="1.6" strokeLinecap="round">
                     <ellipse cx="20" cy="22" rx="2.6" ry="6.4" fill="#241634" stroke="none" />
                     <path d="M20 15.5 L20 9" />
