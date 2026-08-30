@@ -227,21 +227,33 @@ export default function Footer() {
                     </div>
                 </div>
 
-                {/* Copyright Bar with Logo */}
-                <div className="mt-12 md:mt-16 pt-6 border-t border-gray-200 dark:border-gray-800 flex flex-col items-center gap-4">
-                    <Link href="/">
+                {/* Bottom bar: logo on the inline-start, copyright centred, legal
+                    links on the inline-end, all on one line from md up.
+
+                    A three-column GRID rather than justify-between, so the
+                    copyright sits at the true centre of the footer instead of the
+                    centre of whatever gap the two side items happen to leave.
+                    `justify-self-start/end` are logical, so Arabic mirrors the whole
+                    row for free: the logo moves to the right and the links to the
+                    left, with no `isArabic` branch and no dir override.
+
+                    Stacked and centred below md, where three columns would put the
+                    two links on top of each other. */}
+                <div className="mt-10 md:mt-12 pt-5 border-t border-gray-200 dark:border-gray-800 flex flex-col items-center gap-3 md:grid md:grid-cols-3 md:gap-4">
+                    <Link href="/" className="md:justify-self-start">
                         <img
                             src="/images/logo-white.png"
                             alt="HardRock" title="HardRock"
-                            className="h-10 md:h-12 w-auto hidden dark:block"
+                            className="h-8 md:h-9 w-auto hidden dark:block"
                         />
                         <img
                             src="/images/logo-black.webp"
                             alt="HardRock" title="HardRock"
-                            className="h-10 md:h-12 w-auto block dark:hidden"
+                            className="h-8 md:h-9 w-auto block dark:hidden"
                         />
                     </Link>
-                    <p className={`text-gray-400 dark:text-gray-500 text-xs ${
+
+                    <p className={`text-gray-400 dark:text-gray-500 text-xs md:text-center ${
                         isArabic ? 'font-tajawal font-light' : 'font-poppins font-light'
                     }`}>
                         {t('copyright')}
@@ -250,7 +262,7 @@ export default function Footer() {
                     {/* Legal row. The cookie control reopens the banner rather than
                         navigating anywhere: a consent decision has to be revocable,
                         and this is the only place on the site to take it back. */}
-                    <div className={`flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-gray-400 dark:text-gray-500 ${
+                    <div className={`flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-gray-400 dark:text-gray-500 md:justify-self-end ${
                         isArabic ? 'font-tajawal font-light' : 'font-poppins font-light'
                     }`}>
                         <Link href="/privacy" className="hover:text-black dark:hover:text-white transition-colors">
