@@ -9,6 +9,8 @@ import enContactUs from './locales/en/contactUs.json';
 import enFooter from './locales/en/footer.json';
 import enServiceDetail from './locales/en/serviceDetail.json';
 import enConsultation from './locales/en/consultation.json';
+import enConsent from './locales/en/consent.json';
+import enPrivacy from './locales/en/privacy.json';
 import arCommon from './locales/ar/common.json';
 import arHero from './locales/ar/hero.json';
 import arWhyHardRock from './locales/ar/whyHardRock.json';
@@ -17,6 +19,8 @@ import arContactUs from './locales/ar/contactUs.json';
 import arFooter from './locales/ar/footer.json';
 import arServiceDetail from './locales/ar/serviceDetail.json';
 import arConsultation from './locales/ar/consultation.json';
+import arConsent from './locales/ar/consent.json';
+import arPrivacy from './locales/ar/privacy.json';
 
 export type AppLanguage = 'en' | 'ar';
 
@@ -30,6 +34,8 @@ const resources = {
     footer: enFooter,
     serviceDetail: enServiceDetail,
     consultation: enConsultation,
+    consent: enConsent,
+    privacy: enPrivacy,
   },
   ar: {
     common: arCommon,
@@ -40,6 +46,8 @@ const resources = {
     footer: arFooter,
     serviceDetail: arServiceDetail,
     consultation: arConsultation,
+    consent: arConsent,
+    privacy: arPrivacy,
   },
 };
 

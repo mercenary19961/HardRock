@@ -1,0 +1,29 @@
+{
+  "label": "Cookies",
+  "title": "Your privacy choices",
+  "body": "We use cookies to keep this site secure and working properly. With your permission we also use them to understand how the site is used and to measure our campaigns. You decide what to allow.",
+  "privacyLink": "Read our privacy and cookie policy",
+  "customise": "Customise",
+  "back": "Back",
+  "rejectAll": "Reject all",
+  "acceptAll": "Accept all",
+  "save": "Save choices",
+  "settings": "Cookie settings",
+  "categories": {
+    "necessary": {
+      "label": "Necessary",
+      "description": "Required for security, language, theme and the forms on this site. Always on.",
+      "always": "Always on"
+    },
+    "analytics": {
+      "label": "Analytics",
+      "description": "Helps us see which pages are useful so we can improve them.",
+      "detail": "Google Analytics 4, loaded through Google Tag Manager."
+    },
+    "marketing": {
+      "label": "Marketing",
+      "description": "Lets us measure our campaigns and show you relevant content.",
+      "detail": "Google Ads, the Meta Pixel and the LinkedIn Insight Tag."
+    }
+  }
+}

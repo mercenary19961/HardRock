@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import Navbar from '@/components/landing/Navbar';
 import Footer from '@/components/landing/Footer';
 import WhatsAppButton from '@/components/landing/WhatsAppButton';
+import CookieConsent from '@/components/CookieConsent';
 
 const CALENDAR_URL = 'https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ0X_n1AtDC009VDNQB6txHDy-wLxk049MbL1rMPW1R7qidpo4bPTYgGQxWcUPH49txIF8z2W2WT';
 
@@ -142,6 +143,7 @@ export default function Consultation() {
 
                 <Footer />
                 <WhatsAppButton />
+                <CookieConsent />
             </div>
         </>
     );

@@ -1,11 +1,14 @@
 import { Link } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
+import { Cookie } from 'lucide-react';
+import { OPEN_CONSENT_EVENT } from '@/lib/consent';
 
 const servicesCol1 = ['paid-ads', 'social-media', 'seo'] as const;
 const servicesCol2 = ['branding', 'software-ai', 'pr-social-listening'] as const;
 
 export default function Footer() {
     const { t, i18n } = useTranslation('footer');
+    const { t: tConsent } = useTranslation('consent');
     const isArabic = i18n.language === 'ar';
 
     const columnHeaderClass = `text-black dark:text-white text-xs md:text-sm font-semibold pb-2 mb-4 relative ${
@@ -243,6 +246,25 @@ export default function Footer() {
                     }`}>
                         {t('copyright')}
                     </p>
+
+                    {/* Legal row. The cookie control reopens the banner rather than
+                        navigating anywhere: a consent decision has to be revocable,
+                        and this is the only place on the site to take it back. */}
+                    <div className={`flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-gray-400 dark:text-gray-500 ${
+                        isArabic ? 'font-tajawal font-light' : 'font-poppins font-light'
+                    }`}>
+                        <Link href="/privacy" className="hover:text-black dark:hover:text-white transition-colors">
+                            {t('privacy')}
+                        </Link>
+                        <button
+                            type="button"
+                            onClick={() => window.dispatchEvent(new Event(OPEN_CONSENT_EVENT))}
+                            className="inline-flex items-center gap-1.5 cursor-pointer hover:text-black dark:hover:text-white transition-colors"
+                        >
+                            <Cookie size={14} aria-hidden="true" />
+                            {tConsent('settings')}
+                        </button>
+                    </div>
                 </div>
             </div>
         </footer>
