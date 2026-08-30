@@ -10,6 +10,8 @@ import LocationMap from '@/components/landing/LocationMap';
 import Footer from '@/components/landing/Footer';
 import WhatsAppButton from '@/components/landing/WhatsAppButton';
 import SmoothScroll from '@/components/SmoothScroll';
+import CookieConsent from '@/components/CookieConsent';
+import { CONSENT_CHANGED_EVENT, marketingAllowed } from '@/lib/consent';
 
 export default function Landing() {
     // Server and first client render both default to false to keep markup identical;
@@ -31,11 +33,15 @@ export default function Landing() {
         return () => clearTimeout(timer);
     }, []);
 
-    // Defer analytics scripts until after page is interactive
+    // Marketing pixels, deferred until the page is interactive AND the visitor has
+    // allowed marketing cookies.
+    //
+    // 🔴 Consent Mode does NOT reach these two. It gates everything Google (GTM,
+    // GA4, the Ads tag in app.blade.php), but the Meta Pixel and the LinkedIn
+    // Insight Tag are injected here by our own code, so the cookie is the only
+    // thing standing between a first-time visitor and a PageView. Anything else
+    // added to this effect needs the same gate.
     useEffect(() => {
-        // Skip if analytics already loaded (prevents duplicates on re-mount)
-        if ((window as any).__ANALYTICS_LOADED__) return;
-
         const loadAnalytics = () => {
             // Double-check in case of race condition
             if ((window as any).__ANALYTICS_LOADED__) return;
@@ -74,12 +80,32 @@ export default function Landing() {
             }
         };
 
-        // Load after the page is idle, or after 3.5s as fallback
-        if ('requestIdleCallback' in window) {
-            requestIdleCallback(loadAnalytics);
-        } else {
-            setTimeout(loadAnalytics, 3500);
-        }
+        const loadIfAllowed = () => {
+            if (!marketingAllowed()) {
+                // A script already in the document cannot be recalled, but the Meta
+                // Pixel has its own switch, so a visitor who revokes stops being
+                // tracked without waiting for a reload. LinkedIn has no equivalent;
+                // its tag simply does not come back on the next load.
+                (window as any).fbq?.('consent', 'revoke');
+
+                return;
+            }
+
+            // Load after the page is idle, or after 3.5s as fallback
+            if ('requestIdleCallback' in window) {
+                requestIdleCallback(loadAnalytics);
+            } else {
+                setTimeout(loadAnalytics, 3500);
+            }
+        };
+
+        loadIfAllowed();
+
+        // Accepting in the banner loads them on the spot rather than on the next
+        // page load, which is what makes "Accept" feel like it did something.
+        window.addEventListener(CONSENT_CHANGED_EVENT, loadIfAllowed);
+
+        return () => window.removeEventListener(CONSENT_CHANGED_EVENT, loadIfAllowed);
     }, []);
 
     return (
@@ -112,6 +138,7 @@ export default function Landing() {
 
                     <Footer />
                     <WhatsAppButton />
+                    <CookieConsent />
                 </div>
             </SmoothScroll>
         </>

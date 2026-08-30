@@ -5,6 +5,7 @@ import { useRef, useState, useEffect } from 'react';
 import Navbar from '@/components/landing/Navbar';
 import Footer from '@/components/landing/Footer';
 import WhatsAppButton from '@/components/landing/WhatsAppButton';
+import CookieConsent from '@/components/CookieConsent';
 import SmoothScroll from '@/components/SmoothScroll';
 import ExpandableServiceSelector from '@/components/ui/expandable-service-selector';
 import { useTheme } from '@/contexts/ThemeContext';
@@ -176,6 +177,7 @@ export default function Services({ serviceSlug, fromNav = false }: ServicesProps
 
                     <Footer />
                     <WhatsAppButton />
+                    <CookieConsent />
                 </div>
             </SmoothScroll>
         </>

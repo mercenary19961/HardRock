@@ -23,6 +23,12 @@ Route::get('/consultation', function () {
     return Inertia::render('Consultation');
 })->name('consultation');
 
+// Privacy and cookie policy. The consent banner's "Learn more" link points
+// here, so this route has to exist for the banner to be lawful at all.
+Route::get('/privacy', function () {
+    return Inertia::render('Privacy');
+})->name('privacy');
+
 // Bare /services used to serve branding content at its own canonical URL,
 // creating a sitewide-linked duplicate of /services/branding that competed
 // with it in Google's index. 301 instead, keeping the query string so

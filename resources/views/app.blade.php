@@ -12,9 +12,12 @@
         : 'dark';
     $dir = $language === 'ar' ? 'rtl' : 'ltr';
 
-    // Pages that should not be indexed
-    $noIndex = str_starts_with($path, 'admin') || str_starts_with($path, 'login')
+    // Staff-facing surfaces. They are never indexed, and they never carry a
+    // tracking tag: staff are not site traffic, and the consent banner does not
+    // render there either (it is mounted per public page, not in a layout).
+    $isAdminSurface = str_starts_with($path, 'admin') || str_starts_with($path, 'login')
         || str_starts_with($path, 'forgot-password') || str_starts_with($path, 'reset-password');
+    $noIndex = $isAdminSurface;
 
     // Service-specific SEO data
     $serviceSeo = [
@@ -59,6 +62,16 @@
             'description' => 'AI solutions and software development in Jordan. HardRock builds custom AI-powered tools and software for businesses in Amman and the MENA region.',
             'ogTitle' => 'Software & AI Solutions | HardRock',
             'ogImage' => $baseUrl . '/images/services/ai-2.webp',
+        ],
+        // Not a service, but the same per-path map: SSR emits a second <title>
+        // next to this one, so PAGE_TITLE in resources/js/pages/Privacy.tsx has
+        // to mirror this entry exactly. Change both together.
+        'privacy' => [
+            'title' => 'Privacy & Cookie Policy | HardRock - Digital Marketing Agency Jordan',
+            'h1' => 'Privacy and Cookie Policy',
+            'description' => 'How HardRock collects, uses and protects the information you give us through hardrock-co.com, and how to control the cookies this site uses.',
+            'ogTitle' => 'Privacy & Cookie Policy | HardRock',
+            'ogImage' => $baseUrl . '/images/og-image-2.webp',
         ],
     ];
 
@@ -136,8 +149,47 @@
         <link href="/fonts/sfpro.css" rel="stylesheet" media="print" onload="this.media='all'">
         <noscript><link rel="stylesheet" href="/fonts/sfpro.css"></noscript>
 
-        <!-- CookieYes Cookie Consent Banner -->
-        <script id="cookieyes" type="text/javascript" src="https://cdn-cookieyes.com/client_data/e39e04831c7ec9d173f6e3abb6ee6478/script.js"></script>
+        {{-- Google Consent Mode v2. Everything non-essential starts DENIED before
+             any tag can read consent state, so nothing tracks without a choice.
+             The banner (resources/js/components/CookieConsent.tsx) sends the
+             'update' when the visitor decides; repeat visitors are re-granted
+             here from the cookie so their tags work on first paint instead of
+             waiting for React to hydrate.
+
+             INLINE and BEFORE the two loaders below, on purpose: a deferred Vite
+             bundle cannot guarantee it runs first, and a tag that reads consent
+             state before the defaults exist fires ungated.
+
+             ⚠️ The cookie name and the payload keys mirror
+             resources/js/lib/consent.ts. Change one and you must change the other. --}}
+        @unless ($isAdminSurface)
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('consent', 'default', {
+                ad_storage: 'denied',
+                ad_user_data: 'denied',
+                ad_personalization: 'denied',
+                analytics_storage: 'denied',
+                functionality_storage: 'granted',
+                personalization_storage: 'denied',
+                security_storage: 'granted',
+                wait_for_update: 500
+            });
+            try {
+                var m = document.cookie.match(/(?:^|;\s*)hardrock_consent=([^;]*)/);
+                if (m) {
+                    var v = JSON.parse(decodeURIComponent(m[1]));
+                    gtag('consent', 'update', {
+                        ad_storage: v.marketing ? 'granted' : 'denied',
+                        ad_user_data: v.marketing ? 'granted' : 'denied',
+                        ad_personalization: v.marketing ? 'granted' : 'denied',
+                        analytics_storage: v.analytics ? 'granted' : 'denied',
+                        personalization_storage: v.marketing ? 'granted' : 'denied'
+                    });
+                }
+            } catch (e) { /* malformed cookie: stay denied */ }
+        </script>
 
         <!-- Google Tag Manager -->
         <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -149,11 +201,10 @@
         <!-- Google Ads -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17900618489"></script>
         <script>
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
             gtag('config', 'AW-17900618489');
         </script>
+        @endunless
 
         <!-- Scripts -->
         @routes
@@ -171,24 +222,21 @@
                 linkedinPartnerId: "{{ config('services.linkedin.partner_id') }}"
             };
         </script>
-        <!-- Noscript fallbacks for tracking pixels -->
-        @if(config('services.facebook.pixel_id'))
-        <noscript>
-            <img height="1" width="1" style="display:none"
-                 src="https://www.facebook.com/tr?id={{ config('services.facebook.pixel_id') }}&ev=PageView&noscript=1"/>
-        </noscript>
-        @endif
-        @if(config('services.linkedin.partner_id'))
-        <noscript>
-            <img height="1" width="1" style="display:none;" alt=""
-                 src="https://px.ads.linkedin.com/collect/?pid={{ config('services.linkedin.partner_id') }}&fmt=gif" />
-        </noscript>
-        @endif
+        {{-- The Meta and LinkedIn <noscript> pixel fallbacks that used to sit here
+             were removed with the consent gate: they are the tracking pixel
+             itself, fired on page load with no way for a visitor who has JS
+             switched off to accept or refuse first. Anything that cannot be
+             gated does not ship. --}}
     </head>
     <body class="font-sans antialiased">
         <!-- Google Tag Manager (noscript) -->
+        {{-- Kept, unlike the Meta and LinkedIn noscript pixels: this is the
+             container, not a tag, and only tags explicitly configured for the
+             no-JS path can fire through it. Keep it that way when adding tags. --}}
+        @unless ($isAdminSurface)
         <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TJTKSH9J"
         height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+        @endunless
 
         @if($seo)
         <noscript>

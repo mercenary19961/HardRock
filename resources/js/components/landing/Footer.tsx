@@ -1,11 +1,14 @@
 import { Link } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
+import { Cookie } from 'lucide-react';
+import { OPEN_CONSENT_EVENT } from '@/lib/consent';
 
 const servicesCol1 = ['paid-ads', 'social-media', 'seo'] as const;
 const servicesCol2 = ['branding', 'software-ai', 'pr-social-listening'] as const;
 
 export default function Footer() {
     const { t, i18n } = useTranslation('footer');
+    const { t: tConsent } = useTranslation('consent');
     const isArabic = i18n.language === 'ar';
 
     const columnHeaderClass = `text-black dark:text-white text-xs md:text-sm font-semibold pb-2 mb-4 relative ${
@@ -224,25 +227,56 @@ export default function Footer() {
                     </div>
                 </div>
 
-                {/* Copyright Bar with Logo */}
-                <div className="mt-12 md:mt-16 pt-6 border-t border-gray-200 dark:border-gray-800 flex flex-col items-center gap-4">
-                    <Link href="/">
+                {/* Bottom bar: logo on the inline-start, copyright centred, legal
+                    links on the inline-end, all on one line from md up.
+
+                    A three-column GRID rather than justify-between, so the
+                    copyright sits at the true centre of the footer instead of the
+                    centre of whatever gap the two side items happen to leave.
+                    `justify-self-start/end` are logical, so Arabic mirrors the whole
+                    row for free: the logo moves to the right and the links to the
+                    left, with no `isArabic` branch and no dir override.
+
+                    Stacked and centred below md, where three columns would put the
+                    two links on top of each other. */}
+                <div className="mt-10 md:mt-12 pt-5 border-t border-gray-200 dark:border-gray-800 flex flex-col items-center gap-3 md:grid md:grid-cols-3 md:gap-4">
+                    <Link href="/" className="md:justify-self-start">
                         <img
                             src="/images/logo-white.png"
                             alt="HardRock" title="HardRock"
-                            className="h-10 md:h-12 w-auto hidden dark:block"
+                            className="h-8 md:h-9 w-auto hidden dark:block"
                         />
                         <img
                             src="/images/logo-black.webp"
                             alt="HardRock" title="HardRock"
-                            className="h-10 md:h-12 w-auto block dark:hidden"
+                            className="h-8 md:h-9 w-auto block dark:hidden"
                         />
                     </Link>
-                    <p className={`text-gray-400 dark:text-gray-500 text-xs ${
+
+                    <p className={`text-gray-400 dark:text-gray-500 text-xs md:text-center ${
                         isArabic ? 'font-tajawal font-light' : 'font-poppins font-light'
                     }`}>
                         {t('copyright')}
                     </p>
+
+                    {/* Legal row. The cookie control reopens the banner rather than
+                        navigating anywhere: a consent decision has to be revocable,
+                        and this is the only place on the site to take it back. */}
+                    <div className={`flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-gray-400 dark:text-gray-500 md:justify-self-end ${
+                        isArabic ? 'font-tajawal font-light' : 'font-poppins font-light'
+                    }`}>
+                        <Link href="/privacy" className="hover:text-black dark:hover:text-white transition-colors">
+                            {t('privacy')}
+                        </Link>
+                        <button
+                            type="button"
+                            onClick={() => window.dispatchEvent(new Event(OPEN_CONSENT_EVENT))}
+                            className="inline-flex items-center gap-1.5 cursor-pointer hover:text-black dark:hover:text-white transition-colors"
+                        >
+                            <Cookie size={14} aria-hidden="true" />
+                            {tConsent('settings')}
+                        </button>
+                    </div>
                 </div>
             </div>
         </footer>

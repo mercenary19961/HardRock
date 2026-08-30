@@ -1,6 +1,6 @@
 # HardRock - Codebase Context for Claude
 
-> **📍 Doc sync:** CLAUDE.md last synced to commit `f971560` — 2026-08-22 15:57 (Sat) [`hero-frog-tracker`; only the theme toggle and language switcher taking the over-art colours is uncommitted].
+> **📍 Doc sync:** CLAUDE.md last synced to commit `17b5170` — 2026-08-23 00:45 (Sun) [`hero-frog-tracker`; the cookie consent work of 2026-08-30 is uncommitted].
 
 This document provides comprehensive context about the HardRock codebase to help Claude understand and work with the project effectively.
 
@@ -116,6 +116,7 @@ hardrock/
 │       ├── i18n.ts                   # i18next setup — initI18n(language) + setLanguageCookie()
 │       │
 │       ├── components/
+│       │   ├── CookieConsent.tsx     # Self-hosted consent banner (replaced CookieYes)
 │       │   ├── ui/                   # Reusable UI components
 │       │   │   ├── button.tsx
 │       │   │   ├── input.tsx
@@ -150,6 +151,7 @@ hardrock/
 │       │
 │       ├── pages/
 │       │   ├── Landing.tsx           # Main landing page
+│       │   ├── Privacy.tsx           # Privacy + cookie policy (/privacy)
 │       │   ├── Services.tsx          # Service detail pages (/services/{slug})
 │       │   ├── Auth/
 │       │   │   ├── Login.tsx
@@ -168,6 +170,7 @@ hardrock/
 │       │   └── ar/                   # Arabic translations
 │       │
 │       └── lib/
+│           ├── consent.ts            # Consent cookie + Consent Mode v2 helpers
 │           └── utils.ts              # cn() utility function
 │
 ├── routes/
@@ -251,6 +254,7 @@ Laravel queue system tables.
 | GET | / | - | Landing page (Inertia) |
 | GET | /services | - (closure) | 301 → /services/branding (query string preserved; bare URL was an indexed duplicate) |
 | GET | /services/{slug} | - (closure) | Service detail page |
+| GET | /privacy | - (closure) | Privacy and cookie policy (the consent banner links here) |
 | POST | /contact | ContactController@store | Contact form submission |
 
 #### Valid Service Slugs
@@ -409,9 +413,13 @@ $validated = $request->validate([
 - **Data**: first_name, last_name, phone_number, email (optional), service_interest
 
 ### Google Analytics
-- **GTM**: GTM-TJTKSH9J
-- **GA4**: G-TFQFC7Q08R
-- **Location**: Inline in Landing.tsx
+- **GTM**: GTM-TJTKSH9J (inline in `app.blade.php`, behind the Consent Mode v2 gate)
+- **GA4**: G-TFQFC7Q08R (configured inside the GTM container)
+- **Google Ads**: AW-17900618489 (inline `gtag`, same gate)
+- **Meta Pixel / LinkedIn Insight**: injected from `Landing.tsx`, gated on the consent cookie directly since Consent Mode does not reach them
+
+### Cookie Consent
+- **Self-hosted banner** (`resources/js/components/CookieConsent.tsx`). CookieYes was removed 2026-08-30. Read the "Cookie consent" section above before touching any tag.
 
 ---
 
@@ -809,6 +817,106 @@ their content at `pt-20`, so only scrolled content reaches it). Accepted trade-o
 
 ---
 
+## Cookie consent — self-hosted banner + Consent Mode v2
+
+Replaces the **CookieYes** CMP, removed 2026-08-30. Files:
+`resources/js/lib/consent.ts` (state) · `resources/js/components/CookieConsent.tsx`
+(banner) · the inline block in `resources/views/app.blade.php` (the gate itself) ·
+`resources/js/pages/Privacy.tsx` + `/privacy` (what the banner links to) ·
+`tests/Feature/CookieConsentTest.php`.
+
+### One gate for everything Google, and one exception
+
+🔑 **The gate is Google Consent Mode v2, declared inline in `app.blade.php` BEFORE
+the GTM and Google Ads loaders.** Every non-essential signal starts `denied`, so
+GA4, the Ads tag and anything added to the container later is covered without
+touching the container or this code again. The banner only sends the `update`.
+
+- **Inline and first, on purpose.** A deferred Vite bundle cannot guarantee it runs
+  before a tag reads consent state, and a tag that reads it before the defaults
+  exist fires ungated. `test_consent_defaults_precede_every_tag_loader` pins the
+  ordering.
+- **Repeat visitors are re-granted in the same inline block**, straight from the
+  cookie, so their tags work on first paint instead of waiting for hydration.
+- 🔴 **Consent Mode does NOT reach the Meta Pixel or the LinkedIn Insight Tag.**
+  Those two are injected by our own code in `Landing.tsx`, so the cookie is the
+  only thing between a first-time visitor and a PageView. That effect reads
+  `marketingAllowed()` and re-checks on `CONSENT_CHANGED_EVENT`, so accepting
+  loads them on the spot rather than on the next page load. **Anything else added
+  to that effect needs the same gate.** Revoking calls `fbq('consent','revoke')`;
+  LinkedIn has no equivalent and simply does not come back on the next load.
+- ⚠️ **Google Ads conversions are now consent-dependent.** With `ad_storage`
+  denied, Ads reports modelled rather than observed conversions for visitors who
+  refuse. That is the correct behaviour, not a regression, but campaign numbers
+  will move.
+
+### The cookie
+
+`hardrock_consent`, one year, `SameSite=Lax`, `Secure` on https. Value is
+`{"analytics":bool,"marketing":bool,"v":POLICY_VERSION}`.
+
+⚠️ **The cookie name and payload keys exist in TWO places** — `consent.ts` and the
+inline Blade block. Change one and you must change the other; a drift leaves
+repeat visitors denied until React hydrates, with nothing visibly broken.
+`test_consent_mode_block_reads_the_same_cookie_the_client_writes` pins it.
+
+🔑 **`POLICY_VERSION` re-prompts everyone when bumped**, because consent to
+*different* wording is not consent to *this* wording. Bump it together with
+`privacy.updated` in both locale files whenever the policy changes materially.
+
+🔴 **`readCookie` splits the cookie string; it deliberately does NOT use a regex,
+and the regex version is a real bug that shipped in nuor-steel.** Building the
+pattern in a template literal turns the `\s` of `(?:^|;\s*)` into a plain `s`,
+because that is not an escape sequence in a template literal. The pattern then
+matches only a cookie that happens to be FIRST in `document.cookie`: it works on a
+fresh browser and re-prompts forever once any other cookie is set ahead of it.
+
+### Placement, and what does not get a banner
+
+- **Mounted per public page** (`Landing`, `Services`, `Consultation`, `Privacy`),
+  not in a layout: this codebase has no shared public layout, and the banner must
+  not follow staff into `/admin`.
+- **Admin surfaces ship no tag at all.** `$isAdminSurface` in `app.blade.php`
+  (admin, login, forgot-password, reset-password) gates the consent block, GTM,
+  the Ads tag and the GTM noscript iframe. It is the same set as `$noIndex`, which
+  is now derived from it.
+- 🔴 **The Meta and LinkedIn `<noscript>` pixels were deleted, not gated.** They
+  are the tracking pixel itself, fired on load, and a visitor with JS off cannot
+  answer a banner to accept or refuse first. GTM's own noscript iframe is kept:
+  that is the container, not a tag, and only tags explicitly configured for the
+  no-JS path fire through it. Keep it that way when adding tags.
+- ⚠️ **The banner renders nothing on the server** (`visible` starts false and the
+  decision is made in an effect). That is what keeps SSR markup identical to the
+  first client render. Do not "optimise" it by reading the cookie during render.
+
+### Design notes
+
+- **Reject carries the same visual weight as Accept.** Making refusal harder than
+  acceptance is the dark pattern regulators cite first.
+- ⚠️ **The strip is `pointer-events-none` with the card taking events back**, so
+  the WhatsApp bubble (fixed bottom-right, `z-50`) stays clickable through the
+  gutter. The bottom pad is `pb-20 xl:pb-6`: below `xl` the centred card is wide
+  enough to sit on top of that bubble, so it lifts clear instead.
+- The banner is `z-[60]` (Tailwind 3 has no `z-60`), above both the navbar and the
+  WhatsApp bubble.
+- Re-opening from the footer or `/privacy` dispatches `OPEN_CONSENT_EVENT` and
+  **pre-fills the toggles from the cookie**, otherwise "Save choices" would
+  silently revoke what is on file.
+- Copy lives in the `consent` and `privacy` namespaces, EN + AR. The policy is
+  authored in i18n rather than a CMS on purpose: the consent cookie records the
+  POLICY_VERSION a visitor agreed under, and silently editing the text behind a
+  recorded consent would make that record untrue.
+
+### Titles, again
+
+⚠️ **`/privacy` has an entry in `$serviceSeo` in `app.blade.php`, and `PAGE_TITLE`
+in `Privacy.tsx` mirrors it exactly.** Same trap as the service pages: SSR emits a
+second `<title>` next to Blade's, and a divergence shows crawlers two different
+titles. The page's description, OG tags and canonical come from Blade only, so
+there is nothing to duplicate on the React side.
+
+---
+
 ## Development Commands
 
 ### Setup
@@ -977,6 +1085,11 @@ php artisan admin:create email@example.com password "Name"
 | Services Page | resources/js/pages/Services.tsx |
 | Service Selector | resources/js/components/ui/expandable-service-selector.tsx |
 | Contact Form | resources/js/components/landing/ContactUs.tsx |
+| Cookie Consent Banner | resources/js/components/CookieConsent.tsx |
+| Consent State + Consent Mode payload | resources/js/lib/consent.ts |
+| Consent Mode v2 defaults (inline, pre-GTM) | resources/views/app.blade.php |
+| Privacy Policy Page | resources/js/pages/Privacy.tsx |
+| Consent + Privacy Tests | tests/Feature/CookieConsentTest.php |
 | Hero Character (cursor-tracked) | resources/js/components/landing/HeroFrog.tsx + public/images/frog/ |
 | Desktop-pointer test (mount + cursor) | resources/js/hooks/usePrecisePointer.ts |
 | Desktop-pointer test (all styling) | `desktop-pointer` screen in tailwind.config.js |
@@ -1140,7 +1253,8 @@ To check what real Googlebot sees (past Cloudflare), use GSC → URL Inspection 
 | Crawlable navigation links | ✅ Done | Service buttons use `<a href>`, CTAs use `<a href>` |
 | Auth/Admin noindex | ✅ Done | `app.blade.php` checks paths starting with `admin` or `login` |
 | Footer social links aria-labels | ✅ Done | `resources/js/components/landing/Footer.tsx` |
-| Cookie consent (CookieYes) | ✅ Done | `resources/views/app.blade.php` |
+| Cookie consent (self-hosted + Consent Mode v2) | ✅ Done (2026-08-30) | `CookieConsent.tsx` + `lib/consent.ts` + inline block in `app.blade.php`; replaced CookieYes |
+| Privacy and cookie policy page | ✅ Done (2026-08-30) | `resources/js/pages/Privacy.tsx`, routed at `/privacy`, listed in the sitemap |
 | **SSR for full-body crawl** | ✅ Done (2026-05-02) | `resources/js/ssr.tsx` + `hardrock-ssr` Railway service. Body went from ~908 B to 70–100 KB; all 6 service hrefs visible to Googlebot on every page |
 | Server-rendered `<html lang dir class>` | ✅ Done | `resources/views/app.blade.php` reads `theme` + `language` cookies |
 | Unified Blade/SSR titles (killed `${APP_NAME}` literal) | ✅ Done (2026-07-05) | `SERVICE_TITLES` in `Services.tsx` + title callbacks in `app.tsx`/`ssr.tsx` mirror `$serviceSeo` in `app.blade.php` |
@@ -1192,7 +1306,7 @@ Target these keyword themes in blog posts:
 
 | File | Purpose |
 |------|---------|
-| `resources/views/app.blade.php` | Global meta tags, hreflang, OG tags, CookieYes |
+| `resources/views/app.blade.php` | Global meta tags, hreflang, OG tags, per-path SEO map, Consent Mode v2 defaults |
 | `resources/views/partials/structured-data.blade.php` | JSON-LD schema markup (uses `@@` for Blade escaping of `@`) |
 | `public/sitemap.xml` | XML sitemap (currently static, update `lastmod` dates when content changes) |
 | `public/robots.txt` | Crawler directives |
@@ -1212,4 +1326,4 @@ Target these keyword themes in blog posts:
 
 ---
 
-> **Last updated:** 2026-08-22 (later) — Navbar has no solid background anywhere: fully transparent while it sits over the hero, a top-to-bottom scrim elsewhere; the native cursor is hidden over the hero so the mosquito is the only pointer; a new `desktop-pointer` screen variant replaces every `lg:` rule that assumed the character was on screen, which is what gives an iPad in landscape the original chevron hero back instead of an empty hero with white-on-white copy; the theme toggle and language switcher take the dark-theme pill over the art as well, passed in as an `overArt` prop since they carry their own background; the language switcher now shows a translate glyph plus `AR`/`EN` rather than a globe plus `عربي`; and the character now hunts for the mosquito after one still second, sweeping the full range end to end and back on a cosine (track / settle / idle / return state machine, gated on reduced-motion and on the hero being on screen), rests only on whole frames, and paints the mosquito in a `z-20` layer so it no longer vanishes behind the CTA. All on `hero-frog-tracker`: the scrim and cursor landed in `28f7067`, the variant and the switcher in `77a47fa`, the idle hunt in `f45cd06` and `df164d4`; the transparent-over-hero bar in `2f3d32a` and the opening hunt in `f971560`; only the two nav controls taking the over-art colours is still uncommitted. Three traps recorded above: a link's UA `cursor: pointer` beats an inherited `cursor: none`, so the descendant rule is required; `lg:` is not a test for "has a pointer"; and the light theme has to borrow the dark theme's nav colours while the bar sits over the character art, seeded from the URL so it does not flash. Same day — Landing hero: cursor-tracked character (branch `hero-frog-tracker`, WIP, not merged). Desktop-only frame-sequence hero replacing the static chevron; mobile untouched by construction. See "Landing Hero" above for the extraction rules and the four traps that cost real time: sorting frames by a computed head-angle proxy scrambles the tail, mirroring to fake the missing half leaves the frame uncovered, RTL puts the copy on top of the character without `lg:col-start-2`, and frame direction must be verified by screenshot rather than by metric. Previous: 2026-07-05 — GSC indexing fixes: unified Blade/SSR titles (killed literal `${APP_NAME}` baked into hardrock-ssr's bundle from an uninterpolated Railway var), 301'd bare `/services` duplicate, bumped sitemap lastmod, documented Cloudflare 403 on spoofed-Googlebot curls. Previous: 2026-05-04, commit `47197b9` (/dashboard → /admin rename).
+> **Last updated:** 2026-08-30 — Cookie consent rebuilt in-house, ported from nuor-steel: the CookieYes CMP is gone and a self-hosted banner (`CookieConsent.tsx` + `lib/consent.ts`) now records the decision, while the actual gate is a Google Consent Mode v2 defaults block declared inline in `app.blade.php` ahead of GTM and the Google Ads tag, with repeat visitors re-granted from the cookie before hydration. Three things that are easy to get wrong are recorded in the new "Cookie consent" section: Consent Mode does NOT cover the Meta Pixel or the LinkedIn Insight Tag (they are injected from `Landing.tsx` and gated on the cookie directly, reloading on a `CONSENT_CHANGED_EVENT` so Accept takes effect immediately), the Meta and LinkedIn `<noscript>` pixels were deleted rather than gated because a no-JS visitor cannot answer a banner, and `readCookie` splits the cookie string instead of using a template-literal regex, whose `\s` silently degrades to `s` and matches only the first cookie in the string (a live bug in nuor-steel). Also new: a `/privacy` page in EN + AR authored in i18n, linked from the banner and a new footer legal row alongside a "Cookie settings" control that reopens the banner, added to the sitemap, with its title mirrored between `$serviceSeo` and `PAGE_TITLE`; admin, login and password-reset surfaces now ship no tag at all; and 12 feature tests in `tests/Feature/CookieConsentTest.php` pin the denied defaults, their ordering ahead of every loader, the shared cookie name and the absence of CookieYes. Expect Google Ads to report modelled rather than observed conversions for visitors who refuse. Previous: 2026-08-22 (later) — Navbar has no solid background anywhere: fully transparent while it sits over the hero, a top-to-bottom scrim elsewhere; the native cursor is hidden over the hero so the mosquito is the only pointer; a new `desktop-pointer` screen variant replaces every `lg:` rule that assumed the character was on screen, which is what gives an iPad in landscape the original chevron hero back instead of an empty hero with white-on-white copy; the theme toggle and language switcher take the dark-theme pill over the art as well, passed in as an `overArt` prop since they carry their own background; the language switcher now shows a translate glyph plus `AR`/`EN` rather than a globe plus `عربي`; and the character now hunts for the mosquito after one still second, sweeping the full range end to end and back on a cosine (track / settle / idle / return state machine, gated on reduced-motion and on the hero being on screen), rests only on whole frames, and paints the mosquito in a `z-20` layer so it no longer vanishes behind the CTA. All on `hero-frog-tracker`: the scrim and cursor landed in `28f7067`, the variant and the switcher in `77a47fa`, the idle hunt in `f45cd06` and `df164d4`; the transparent-over-hero bar in `2f3d32a` and the opening hunt in `f971560`; only the two nav controls taking the over-art colours is still uncommitted. Three traps recorded above: a link's UA `cursor: pointer` beats an inherited `cursor: none`, so the descendant rule is required; `lg:` is not a test for "has a pointer"; and the light theme has to borrow the dark theme's nav colours while the bar sits over the character art, seeded from the URL so it does not flash. Same day — Landing hero: cursor-tracked character (branch `hero-frog-tracker`, WIP, not merged). Desktop-only frame-sequence hero replacing the static chevron; mobile untouched by construction. See "Landing Hero" above for the extraction rules and the four traps that cost real time: sorting frames by a computed head-angle proxy scrambles the tail, mirroring to fake the missing half leaves the frame uncovered, RTL puts the copy on top of the character without `lg:col-start-2`, and frame direction must be verified by screenshot rather than by metric. Previous: 2026-07-05 — GSC indexing fixes: unified Blade/SSR titles (killed literal `${APP_NAME}` baked into hardrock-ssr's bundle from an uninterpolated Railway var), 301'd bare `/services` duplicate, bumped sitemap lastmod, documented Cloudflare 403 on spoofed-Googlebot curls. Previous: 2026-05-04, commit `47197b9` (/dashboard → /admin rename).
