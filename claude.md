@@ -1,6 +1,6 @@
 # HardRock - Codebase Context for Claude
 
-> **📍 Doc sync:** CLAUDE.md last synced to commit `17b5170` — 2026-08-23 00:45 (Sun) [`hero-frog-tracker`; the cookie consent work of 2026-08-30 is uncommitted].
+> **📍 Doc sync:** CLAUDE.md last synced to commit `0d0b65e` — 2026-08-30 14:42 (Sun) [`hero-frog-tracker`; the Why HardRock redesign of 2026-08-31 is uncommitted].
 
 This document provides comprehensive context about the HardRock codebase to help Claude understand and work with the project effectively.
 
@@ -759,6 +759,94 @@ rather than dropping the section rule.
 
 ---
 
+## Why HardRock — the neural core
+
+Rebuilt 2026-08-31. Files: `resources/js/components/landing/NeuralCore.tsx` (new,
+the artwork) · `resources/js/components/landing/WhyHardRock.tsx` (the section) ·
+the `core-*` keyframes at the end of `resources/css/app.css`.
+
+**The copy and the blooming circles are exactly as they were.** A version that
+restructured the two paragraphs into capability chips plus a "we stay with you"
+statement over a four-stop continuity rail was built and rejected; so was
+replacing the five blurred circles with two large aurora fields. Neither is
+coming back. What changed is the artwork and the layout around it: the render now
+sits in an orbital system, and the even split is a 5/7.
+
+⚠️ **Do not "tidy" the five blooming circles into a gradient wash.** Two soft
+light sources over the same area cancel each other and leave haze. They read as
+bloom precisely because they are small, hard-positioned and blurred hard.
+
+### The rings are concentric with the DISC, not with the image
+
+🔴 **`why-hardrock.webp` has a hard-edged purple-to-red circle painted into it**,
+with the head overhanging the top of that circle, so the file's own centre is
+nowhere near the disc's. Rings centred on the image box sit visibly off the edge
+they are meant to hug. Measured off the pixels (widest opaque row, then fitted):
+**746x904, centre (372.5, 530), radius 333.5**, which is what the `DISC` and
+`ORBIT` constants encode.
+
+⚠️ Every constant is a fraction of the image **WIDTH**, because that is what
+`left` and `width` percentages resolve against. `top` resolves against the box
+HEIGHT instead, which is why each vertical figure carries an extra division by
+904/746. **Re-measure all of them if the render is ever replaced.**
+
+⚠️ **`transform-box: fill-box` on every rotating `<circle>`.** Without it an SVG
+child rotates about the viewBox origin, which swings the ring across the page
+instead of turning it in place.
+
+### 🔴 A CSS animation REPLACES the whole `transform` property
+
+This bit this component twice, in two different ways, and both were invisible in
+code review:
+
+- **The orbiting nodes.** Each dot is centred on its point with `-translate-x-1/2
+  -translate-y-1/2`, and `animate-core-node` sets `transform: scale()`. The
+  animated value beats the declared one, so the centring translate was discarded
+  and every dot sat half its own width off the ring, in a direction that depended
+  on its arm's rotation. Measured: 63.3 / 63.3 / 64.0 viewBox units against a
+  ring at 64.
+- **The halo.** `animate-core-breathe` (also a `scale()`) sat on the same element
+  as framer-motion's `x`/`y`, so the halo's parallax silently did nothing at all.
+
+**The fix in both cases is nesting: positioning and parallax on the outer
+element, the keyframe animation on an inner one.** Verify with the numbers rather
+than by eye. All three dots now measure exactly 64.00, and the head and halo
+translate together at 10px against the rings' 4px.
+
+⚠️ **The ring the nodes ride has to be visible.** At `strokeWidth 0.3` and 15%
+opacity the r=64 track read as nothing, so the dots looked like they were
+floating between the two rings either side of it. It is also static on purpose:
+a dashed ring turning at its own speed under the dots makes them look like they
+are sliding along it.
+
+### Parallax
+
+- **Motion values, never state.** A pointer position in `useState` re-renders the
+  tree on every mousemove.
+- **The listener is on the section, not on window**, so it is idle for the rest
+  of the page, and `pointerleave` returns the artwork to rest rather than
+  freezing it wherever the pointer left.
+- **Gated on `usePrecisePointer()`**, the same hook the hero character uses: a
+  tablet would otherwise latch one stale position on tap and hold the artwork
+  off-centre.
+
+### Sizing
+
+⚠️ **The rings overflow the image box, so the box cannot be capped in isolation.**
+The node ring is 1.144x the image width and the outer dashed one 1.287x. A flat
+`max-w-[340px]` pushed the node ring past the phone gutter and the section's
+`overflow-hidden` sliced dots in half at both edges, so the smallest breakpoint
+caps against the viewport (`min(84vw - 54px, 340px)`) instead of at a fixed step.
+
+### Both themes, both directions
+
+RTL needs no order override here: the first grid child is the right-hand column
+under `dir="rtl"`, which mirrors the layout correctly on its own. That is the
+opposite of the hero, where `desktop-pointer:col-start-2` is required or the copy
+lands on the character. Verified in all four theme/language combinations plus
+mobile, under `prefers-reduced-motion: reduce` (every loop collapses to
+`animation: none`), and through the SSR renderer.
+
 ## Navbar — transparent over the hero, scrim elsewhere
 
 The bar has no solid background anywhere. It takes one of two backgrounds depending on
@@ -1090,6 +1178,8 @@ php artisan admin:create email@example.com password "Name"
 | Consent Mode v2 defaults (inline, pre-GTM) | resources/views/app.blade.php |
 | Privacy Policy Page | resources/js/pages/Privacy.tsx |
 | Consent + Privacy Tests | tests/Feature/CookieConsentTest.php |
+| Why HardRock Section | resources/js/components/landing/WhyHardRock.tsx |
+| Why HardRock Artwork (orbital core) | resources/js/components/landing/NeuralCore.tsx |
 | Hero Character (cursor-tracked) | resources/js/components/landing/HeroFrog.tsx + public/images/frog/ |
 | Desktop-pointer test (mount + cursor) | resources/js/hooks/usePrecisePointer.ts |
 | Desktop-pointer test (all styling) | `desktop-pointer` screen in tailwind.config.js |
@@ -1326,4 +1416,4 @@ Target these keyword themes in blog posts:
 
 ---
 
-> **Last updated:** 2026-08-30 — Cookie consent rebuilt in-house, ported from nuor-steel: the CookieYes CMP is gone and a self-hosted banner (`CookieConsent.tsx` + `lib/consent.ts`) now records the decision, while the actual gate is a Google Consent Mode v2 defaults block declared inline in `app.blade.php` ahead of GTM and the Google Ads tag, with repeat visitors re-granted from the cookie before hydration. Three things that are easy to get wrong are recorded in the new "Cookie consent" section: Consent Mode does NOT cover the Meta Pixel or the LinkedIn Insight Tag (they are injected from `Landing.tsx` and gated on the cookie directly, reloading on a `CONSENT_CHANGED_EVENT` so Accept takes effect immediately), the Meta and LinkedIn `<noscript>` pixels were deleted rather than gated because a no-JS visitor cannot answer a banner, and `readCookie` splits the cookie string instead of using a template-literal regex, whose `\s` silently degrades to `s` and matches only the first cookie in the string (a live bug in nuor-steel). Also new: a `/privacy` page in EN + AR authored in i18n, linked from the banner and a new footer legal row alongside a "Cookie settings" control that reopens the banner, added to the sitemap, with its title mirrored between `$serviceSeo` and `PAGE_TITLE`; admin, login and password-reset surfaces now ship no tag at all; and 12 feature tests in `tests/Feature/CookieConsentTest.php` pin the denied defaults, their ordering ahead of every loader, the shared cookie name and the absence of CookieYes. Expect Google Ads to report modelled rather than observed conversions for visitors who refuse. Previous: 2026-08-22 (later) — Navbar has no solid background anywhere: fully transparent while it sits over the hero, a top-to-bottom scrim elsewhere; the native cursor is hidden over the hero so the mosquito is the only pointer; a new `desktop-pointer` screen variant replaces every `lg:` rule that assumed the character was on screen, which is what gives an iPad in landscape the original chevron hero back instead of an empty hero with white-on-white copy; the theme toggle and language switcher take the dark-theme pill over the art as well, passed in as an `overArt` prop since they carry their own background; the language switcher now shows a translate glyph plus `AR`/`EN` rather than a globe plus `عربي`; and the character now hunts for the mosquito after one still second, sweeping the full range end to end and back on a cosine (track / settle / idle / return state machine, gated on reduced-motion and on the hero being on screen), rests only on whole frames, and paints the mosquito in a `z-20` layer so it no longer vanishes behind the CTA. All on `hero-frog-tracker`: the scrim and cursor landed in `28f7067`, the variant and the switcher in `77a47fa`, the idle hunt in `f45cd06` and `df164d4`; the transparent-over-hero bar in `2f3d32a` and the opening hunt in `f971560`; only the two nav controls taking the over-art colours is still uncommitted. Three traps recorded above: a link's UA `cursor: pointer` beats an inherited `cursor: none`, so the descendant rule is required; `lg:` is not a test for "has a pointer"; and the light theme has to borrow the dark theme's nav colours while the bar sits over the character art, seeded from the URL so it does not flash. Same day — Landing hero: cursor-tracked character (branch `hero-frog-tracker`, WIP, not merged). Desktop-only frame-sequence hero replacing the static chevron; mobile untouched by construction. See "Landing Hero" above for the extraction rules and the four traps that cost real time: sorting frames by a computed head-angle proxy scrambles the tail, mirroring to fake the missing half leaves the frame uncovered, RTL puts the copy on top of the character without `lg:col-start-2`, and frame direction must be verified by screenshot rather than by metric. Previous: 2026-07-05 — GSC indexing fixes: unified Blade/SSR titles (killed literal `${APP_NAME}` baked into hardrock-ssr's bundle from an uninterpolated Railway var), 301'd bare `/services` duplicate, bumped sitemap lastmod, documented Cloudflare 403 on spoofed-Googlebot curls. Previous: 2026-05-04, commit `47197b9` (/dashboard → /admin rename).
+> **Last updated:** 2026-08-31 — "Why HardRock" artwork rebuilt as a neural core. **The copy and the five blooming circles are exactly as they were**: a version that restructured the two paragraphs into capability chips plus a "we stay with you" statement over a four-stop continuity rail was built and rejected, as was replacing the blooms with two large aurora fields, and neither is coming back (two soft light sources over the same area cancel each other and leave haze). What changed is the render, which now sits in an orbital system of four rings and three orbiting nodes with a breathing halo and a pointer parallax, plus a masked grid substrate and a 5/7 split in place of the even one. The trap worth reading before touching any of it is that **a CSS animation replaces the whole `transform` property**, which bit this component twice and was invisible both times: `animate-core-node` (a `scale()`) discarded the `-translate-x-1/2` centring the dots, so each sat half its own width off the ring in a direction set by its arm's rotation (measured 63.3 / 63.3 / 64.0 against a ring at 64), and `animate-core-breathe` sat on the same element as framer-motion's `x`/`y` so the halo's parallax silently did nothing at all. The fix in both cases is nesting: positioning and parallax outside, keyframes inside. Also recorded: the rings are concentric with the DISC BAKED INTO THE IMAGE rather than with the image box (fitted off the pixels at centre (372.5, 530) radius 333.5, every constant a fraction of the WIDTH because that is what `left`/`width` resolve against, hence the extra divide by the aspect ratio on every `top`); every rotating SVG circle needs `transform-box: fill-box`; the ring the nodes ride must actually be visible or they look like they are floating; and because the rings overflow the image box by up to 1.287x, the smallest breakpoint caps against the viewport rather than at a fixed step, or `overflow-hidden` slices dots in half on a phone. Verified in all four theme/language combinations plus mobile, under `prefers-reduced-motion: reduce`, and through the SSR renderer. Previous: 2026-08-30 — Cookie consent rebuilt in-house, ported from nuor-steel: the CookieYes CMP is gone and a self-hosted banner (`CookieConsent.tsx` + `lib/consent.ts`) now records the decision, while the actual gate is a Google Consent Mode v2 defaults block declared inline in `app.blade.php` ahead of GTM and the Google Ads tag, with repeat visitors re-granted from the cookie before hydration. Three things that are easy to get wrong are recorded in the new "Cookie consent" section: Consent Mode does NOT cover the Meta Pixel or the LinkedIn Insight Tag (they are injected from `Landing.tsx` and gated on the cookie directly, reloading on a `CONSENT_CHANGED_EVENT` so Accept takes effect immediately), the Meta and LinkedIn `<noscript>` pixels were deleted rather than gated because a no-JS visitor cannot answer a banner, and `readCookie` splits the cookie string instead of using a template-literal regex, whose `\s` silently degrades to `s` and matches only the first cookie in the string (a live bug in nuor-steel). Also new: a `/privacy` page in EN + AR authored in i18n, linked from the banner and a new footer legal row alongside a "Cookie settings" control that reopens the banner, added to the sitemap, with its title mirrored between `$serviceSeo` and `PAGE_TITLE`; admin, login and password-reset surfaces now ship no tag at all; and 12 feature tests in `tests/Feature/CookieConsentTest.php` pin the denied defaults, their ordering ahead of every loader, the shared cookie name and the absence of CookieYes. Expect Google Ads to report modelled rather than observed conversions for visitors who refuse. Previous: 2026-08-22 (later) — Navbar has no solid background anywhere: fully transparent while it sits over the hero, a top-to-bottom scrim elsewhere; the native cursor is hidden over the hero so the mosquito is the only pointer; a new `desktop-pointer` screen variant replaces every `lg:` rule that assumed the character was on screen, which is what gives an iPad in landscape the original chevron hero back instead of an empty hero with white-on-white copy; the theme toggle and language switcher take the dark-theme pill over the art as well, passed in as an `overArt` prop since they carry their own background; the language switcher now shows a translate glyph plus `AR`/`EN` rather than a globe plus `عربي`; and the character now hunts for the mosquito after one still second, sweeping the full range end to end and back on a cosine (track / settle / idle / return state machine, gated on reduced-motion and on the hero being on screen), rests only on whole frames, and paints the mosquito in a `z-20` layer so it no longer vanishes behind the CTA. All on `hero-frog-tracker`: the scrim and cursor landed in `28f7067`, the variant and the switcher in `77a47fa`, the idle hunt in `f45cd06` and `df164d4`; the transparent-over-hero bar in `2f3d32a` and the opening hunt in `f971560`; only the two nav controls taking the over-art colours is still uncommitted. Three traps recorded above: a link's UA `cursor: pointer` beats an inherited `cursor: none`, so the descendant rule is required; `lg:` is not a test for "has a pointer"; and the light theme has to borrow the dark theme's nav colours while the bar sits over the character art, seeded from the URL so it does not flash. Same day — Landing hero: cursor-tracked character (branch `hero-frog-tracker`, WIP, not merged). Desktop-only frame-sequence hero replacing the static chevron; mobile untouched by construction. See "Landing Hero" above for the extraction rules and the four traps that cost real time: sorting frames by a computed head-angle proxy scrambles the tail, mirroring to fake the missing half leaves the frame uncovered, RTL puts the copy on top of the character without `lg:col-start-2`, and frame direction must be verified by screenshot rather than by metric. Previous: 2026-07-05 — GSC indexing fixes: unified Blade/SSR titles (killed literal `${APP_NAME}` baked into hardrock-ssr's bundle from an uninterpolated Railway var), 301'd bare `/services` duplicate, bumped sitemap lastmod, documented Cloudflare 403 on spoofed-Googlebot curls. Previous: 2026-05-04, commit `47197b9` (/dashboard → /admin rename).

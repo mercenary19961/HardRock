@@ -372,3 +372,58 @@
     mix-blend-mode: color-dodge;
   }
 }
+
+/* ------------------------------------------------------------------
+   Why HardRock — neural core
+
+   Everything here animates `transform` or `opacity` only, so the whole
+   section stays on the compositor. The rings are SVG circles rotated
+   about their own centre, which is why each one carries
+   `transform-box: fill-box` in the markup: without it an SVG child
+   rotates about the viewport origin, not about the circle.
+
+   The section sits inside a `content-auto` wrapper on Landing, so none
+   of these loops actually run until the visitor scrolls the section
+   into view. That is also why there is no IntersectionObserver here.
+   ------------------------------------------------------------------ */
+@layer utilities {
+  @keyframes core-spin {
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes core-spin-reverse {
+    to { transform: rotate(-360deg); }
+  }
+
+  @keyframes core-breathe {
+    0%, 100% { opacity: 0.30; transform: scale(1); }
+    50%      { opacity: 0.52; transform: scale(1.05); }
+  }
+
+  @keyframes core-node {
+    0%, 100% { opacity: 0.35; transform: scale(0.8); }
+    50%      { opacity: 1;    transform: scale(1); }
+  }
+
+
+  .animate-core-spin         { animation: core-spin 48s linear infinite; }
+  .animate-core-spin-slow    { animation: core-spin 96s linear infinite; }
+  .animate-core-spin-reverse { animation: core-spin-reverse 64s linear infinite; }
+  .animate-core-breathe      { animation: core-breathe 7s ease-in-out infinite; }
+  .animate-core-node         { animation: core-node 3.4s ease-in-out infinite; }
+}
+
+/* A head that turns on its own forever is exactly what this setting is for.
+   Scoped to the new loops rather than applied globally: the animations that
+   shipped before this section are out of scope for a redesign of it.
+   `!important` because Tailwind hoists `@layer utilities`, so source order
+   alone would not settle it. */
+@media (prefers-reduced-motion: reduce) {
+  .animate-core-spin,
+  .animate-core-spin-slow,
+  .animate-core-spin-reverse,
+  .animate-core-breathe,
+  .animate-core-node {
+    animation: none !important;
+  }
+}
